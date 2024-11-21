@@ -1,3 +1,4 @@
+using HSOne.Api;
 using HSOne.Core.Domain.Identity;
 using HSOne.Data;
 using Microsoft.AspNetCore.Identity;
@@ -53,5 +54,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Migrate and seed database
+app.MigrationDatabase();
 
 app.Run();
