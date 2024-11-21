@@ -1,0 +1,6 @@
+@HSOne.Api_HostAddress = http://localhost:5158
+
+GET {{HSOne.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
