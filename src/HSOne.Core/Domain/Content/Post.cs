@@ -19,21 +19,21 @@ namespace HSOne.Core.Domain.Content
         [Column(TypeName = "varchar(256)")]
         public required string Slug { get; set; }
 
-        [MaxLength(504)]
+        [MaxLength(512)]
         public string? Description { get; set; }
 
         [Required]
         public Guid CategoryId { get; set; }
 
-        [MaxLength(504)]
+        [MaxLength(512)]
         public string? Thumbnail { get; set; }
 
         public string? Content { get; set; }
 
-        [MaxLength(504)]
+        [MaxLength(512)]
         public Guid AuthorUserId { get; set; }
 
-        [MaxLength(504)]
+        [MaxLength(512)]
         public string? Source { get; set; }
 
         [MaxLength(256)]

@@ -17,7 +17,7 @@ namespace HSOne.Core.Domain.Content
 
         public DateTime DateCreated { get; set; }
 
-        [MaxLength(504)]
+        [MaxLength(512)]
         public string? Note { set; get; }
 
         public Guid UserId { get; set; }
