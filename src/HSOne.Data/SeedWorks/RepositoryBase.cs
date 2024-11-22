@@ -7,10 +7,11 @@ namespace HSOne.Data.SeedWorks
     public class RepositoryBase<T, Key> : IRepository<T, Key> where T : class
     {
         private readonly DbSet<T> _dbSet;
-
+        protected readonly HSOneContext _context;
         public RepositoryBase(HSOneContext context)
         {
             _dbSet = context.Set<T>();
+            _context = context;
         }
 
         public void Add(T entity)
