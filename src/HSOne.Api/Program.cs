@@ -1,5 +1,6 @@
 using HSOne.Api;
 using HSOne.Core.Domain.Identity;
+using HSOne.Core.Models.Content;
 using HSOne.Core.SeedWorks;
 using HSOne.Data;
 using HSOne.Data.Repositories;
@@ -53,6 +54,9 @@ foreach (var service in services)
         builder.Services.Add(new ServiceDescriptor(directInterface, service, ServiceLifetime.Scoped));
     }
 }
+
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(PostInListDto));
 
 // Default config for ASP.NET Core
 builder.Services.AddControllers();

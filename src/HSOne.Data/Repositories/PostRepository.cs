@@ -1,5 +1,7 @@
-﻿using HSOne.Core.Domain.Content;
+﻿using AutoMapper;
+using HSOne.Core.Domain.Content;
 using HSOne.Core.Models;
+using HSOne.Core.Models.Content;
 using HSOne.Core.Repositories;
 using HSOne.Data.SeedWorks;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +10,10 @@ namespace HSOne.Data.Repositories
 {
     public class PostRepository : RepositoryBase<Post, Guid>, IPostRepository
     {
-        public PostRepository(HSOneContext context) : base(context)
+        private readonly IMapper _mapper;
+        public PostRepository(HSOneContext context, IMapper mapper) : base(context)
         {
+            _mapper = mapper;
         }
 
         public Task<List<Post>> GetPopularPostsAsync(int count)
@@ -17,7 +21,7 @@ namespace HSOne.Data.Repositories
             return _context.Posts.OrderByDescending(x => x.ViewCount).Take(count).ToListAsync();
         }
 
-        public async Task<PagedResult<Post>> GetPostsPagingAsync(string keyword, Guid? categoryId, int pageIndex = 1, int pageSize = 10)
+        public async Task<PagedResult<PostInListDto>> GetPostsPagingAsync(string keyword, Guid? categoryId, int pageIndex = 1, int pageSize = 10)
         {
             var query = _context.Posts.AsQueryable();
             if (!string.IsNullOrEmpty(keyword))
@@ -36,9 +40,9 @@ namespace HSOne.Data.Repositories
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize);
 
-            return new PagedResult<Post>
+            return new PagedResult<PostInListDto>
             {
-                Results = await query.ToListAsync(),
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
                 CurrentPage = pageIndex,
                 RowCount = totalRecords,
                 PageSize = pageSize
