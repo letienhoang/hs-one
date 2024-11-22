@@ -16,9 +16,9 @@ namespace HSOne.Data.Repositories
         public bool IsPaid { get; set; }
         public double RoyaltyAmount { get; set; }
 
-        public class AutoMapperProfile : Profile
+        public class AutoMapperPostDtoProfile : Profile
         {
-            public AutoMapperProfile()
+            public AutoMapperPostDtoProfile()
             {
                 CreateMap<Post, PostDto>();
             }

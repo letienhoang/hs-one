@@ -1,4 +1,7 @@
-﻿using HSOne.Core.SeedWorks;
+﻿using AutoMapper;
+using HSOne.Core.Repositories;
+using HSOne.Core.SeedWorks;
+using HSOne.Data.Repositories;
 
 namespace HSOne.Data.SeedWorks
 {
@@ -6,10 +9,13 @@ namespace HSOne.Data.SeedWorks
     {
         private readonly HSOneContext _context;
 
-        public UnitOfWork(HSOneContext context)
+        public UnitOfWork(HSOneContext context, IMapper mapper)
         {
             _context = context;
+            Posts = new PostRepository(_context, mapper);
         }
+
+        public IPostRepository Posts { get; private set; }
 
         public async Task<int> CompleteAsync()
         {
