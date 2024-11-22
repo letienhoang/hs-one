@@ -1,13 +1,14 @@
 using HSOne.Api;
 using HSOne.Core.Domain.Identity;
+using HSOne.Core.SeedWorks;
 using HSOne.Data;
+using HSOne.Data.SeedWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
-// Add services to the container.
 
 // Config DB Conext and ASP.NET Core Identity
 builder.Services.AddDbContext<HSOneContext>(options => options.UseSqlServer(connectionString));
@@ -33,6 +34,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = false;
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 });
+
+// Add services to the container.
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Default config for ASP.NET Core
 builder.Services.AddControllers();
