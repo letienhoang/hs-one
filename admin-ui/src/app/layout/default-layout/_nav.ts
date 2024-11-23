@@ -5,53 +5,61 @@ export const navItems: INavData[] = [
     name: 'Dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW'
+    // }
   },
   {
-    name: 'Components',
+    name: 'Content',
     title: true
   },
   {
-    name: 'Widgets',
-    url: '/widgets',
-    iconComponent: { name: 'cil-calculator' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    name: 'Posts',
+    url: '/content/posts',
+    iconComponent: { name: 'cil-featured-playlist' },
+    children: [
+      {
+        name: 'All Posts',
+        url: '/content/posts',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Categories',
+        url: '/content/post-categories',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Series',
+        url: '/content/series',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Royalty',
+        url: '/content/royalty',
+        icon: 'nav-icon-bullet'
+      }
+    ]
   },
   {
     title: true,
-    name: 'Extras'
+    name: 'System'
   },
   {
-    name: 'Pages',
-    url: '/login',
+    name: 'Users',
+    url: '/system',
     iconComponent: { name: 'cil-star' },
     children: [
       {
-        name: 'Login',
-        url: '/login',
+        name: 'All Users',
+        url: '/system/users',
         icon: 'nav-icon-bullet'
       },
       {
-        name: 'Register',
-        url: '/register',
+        name: 'Roles',
+        url: '/system/roles',
         icon: 'nav-icon-bullet'
       },
-      {
-        name: 'Error 404',
-        url: '/404',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Error 500',
-        url: '/500',
-        icon: 'nav-icon-bullet'
-      }
     ]
   }
 ];

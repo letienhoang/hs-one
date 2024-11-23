@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
-import { IconDirective } from '@coreui/icons-angular';
+import { IconDirective, IconSetService  } from '@coreui/icons-angular';
+import { brandSet, flagSet, freeSet } from '@coreui/icons';
 import {
   ContainerComponent,
   ShadowOnScrollDirective,
@@ -29,6 +30,7 @@ function isOverflown(element: HTMLElement) {
   selector: 'app-dashboard',
   templateUrl: './default-layout.component.html',
   styleUrls: ['./default-layout.component.scss'],
+  providers: [IconSetService],
   standalone: true,
   imports: [
     SidebarComponent,
@@ -50,7 +52,10 @@ function isOverflown(element: HTMLElement) {
 })
 export class DefaultLayoutComponent {
   public navItems = navItems;
-
+  constructor(public iconSet: IconSetService
+  ) {
+    iconSet.icons = { ...freeSet, ...brandSet, ...flagSet };
+  }
   onScrollbarUpdate($event: any) {
     // if ($event.verticalUsed) {
     // console.log('verticalUsed', $event.verticalUsed);
