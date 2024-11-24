@@ -29,7 +29,7 @@ namespace HSOne.Data
                     Id = rootAdminId,
                     FirstName = "Holwn",
                     LastName = "Admin",
-                    UserName = "Holwn Admin",
+                    UserName = "HolwnAdmin",
                     NormalizedUserName = "HOLWNADMIN",
                     Email = "admin@hoctat.com",
                     NormalizedEmail = "ADMIN@HOCTAT.COM",
