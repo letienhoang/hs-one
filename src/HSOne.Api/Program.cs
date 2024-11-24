@@ -1,4 +1,5 @@
 using HSOne.Api;
+using HSOne.Api.Filters;
 using HSOne.Api.Services;
 using HSOne.Core.ConfigOptions;
 using HSOne.Core.Domain.Identity;
