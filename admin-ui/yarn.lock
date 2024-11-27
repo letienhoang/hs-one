@@ -5314,6 +5314,11 @@ npm-run-path@^4.0.1:
   dependencies:
     path-key "^3.0.0"
 
+nswag@^14.2.0:
+  version "14.2.0"
+  resolved "https://registry.yarnpkg.com/nswag/-/nswag-14.2.0.tgz#4a38082d2bd626644d6849a1c03734046b441659"
+  integrity sha512-paE+kXYx6yNknEG0LmGmoOFGFRN6GKvEjmDivDX417wyapWeZGnd5TCEBvcyfRaUlp6oDRucWGVD1ZKTyGSJ/g==
+
 nth-check@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/nth-check/-/nth-check-2.1.1.tgz#c9eab428effce36cd6b92c924bdb000ef1f1ed1d"
