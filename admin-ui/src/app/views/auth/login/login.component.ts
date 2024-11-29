@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgStyle } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgIf, NgStyle } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import {
   ContainerComponent,
@@ -31,6 +31,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { Router } from '@angular/router';
 import { UrlConstants } from 'src/app/shared/constants/url.constants';
 import { TokenStorageService } from 'src/app/shared/services/token-storage.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -53,10 +54,13 @@ import { TokenStorageService } from 'src/app/shared/services/token-storage.servi
     ButtonDirective,
     NgStyle,
     ReactiveFormsModule,
+    NgIf
   ],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -71,13 +75,18 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit(): void {}
+
   login() {
+    this.loading = true;
     var request: LoginRequest = new LoginRequest({
       userName: this.loginForm.get('username')?.value,
       password: this.loginForm.get('password')?.value,
     });
 
-    this.authService.login(request).subscribe({
+    this.authService.login(request)
+    .pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe({
       next: (response: AuthenticatedResult) => {
         // Save Token and refesh token to local storage
         this.tokenStorageService.saveToken(response.token);
@@ -96,7 +105,13 @@ export class LoginComponent {
         } else {
           this.toastService.showError(error.message);
         }
+        this.loading = false;
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
