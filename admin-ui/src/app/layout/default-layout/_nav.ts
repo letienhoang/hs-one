@@ -9,10 +9,16 @@ export const navItems: INavData[] = [
     //   color: 'info',
     //   text: 'NEW'
     // }
+    attributes: {
+      "policyName": "Permissions.Dashboard.View"
+    }
   },
   {
     name: 'Content',
-    title: true
+    title: true,
+    attributes: {
+      "policyName": "Permissions.Posts.View"
+    }
   },
   {
     name: 'Posts',
@@ -22,28 +28,43 @@ export const navItems: INavData[] = [
       {
         name: 'All Posts',
         url: '/content/posts',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.Posts.View"
+        }
       },
       {
         name: 'Categories',
         url: '/content/post-categories',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.PostCategories.View"
+        }
       },
       {
         name: 'Series',
         url: '/content/series',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.Series.View"
+        }
       },
       {
         name: 'Royalty',
         url: '/content/royalty',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.Loyalty.View"
+        }
       }
     ]
   },
   {
     title: true,
-    name: 'System'
+    name: 'System',
+    attributes: {
+      "policyName": "Permissions.Users.View"
+    }
   },
   {
     name: 'Users',
@@ -53,12 +74,18 @@ export const navItems: INavData[] = [
       {
         name: 'All Users',
         url: '/system/users',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.Users.View"
+        }
       },
       {
         name: 'Roles',
         url: '/system/roles',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.Roles.View"
+        }
       },
     ]
   }

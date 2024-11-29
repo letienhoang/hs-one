@@ -7,6 +7,13 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: '403',
+    loadComponent: () => import('./page403/page403.component').then(m => m.Page403Component),
+    data: {
+      title: 'Page 403'
+    }
+  },
+  {
     path: '404',
     loadComponent: () => import('./page404/page404.component').then(m => m.Page404Component),
     data: {

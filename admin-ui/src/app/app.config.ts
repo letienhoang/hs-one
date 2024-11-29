@@ -16,6 +16,7 @@ import { ADMIN_API_BASE_URL, AdminApiAuthApiClient } from './api/admin-api.servi
 import { environment } from '../environments/environment';
 import { TokenStorageService } from './shared/services/token-storage.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { AuthGuard } from './shared/services/auth.guard';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,6 +36,7 @@ export const appConfig: ApplicationConfig = {
     IconSetService,
     AdminApiAuthApiClient,
     TokenStorageService,
+    AuthGuard,
     provideAnimations(),
     {provide: ADMIN_API_BASE_URL, useValue: environment.API_URL},
     provideHttpClient(withInterceptorsFromDi())
