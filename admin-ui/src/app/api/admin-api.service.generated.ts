@@ -17,11 +17,11 @@ export const ADMIN_API_BASE_URL = new InjectionToken<string>('ADMIN_API_BASE_URL
 
 @Injectable()
 export class AdminApiAuthApiClient {
-    private http: HttpClient = Inject(HttpClient);
+    private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(http: HttpClient, @Optional() @Inject(ADMIN_API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(ADMIN_API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl ?? "";
     }

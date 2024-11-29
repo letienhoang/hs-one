@@ -38,9 +38,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/scss/styles.scss"
+              "src/scss/styles.scss",
+              "node_modules/@coreui/icons/css/all.min.css"
             ],
-            "scripts": [],
+            "scripts": [
+            ],
             "allowedCommonJsDependencies": []
           },
           "configurations": {

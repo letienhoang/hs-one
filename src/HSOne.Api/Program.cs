@@ -1,4 +1,3 @@
-using HSOne.Api;
 using HSOne.Api.Filters;
 using HSOne.Api.Services;
 using HSOne.Core.ConfigOptions;
@@ -8,13 +7,26 @@ using HSOne.Core.SeedWorks;
 using HSOne.Data;
 using HSOne.Data.Repositories;
 using HSOne.Data.SeedWorks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
+var HSOneCorsPolicy = "HSOneCorsPolicy";
+
+builder.Services.AddCors(o => o.AddPolicy(HSOneCorsPolicy, builder =>
+{
+    builder.AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithOrigins(configuration["AllowedOrigins"]?.Split(";"))
+        .AllowCredentials();
+}));
 
 // Config DB Conext and ASP.NET Core Identity
 builder.Services.AddDbContext<HSOneContext>(options => options.UseSqlServer(connectionString));
@@ -77,7 +89,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.CustomOperationIds(apiDesc =>
     {
-        return apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null;
+        return apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null;
     });
     c.SwaggerDoc("AdminAPI", new Microsoft.OpenApi.Models.OpenApiInfo
     {
@@ -86,6 +98,24 @@ builder.Services.AddSwaggerGen(c =>
         Description = "Admin API for CMS core domain. This domain keeps track of campains, campain rules, and campaign execution."
     });
     c.ParameterFilter<SwaggerNullableParameterFilter>();
+});
+
+builder.Services.AddAuthentication(o =>
+{
+    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ClockSkew = TimeSpan.FromSeconds(0),
+        ValidIssuer = configuration["JwtTokenSettings:Issuer"],
+        ValidAudience = configuration["JwtTokenSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSettings:Key"]))
+    };
 });
 
 var app = builder.Build();
@@ -102,6 +132,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors(HSOneCorsPolicy);
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -109,6 +141,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Migrate and seed database
-app.MigrationDatabase();
+//app.MigrationDatabase();
 
 app.Run();

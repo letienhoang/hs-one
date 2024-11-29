@@ -17,7 +17,7 @@ export const navItems: INavData[] = [
   {
     name: 'Posts',
     url: '/content/posts',
-    iconComponent: { name: 'cil-featured-playlist' },
+    iconComponent: { name: 'cil-spreadsheet' },
     children: [
       {
         name: 'All Posts',

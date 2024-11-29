@@ -5,14 +5,19 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { delay, filter, map, tap } from 'rxjs/operators';
 
 import { ColorModeService } from '@coreui/angular';
-import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
+import { ToastContainerComponent } from './shared/components/toast-container.component';
+import { IconSetService  } from '@coreui/icons-angular';
+import { brandSet, flagSet, freeSet, } from '@coreui/icons';
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet />',
+  template: `
+    <app-toast-container></app-toast-container>
+    <router-outlet />
+  `,
   standalone: true,
-  imports: [RouterOutlet]
+  imports: [RouterOutlet, ToastContainerComponent]
 })
 export class AppComponent implements OnInit {
   title = 'HSOne CMS Admin UI';
@@ -25,10 +30,10 @@ export class AppComponent implements OnInit {
   readonly #colorModeService = inject(ColorModeService);
   readonly #iconSetService = inject(IconSetService);
 
-  constructor() {
+  constructor(public iconSetService: IconSetService) {
     this.#titleService.setTitle(this.title);
     // iconSet singleton
-    this.#iconSetService.icons = { ...iconSubset };
+    this.#iconSetService.icons = { ...iconSubset, ...brandSet, ...freeSet, ...flagSet };
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
   }
