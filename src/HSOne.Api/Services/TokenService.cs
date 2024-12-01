@@ -1,4 +1,5 @@
 ﻿using HSOne.Core.ConfigOptions;
+using HSOne.Core.SeedWorks.Constants;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -63,6 +64,8 @@ namespace HSOne.Api.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var userName = principal.Claims.FirstOrDefault(x => x.Type == UserClaims.UserName)?.Value;
+            //principal.Identities[0].Actor = userName;
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                 throw new SecurityTokenException("Invalid token");

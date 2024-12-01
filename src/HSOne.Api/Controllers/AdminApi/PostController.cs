@@ -4,12 +4,14 @@ using HSOne.Core.Models;
 using HSOne.Core.Models.Content;
 using HSOne.Core.SeedWorks;
 using HSOne.Data.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HSOne.Api.Controllers.AdminApi
 {
     [Route("api/admin/post")]
     [ApiController]
+    [Authorize]
     public class PostController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -21,7 +23,7 @@ namespace HSOne.Api.Controllers.AdminApi
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         [Route("{id}")]
         public async Task<ActionResult<PostDto>> GetPostsById(Guid id)
         {
@@ -33,7 +35,7 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(post);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         [Route("paging")]
         public async Task<ActionResult<PagedResult<PostInListDto>>> GetPostsPagingAsync(string? keyword, Guid? categoryId, int pageIndex = 1, int pageSize = 10)
         {
@@ -41,7 +43,7 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(posts);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<ActionResult<PostDto>> CreatePostAsync([FromBody] CreateUpdatePostRequest postDto)
         {
             var post = _mapper.Map<CreateUpdatePostRequest, Post>(postDto);
@@ -50,7 +52,7 @@ namespace HSOne.Api.Controllers.AdminApi
             return result > 0 ? Ok(post) : BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut, Authorize]
         [Route("{id}")]
         public async Task<ActionResult<PostDto>> UpdatePostAsync(Guid id, [FromBody] CreateUpdatePostRequest postDto)
         {
@@ -64,7 +66,7 @@ namespace HSOne.Api.Controllers.AdminApi
             return result > 0 ? Ok(post) : BadRequest();
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize]
         public async Task<ActionResult> DeletePostsAsync([FromQuery] Guid[] ids)
         {
             foreach (var id in ids)

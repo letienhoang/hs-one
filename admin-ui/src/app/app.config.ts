@@ -12,11 +12,13 @@ import {
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService, IconModule } from '@coreui/icons-angular';
 import { routes } from './app.routes';
-import { ADMIN_API_BASE_URL, AdminApiAuthApiClient } from './api/admin-api.service.generated';
+import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiTestApiClient, AdminApiTokenApiClient } from './api/admin-api.service.generated';
 import { environment } from '../environments/environment';
 import { TokenStorageService } from './shared/services/token-storage.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthGuard } from './shared/services/auth.guard';
+import { TokenInterceptor } from './shared/interceptors/token.interceptor';
+import { GlobalHttpInterceptorService } from './shared/interceptors/error-handler.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,10 +37,22 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SidebarModule, DropdownModule, IconModule),
     IconSetService,
     AdminApiAuthApiClient,
+    AdminApiTestApiClient,
+    AdminApiTokenApiClient,
     TokenStorageService,
     AuthGuard,
     provideAnimations(),
     {provide: ADMIN_API_BASE_URL, useValue: environment.API_URL},
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: GlobalHttpInterceptorService,
+      multi: true,
+    }
   ]
 };
