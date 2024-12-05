@@ -8,7 +8,7 @@ namespace HSOne.Data
 {
     public class HSOneContext : IdentityDbContext<AppUser, AppRole, Guid>
     {
-        public HSOneContext(DbContextOptions<HSOneContext> options) : base(options)
+        public HSOneContext(DbContextOptions options) : base(options)
         {
         }
 

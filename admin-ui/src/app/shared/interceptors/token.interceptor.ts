@@ -21,7 +21,7 @@ import {
   AuthenticatedResult,
   TokenRequest,
 } from '../../api/admin-api.service.generated';
-const TOKEN_HEADER_KEY = 'Authorization'; 
+const TOKEN_HEADER_KEY = 'Authorization'; // for Spring Boot back-end
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {

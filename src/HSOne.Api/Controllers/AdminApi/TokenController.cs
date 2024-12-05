@@ -40,7 +40,7 @@ namespace HSOne.Api.Controllers.AdminApi
             var userName = principal.Identity.Name;
             var user = await _userManager.FindByNameAsync(userName);
 
-            if (user is null || user.RefreshToken == refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             {
                 return BadRequest("Invalid client request");
             }
@@ -50,11 +50,11 @@ namespace HSOne.Api.Controllers.AdminApi
             user.RefreshToken = newRefreshToken;
             await _userManager.UpdateAsync(user);
 
-            return new AuthenticatedResult
+            return Ok(new AuthenticatedResult()
             {
                 Token = newAccessToken,
                 RefreshToken = newRefreshToken
-            };
+            });
         }
 
         [HttpPost("revoke"), Authorize]

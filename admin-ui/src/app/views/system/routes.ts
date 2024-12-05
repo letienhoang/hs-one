@@ -17,4 +17,14 @@ export const routes: Routes = [
     },
     canActivate: [AuthGuard],
   },
+  { 
+    path: 'roles',
+    loadComponent: () =>
+      import('./roles/role.component').then((m) => m.RoleComponent),
+    data: {
+      title: $localize`Roles`,
+      requiredPolicy: 'Permissions.Roles.View',
+    },
+    canActivate: [AuthGuard],
+  } 
 ];

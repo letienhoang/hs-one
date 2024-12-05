@@ -14,6 +14,7 @@ import {
   InputGroupTextDirective,
   FormControlDirective,
   ButtonDirective,
+  SpinnerComponent,
 } from '@coreui/angular';
 import {
   FormBuilder,
@@ -54,7 +55,8 @@ import { Subject, takeUntil } from 'rxjs';
     ButtonDirective,
     NgStyle,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    SpinnerComponent,
   ],
 })
 export class LoginComponent implements OnInit, OnDestroy {

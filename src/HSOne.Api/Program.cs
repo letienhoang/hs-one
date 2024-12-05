@@ -1,3 +1,5 @@
+using HSOne.Api;
+using HSOne.Api.Authorization;
 using HSOne.Api.Filters;
 using HSOne.Api.Services;
 using HSOne.Core.ConfigOptions;
@@ -8,6 +10,7 @@ using HSOne.Data;
 using HSOne.Data.Repositories;
 using HSOne.Data.SeedWorks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,11 +23,13 @@ var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 var HSOneCorsPolicy = "HSOneCorsPolicy";
 
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddCors(o => o.AddPolicy(HSOneCorsPolicy, builder =>
 {
-    builder.AllowAnyMethod()
+    builder.WithOrigins(configuration["AllowedOrigins"])
         .AllowAnyHeader()
-        .WithOrigins(configuration["AllowedOrigins"]?.Split(";"))
+        .AllowAnyMethod()
         .AllowCredentials();
 }));
 
@@ -110,10 +115,8 @@ builder.Services.AddAuthentication(o =>
     cfg.SaveToken = true;
     cfg.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ClockSkew = TimeSpan.FromSeconds(0),
         ValidIssuer = configuration["JwtTokenSettings:Issuer"],
-        ValidAudience = configuration["JwtTokenSettings:Audience"],
+        ValidAudience = configuration["JwtTokenSettings:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSettings:Key"]))
     };
 });
@@ -142,6 +145,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Migrate and seed database
-//app.MigrationDatabase();
+app.MigrationDatabase();
 
 app.Run();

@@ -113,7 +113,7 @@ namespace HSOne.Api.Controllers.AdminApi
 
         [HttpGet("paging")]
         [Authorize(Permissions.Roles.View)]
-        public async Task<ActionResult<PagedResult<RoleDto>>> GetPagingAsync(string? keyword, Guid? categoryId, int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<PagedResult<RoleDto>>> GetPagingAsync(string? keyword, int pageIndex = 1, int pageSize = 10)
         {
             var query = _roleManager.Roles;
             if (!string.IsNullOrEmpty(keyword))

@@ -12,13 +12,14 @@ import {
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService, IconModule } from '@coreui/icons-angular';
 import { routes } from './app.routes';
-import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiTestApiClient, AdminApiTokenApiClient } from './api/admin-api.service.generated';
+import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiRoleApiClient, AdminApiTestApiClient, AdminApiTokenApiClient } from './api/admin-api.service.generated';
 import { environment } from '../environments/environment';
 import { TokenStorageService } from './shared/services/token-storage.service';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthGuard } from './shared/services/auth.guard';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 import { GlobalHttpInterceptorService } from './shared/interceptors/error-handler.interceptor';
+import { BlockUIModule } from 'primeng/blockui';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,11 +35,12 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
       withHashLocation()
     ),
-    importProvidersFrom(SidebarModule, DropdownModule, IconModule),
+    importProvidersFrom(SidebarModule, DropdownModule, IconModule, BlockUIModule),
     IconSetService,
     AdminApiAuthApiClient,
     AdminApiTestApiClient,
     AdminApiTokenApiClient,
+    AdminApiRoleApiClient,
     TokenStorageService,
     AuthGuard,
     provideAnimations(),
