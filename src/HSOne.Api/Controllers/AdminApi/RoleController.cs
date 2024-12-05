@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HSOne.Api.Extensions;
 using HSOne.Api.Filters;
 using HSOne.Core.Domain.Identity;
 using HSOne.Core.Models;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using static HSOne.Core.SeedWorks.Constants.Permissions;
 
 namespace HSOne.Api.Controllers.AdminApi
 {
@@ -93,6 +96,12 @@ namespace HSOne.Api.Controllers.AdminApi
                     return NotFound();
                 }
 
+                var claims = await _roleManager.GetClaimsAsync(role);
+                foreach (var claim in claims)
+                {
+                    await _roleManager.RemoveClaimAsync(role, claim);
+                }
+
                 var result = await _roleManager.DeleteAsync(role);
                 if (!result.Succeeded)
                 {
@@ -140,6 +149,83 @@ namespace HSOne.Api.Controllers.AdminApi
             };
 
             return Ok(pagedResult);
+        }
+
+        [HttpGet("all")]
+        [Authorize(Permissions.Roles.View)]
+        public async Task<ActionResult<List<RoleDto>>> GetAllAsync()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+            var response = _mapper.Map<List<RoleDto>>(roles);
+            return Ok(response);
+        }
+
+        [HttpGet("{roleId}/permissions")]
+        [Authorize(Permissions.Roles.View)]
+        public async Task<ActionResult<PermissionDto>> GetPermissionsAsync(string roleId)
+        {
+            var model = new PermissionDto()
+            {
+                RoleId = "",
+                RoleClaims = new List<RoleClaimsDto>()
+            };
+            var allPermissions = new List<RoleClaimsDto>();
+            var types = typeof(Permissions).GetTypeInfo().DeclaredNestedTypes;
+            foreach(var type in types)
+            {
+                allPermissions.GetPermissions(type);
+            }    
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                return NotFound();
+            }
+            model.RoleId = role.Id.ToString();
+            var claims = await _roleManager.GetClaimsAsync(role);
+            var allClaimValues = allPermissions.Select(x => x.Value).ToList();
+            var roleClaimValues = claims.Select(x => x.Value).ToList();
+            var authorizedClaims = allClaimValues.Intersect(roleClaimValues).ToList();
+            foreach (var permission in allPermissions)
+            {
+                if (authorizedClaims.Any(a=>a == permission.Value))
+                {
+                    permission.IsSelected = true;
+                }
+            }
+            model.RoleClaims = allPermissions;
+
+            return Ok(model);
+        }
+
+        [HttpPut("permissions")]
+        [Authorize(Permissions.Roles.Edit)]
+        public async Task<IActionResult> UpdatePermissionsAsync([FromBody] PermissionDto request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var role = await _roleManager.FindByIdAsync(request.RoleId);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            var claims = await _roleManager.GetClaimsAsync(role);
+            foreach (var claim in claims)
+            {
+                await _roleManager.RemoveClaimAsync(role, claim);
+            }
+
+            var selectedClaims = request.RoleClaims.Where(x => x.IsSelected).ToList();
+            foreach (var claim in selectedClaims)
+            {
+                await _roleManager.AddPermissionClaimAsync(role, claim.Value);
+            }
+
+            return Ok();
         }
     }
 }

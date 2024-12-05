@@ -9,7 +9,7 @@
           <div class="col">
             <button pButton appPolicy="Permissons.Roles.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus"></button>
             <button pButton appPolicy="Permissons.Roles.Delete" (click)="deleteItems()" class="p-button-sm p-button-danger me-2" [outlined]="true" icon="pi pi-trash" *ngIf="selectedItems.length > 0"></button>
-            <button pButton appPolicy="Permissons.Roles.Delete" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" *ngIf="selectedItems.length == 1" ></button>
+            <button pButton appPolicy="Permissons.Roles.Edit" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" *ngIf="selectedItems.length == 1" ></button>
           </div>
           <div class="col col-4">
             <p-inputGroup>
@@ -33,7 +33,7 @@
           <td>{{item.name}}</td>
           <td>{{item.displayName}}</td>
           <td>
-            <button pButton (click)="showPermissionModal(item.id)" class="p-button-sm" severity="contrast" [outlined]="true" icon="pi pi-objects-column"></button>
+            <button pButton (click)="showPermissionModal(item.id, item.name)" class="p-button-sm" severity="contrast" [outlined]="true" icon="pi pi-objects-column"></button>
           </td>
         </tr>
       </ng-template>

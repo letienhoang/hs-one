@@ -26,6 +26,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupModule } from 'primeng/inputgroup';
+import { PermissionGrantComponent } from './permission-grant.component';
 
 @Component({
   selector: 'app-roles',
@@ -94,7 +95,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(event: any) {
-    this.pageIndex = event.page;
+    this.pageIndex = event.page + 1;
     this.pageSize = event.rows;
     this.loadDatas();
   }
@@ -190,8 +191,27 @@ export class RoleComponent implements OnInit, OnDestroy {
     });
   }
 
-  showPermissionModal(role: string) {
-    console.log(role);
+  showPermissionModal(id: string, name: string) {
+    const ref = this.dialogService.open(PermissionGrantComponent, {
+      data: {
+          id: id,
+      },
+      header: name,
+      width: '70%',
+  });
+  const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+  const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+  const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+  dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+  ref.onClose.subscribe((data: RoleDto) => {
+      if (data) {
+          this.toastService.showSuccess(
+              MessageConstants.UPDATED_OK_MSG
+          );
+          this.selectedItems = [];
+          this.loadDatas();
+      }
+  });
   }
 
   ngOnDestroy(): void {
