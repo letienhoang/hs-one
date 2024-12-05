@@ -9,15 +9,20 @@ import { iconSubset } from './icons/icon-subset';
 import { ToastContainerComponent } from './shared/components/toast-container.component';
 import { IconSetService  } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet, } from '@coreui/icons';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-root',
   template: `
     <app-toast-container></app-toast-container>
+    <p-confirmDialog header="Confirm" acceptLabel="Yes" rejectLabel="No" icon="pi pi-exclamation-triangle"
+     rejectButtonStyleClass="p-button-outlined me-3 p-button-contrast" acceptButtonStyleClass="p-button-outlined">
+    </p-confirmDialog>
     <router-outlet />
   `,
   standalone: true,
-  imports: [RouterOutlet, ToastContainerComponent]
+  imports: [RouterOutlet, ToastContainerComponent, ConfirmDialogModule, DynamicDialogModule]
 })
 export class AppComponent implements OnInit {
   title = 'HSOne CMS Admin UI';

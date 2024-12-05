@@ -34,7 +34,11 @@ namespace HSOne.Api.Controllers.AdminApi
                 return BadRequest("Invalid request");
             }
 
-            var role = _mapper.Map<AppRole>(request);
+            var role = new AppRole()
+            {
+                Name = request.Name,
+                DisplayName = request.DisplayName
+            };
             var result = await _roleManager.CreateAsync(role);
             if (!result.Succeeded)
             {
@@ -60,7 +64,9 @@ namespace HSOne.Api.Controllers.AdminApi
                 return NotFound();
             }
 
-            _mapper.Map(request, role);
+            role.Name = request.Name;
+            role.DisplayName = request.DisplayName;
+
             var result = await _roleManager.UpdateAsync(role);
             if (!result.Succeeded)
             {

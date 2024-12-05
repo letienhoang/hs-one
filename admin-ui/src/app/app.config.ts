@@ -20,6 +20,9 @@ import { AuthGuard } from './shared/services/auth.guard';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 import { GlobalHttpInterceptorService } from './shared/interceptors/error-handler.interceptor';
 import { BlockUIModule } from 'primeng/blockui';
+import { ConfirmationService } from 'primeng/api';
+import { UtilityService } from './shared/services/utility.service';
+import { DialogService } from 'primeng/dynamicdialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,6 +40,9 @@ export const appConfig: ApplicationConfig = {
     ),
     importProvidersFrom(SidebarModule, DropdownModule, IconModule, BlockUIModule),
     IconSetService,
+    ConfirmationService,
+    UtilityService,
+    DialogService, 
     AdminApiAuthApiClient,
     AdminApiTestApiClient,
     AdminApiTokenApiClient,

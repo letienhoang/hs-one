@@ -3,19 +3,19 @@
     <h4 class="bold">Roles List</h4>
   </ng-template>
   <ng-template pTemplate="content" class="p-0">
-    <p-table #dt [value]="roles" selectionMode="multiple" dataKey="id" [(selection)]="selectedRoles" [metaKeySelection]="true" class="m-0">
+    <p-table #dt [value]="items" selectionMode="multiple" dataKey="id" [(selection)]="selectedItems" [metaKeySelection]="true" class="m-0">
       <ng-template pTemplate="caption">
         <div class="row">
-          <div class="col col-6">
-            <button cButton color="success" (click)="showAddModal()" cTooltip="Add" variant="outline"><svg cIcon name="cil-plus" size="sm"></svg></button>
-            <button cButton color="danger" (click)="deleteItems()" cTooltip="Deletes" *ngIf="selectedRoles.length > 0" variant="outline"><svg cIcon name="cil-delete" size="sm"></svg></button>
-            <button cButton color="info" (click)="showEditModal()" cTooltip="Edit" *ngIf="selectedRoles.length == 1" variant="outline"><svg cIcon name="cil-pencil" size="sm"></svg></button>
-          </div>
           <div class="col">
-            <input pInputText type="text" (keyup.enter)="loadDatas()" [(ngModel)]="keyword" placeholder="Search..." class="w-100"/>
+            <button pButton appPolicy="Permissons.Roles.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus"></button>
+            <button pButton appPolicy="Permissons.Roles.Delete" (click)="deleteItems()" class="p-button-sm p-button-danger me-2" [outlined]="true" icon="pi pi-trash" *ngIf="selectedItems.length > 0"></button>
+            <button pButton appPolicy="Permissons.Roles.Delete" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" *ngIf="selectedItems.length == 1" ></button>
           </div>
-          <div class="col">
-            <button type="button" cButton (click)="loadDatas()" variant="outline">Search</button>
+          <div class="col col-4">
+            <p-inputGroup>
+              <input type="text" pInputText (keyup.enter)="loadDatas()" [(ngModel)]="keyword" placeholder="Keyword" class=""/>
+              <button pButton (click)="loadDatas()" class="p-button-sm" severity="secondary" [outlined]="true" icon="pi pi-search"></button>
+            </p-inputGroup>
           </div>
         </div>
       </ng-template>
@@ -27,13 +27,13 @@
           <th>Actions</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-role>
+      <ng-template pTemplate="body" let-item>
         <tr>
-          <td><p-tableCheckbox [value]="role"></p-tableCheckbox></td>
-          <td>{{role.name}}</td>
-          <td>{{role.displayName}}</td>
+          <td><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
+          <td>{{item.name}}</td>
+          <td>{{item.displayName}}</td>
           <td>
-            <button cButton color="dark" (click)="showPermissionModal(role.id)" cTooltip="Permissions" variant="outline"><svg cIcon name="cil-handshake" size="sm"></svg></button>
+            <button pButton (click)="showPermissionModal(item.id)" class="p-button-sm" severity="contrast" [outlined]="true" icon="pi pi-objects-column"></button>
           </td>
         </tr>
       </ng-template>
