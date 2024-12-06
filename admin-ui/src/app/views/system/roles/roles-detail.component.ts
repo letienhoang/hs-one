@@ -10,27 +10,17 @@ import { Subject, takeUntil } from 'rxjs';
 import { AdminApiRoleApiClient, RoleDto } from '../../../api/admin-api.service.generated';
 import { UtilityService } from '../../../shared/services/utility.service';
 import { KeyFilterModule } from 'primeng/keyfilter';
-import { ReactiveFormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { PanelModule } from 'primeng/panel';
-import { BlockUIModule } from 'primeng/blockui';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { HSOneSharedModule } from '../../../shared/modules/hs-one-shared.module';
+import { RolesSharedModule } from './roles-shared.module';
 
 @Component({
     templateUrl: 'roles-detail.component.html',
     standalone: true,
     providers: [],
     imports: [
-        ReactiveFormsModule,
-        InputTextModule,
-        ButtonModule,
-        PanelModule,
-        BlockUIModule,
-        ProgressSpinnerModule,
-        KeyFilterModule,
-        HSOneSharedModule
+        RolesSharedModule,
+        HSOneSharedModule,
+        KeyFilterModule
     ]
 })
 export class RolesDetailComponent implements OnInit, OnDestroy {

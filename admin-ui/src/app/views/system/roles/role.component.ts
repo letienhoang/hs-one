@@ -4,29 +4,15 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import {
-  UtilitiesModule,
-  GridModule,
-  TooltipModule
-  } from '@coreui/angular';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminApiRoleApiClient, RoleDto, RoleDtoPagedResult } from 'src/app/api/admin-api.service.generated';
 import { ToastService } from 'src/app/shared/services/toast.service';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { BlockUIModule } from 'primeng/blockui';
-import { PaginatorModule } from 'primeng/paginator';
-import { TableModule } from 'primeng/table';
-import { PanelModule } from 'primeng/panel';
-import { NgIf } from '@angular/common';
-import { InputTextModule } from 'primeng/inputtext';
 import { MessageConstants } from 'src/app/shared/constants/messages.constants';
 import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
 import { RolesDetailComponent } from './roles-detail.component';
 import { ConfirmationService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { RippleModule } from 'primeng/ripple';
-import { InputGroupModule } from 'primeng/inputgroup';
 import { PermissionGrantComponent } from './permission-grant.component';
+import { RolesSharedModule } from './roles-shared.module';
 
 @Component({
   selector: 'app-roles',
@@ -35,19 +21,7 @@ import { PermissionGrantComponent } from './permission-grant.component';
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
-    TableModule, 
-    UtilitiesModule,
-    GridModule,
-    ProgressSpinnerModule,
-    BlockUIModule,
-    PaginatorModule,
-    TooltipModule,
-    PanelModule,
-    NgIf,
-    InputTextModule,
-    ButtonModule,
-    RippleModule,
-    InputGroupModule
+    RolesSharedModule
   ],
 })
 export class RoleComponent implements OnInit, OnDestroy {

@@ -1,25 +1,15 @@
 import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminApiRoleApiClient, PermissionDto, RoleClaimsDto } from '../../../api/admin-api.service.generated';
-import { PanelModule } from 'primeng/panel';
-import { CheckboxModule } from 'primeng/checkbox';
-import { NgFor } from '@angular/common';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { BlockUIModule } from 'primeng/blockui';
+import { RolesSharedModule } from './roles-shared.module';
 
 @Component({
     templateUrl: 'permission-grant.component.html',
     standalone: true,
     imports: [
-        PanelModule,
-        ReactiveFormsModule,
-        CheckboxModule,
-        NgFor,
-        ProgressSpinnerModule,
-        BlockUIModule,
-        FormsModule
+        RolesSharedModule
     ]
 })
 export class PermissionGrantComponent implements OnInit, OnDestroy {

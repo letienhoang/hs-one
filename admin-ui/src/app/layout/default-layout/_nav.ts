@@ -67,12 +67,12 @@ export const navItems: INavData[] = [
     }
   },
   {
-    name: 'Users',
+    name: 'Identity',
     url: '/system',
     iconComponent: { name: 'cil-star' },
     children: [
       {
-        name: 'All Users',
+        name: 'Users',
         url: '/system/users',
         icon: 'nav-icon-bullet',
         attributes: {
