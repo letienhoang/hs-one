@@ -3,13 +3,13 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminApiRoleApiClient, PermissionDto, RoleClaimsDto } from '../../../api/admin-api.service.generated';
-import { RolesSharedModule } from './roles-shared.module';
+import { RoleSharedModule } from './role-shared.module';
 
 @Component({
     templateUrl: 'permission-grant.component.html',
     standalone: true,
     imports: [
-        RolesSharedModule
+        RoleSharedModule
     ]
 })
 export class PermissionGrantComponent implements OnInit, OnDestroy {

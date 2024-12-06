@@ -11,19 +11,19 @@ import { AdminApiRoleApiClient, RoleDto } from '../../../api/admin-api.service.g
 import { UtilityService } from '../../../shared/services/utility.service';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { HSOneSharedModule } from '../../../shared/modules/hs-one-shared.module';
-import { RolesSharedModule } from './roles-shared.module';
+import { RoleSharedModule } from './role-shared.module';
 
 @Component({
-    templateUrl: 'roles-detail.component.html',
+    templateUrl: 'role-detail.component.html',
     standalone: true,
     providers: [],
     imports: [
-        RolesSharedModule,
+        RoleSharedModule,
         HSOneSharedModule,
         KeyFilterModule
     ]
 })
-export class RolesDetailComponent implements OnInit, OnDestroy {
+export class RoleDetailComponent implements OnInit, OnDestroy {
     private ngUnsubscribe = new Subject<void>();
 
     // Default

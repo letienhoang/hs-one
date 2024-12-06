@@ -58,4 +58,4 @@ import { CheckboxModule } from 'primeng/checkbox';
         NgFor
     ]
 })
-export class RolesSharedModule { }
+export class RoleSharedModule { }

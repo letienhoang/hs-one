@@ -9,10 +9,10 @@ import { AdminApiRoleApiClient, RoleDto, RoleDtoPagedResult } from 'src/app/api/
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { MessageConstants } from 'src/app/shared/constants/messages.constants';
 import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
-import { RolesDetailComponent } from './roles-detail.component';
+import { RoleDetailComponent } from './role-detail.component';
 import { ConfirmationService } from 'primeng/api';
 import { PermissionGrantComponent } from './permission-grant.component';
-import { RolesSharedModule } from './roles-shared.module';
+import { RoleSharedModule } from './role-shared.module';
 
 @Component({
   selector: 'app-roles',
@@ -21,7 +21,7 @@ import { RolesSharedModule } from './roles-shared.module';
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
-    RolesSharedModule
+    RoleSharedModule
   ],
 })
 export class RoleComponent implements OnInit, OnDestroy {
@@ -85,7 +85,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   }
 
   showAddModal() {
-    const ref = this.dialogService.open(RolesDetailComponent, {
+    const ref = this.dialogService.open(RoleDetailComponent, {
       header: 'Add Role',
       width: '70%',
     });
@@ -108,7 +108,7 @@ export class RoleComponent implements OnInit, OnDestroy {
       return;
     }
     var id = this.selectedItems[0].id;
-    const ref = this.dialogService.open(RolesDetailComponent, {
+    const ref = this.dialogService.open(RoleDetailComponent, {
       data: {
         id: id,
       },
