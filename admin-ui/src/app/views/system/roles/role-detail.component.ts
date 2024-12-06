@@ -79,7 +79,7 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
     loadDetail(id: any) {
         this.toggleBlockUI(true);
         this.roleService
-            .get(id)
+            .getRole(id)
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe({
                 next: (response: RoleDto) => {
@@ -101,7 +101,7 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
     private saveData() {
         if (this.utilService.isEmpty(this.config.data?.id)) {
             this.roleService
-                .create(this.form.value)
+                .createRole(this.form.value)
                 .pipe(takeUntil(this.ngUnsubscribe))
                 .subscribe(() => {
                     this.ref.close(this.form.value);
@@ -109,7 +109,7 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
                 });
         } else {
             this.roleService
-                .update(this.config.data.id, this.form.value)
+                .updateRole(this.config.data.id, this.form.value)
                 .pipe(takeUntil(this.ngUnsubscribe))
                 .subscribe(() => {
                     this.toggleBlockUI(false);

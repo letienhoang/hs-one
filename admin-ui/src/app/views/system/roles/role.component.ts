@@ -53,7 +53,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   loadDatas() {
     this.toggleBlockUI(true);
     this.roleApiService
-      .getPaging(this.keyword, this.pageIndex, this.pageSize)
+      .getRolesPaging(this.keyword, this.pageIndex, this.pageSize)
       .pipe(takeUntil(this.ngUnsubcribe))
       .subscribe({
         next: (response: RoleDtoPagedResult) => {
@@ -150,7 +150,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   deleteItemsConfirm(ids: any[]) {
     this.toggleBlockUI(true);
 
-    this.roleApiService.delete(ids).subscribe({
+    this.roleApiService.deleteRoles(ids).subscribe({
         next: () => {
             this.toastService.showSuccess(
                 MessageConstants.DELETED_OK_MSG

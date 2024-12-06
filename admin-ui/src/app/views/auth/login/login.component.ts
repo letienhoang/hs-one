@@ -100,13 +100,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       error: (error: any) => {
         if (error.status === 400) {
           this.toastService.showError('Invalid username or password');
-          return;
         } else if (error.status === 401) {
           this.toastService.showError('Invalid username or password');
-          return;
         } else if (error.status === 403) {
           this.toastService.showError('You do not have permission to access this resource');
-          return;
         } else {
           this.toastService.showError(error.message);
         }

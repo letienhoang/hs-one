@@ -24,4 +24,6 @@ export class MessageConstants {
     public static SET_VIP_POINT_SUCCESS_MSG = 'VIP points updated successfully.';
     public static TOPUP_MONEY_SUCCESS_MSG = 'Top-up completed successfully.';
     public static ROLE_ASSIGN_SUCCESS_MSG = 'Role assigned successfully.';
+
+    public static GET_DATA_FAIL = 'Failed to get data.';
 }

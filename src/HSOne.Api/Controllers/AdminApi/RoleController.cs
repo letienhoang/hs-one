@@ -30,7 +30,7 @@ namespace HSOne.Api.Controllers.AdminApi
         [HttpPost("create")]
         [ValidateModel]
         [Authorize(Permissions.Roles.Create)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateUpdateRoleRequest request)
+        public async Task<IActionResult> CreateRoleAsync([FromBody] CreateUpdateRoleRequest request)
         {
             if (request == null)
             {
@@ -54,7 +54,7 @@ namespace HSOne.Api.Controllers.AdminApi
         [HttpPut("update/{id}")]
         [ValidateModel]
         [Authorize(Permissions.Roles.Edit)]
-        public async Task<IActionResult> UpdateAsync(Guid id,[FromBody] CreateUpdateRoleRequest request)
+        public async Task<IActionResult> UpdateRoleAsync(Guid id,[FromBody] CreateUpdateRoleRequest request)
         {
             if (request == null)
             {
@@ -81,7 +81,7 @@ namespace HSOne.Api.Controllers.AdminApi
 
         [HttpDelete]
         [Authorize(Permissions.Roles.Delete)]
-        public async Task<IActionResult> DeleteAsync([FromQuery] Guid[] ids)
+        public async Task<IActionResult> DeleteRolesAsync([FromQuery] Guid[] ids)
         {
             if (ids == null || ids.Length == 0)
             {
@@ -114,7 +114,7 @@ namespace HSOne.Api.Controllers.AdminApi
 
         [HttpGet("{id}")]
         [Authorize(Permissions.Roles.View)]
-        public async Task<ActionResult<RoleDto>> GetAsync(Guid id)
+        public async Task<ActionResult<RoleDto>> GetRoleAsync(Guid id)
         {
             var role = await _roleManager.FindByIdAsync(id.ToString());
             if (role == null)
@@ -128,7 +128,7 @@ namespace HSOne.Api.Controllers.AdminApi
 
         [HttpGet("paging")]
         [Authorize(Permissions.Roles.View)]
-        public async Task<ActionResult<PagedResult<RoleDto>>> GetPagingAsync(string? keyword, int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<PagedResult<RoleDto>>> GetRolesPagingAsync(string? keyword, int pageIndex = 1, int pageSize = 10)
         {
             var query = _roleManager.Roles;
             if (!string.IsNullOrEmpty(keyword))
@@ -153,7 +153,7 @@ namespace HSOne.Api.Controllers.AdminApi
 
         [HttpGet("all")]
         [Authorize(Permissions.Roles.View)]
-        public async Task<ActionResult<List<RoleDto>>> GetAllAsync()
+        public async Task<ActionResult<List<RoleDto>>> GetAllRolesAsync()
         {
             var roles = await _roleManager.Roles.ToListAsync();
             var response = _mapper.Map<List<RoleDto>>(roles);

@@ -12,7 +12,7 @@ import {
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService, IconModule } from '@coreui/icons-angular';
 import { routes } from './app.routes';
-import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiRoleApiClient, AdminApiTestApiClient, AdminApiTokenApiClient } from './api/admin-api.service.generated';
+import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiRoleApiClient, AdminApiTestApiClient, AdminApiTokenApiClient, AdminApiUserApiClient } from './api/admin-api.service.generated';
 import { environment } from '../environments/environment';
 import { TokenStorageService } from './shared/services/token-storage.service';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -47,6 +47,7 @@ export const appConfig: ApplicationConfig = {
     AdminApiTestApiClient,
     AdminApiTokenApiClient,
     AdminApiRoleApiClient,
+    AdminApiUserApiClient,
     TokenStorageService,
     AuthGuard,
     provideAnimations(),

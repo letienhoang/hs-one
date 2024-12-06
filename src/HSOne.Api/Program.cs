@@ -36,7 +36,9 @@ builder.Services.AddCors(o => o.AddPolicy(HSOneCorsPolicy, builder =>
 // Config DB Conext and ASP.NET Core Identity
 builder.Services.AddDbContext<HSOneContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<HSOneContext>();
+builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<HSOneContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

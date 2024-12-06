@@ -23,7 +23,7 @@
 @import "examples";
 
 // Bootstrap
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap/dist/css/bootstrap.min.css";
 
 // PrimeNG
 @import "primeng/resources/themes/lara-light-blue/theme.css";
@@ -33,17 +33,24 @@
 
 
 @font-face {
-    font-family: 'Inter';
-    src: url('/assets/fonts/inter-roman/Inter-roman.var.woff2') format('woff2');
-    font-weight: 100 900;
-    font-style: normal;
-  }
+  font-family: "Inter";
+  src: url("/assets/fonts/inter-roman/Inter-roman.var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+}
 
-  body {
-    font-family: 'Inter', sans-serif !important;
-  }
+body {
+  font-family: "Inter", sans-serif !important;
+}
 
-  button.p-button {
-    border-radius: 15% !important;
-  }
-  
+button.p-button {
+  border-radius: 15% !important;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}

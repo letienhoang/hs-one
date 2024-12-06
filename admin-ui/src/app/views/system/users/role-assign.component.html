@@ -1,0 +1,35 @@
+<p-panel #pnlDetail header="Information" showHeader="false" [toggleable]="true" [collapsed]="false">
+  <p-pickList
+    [source]="availableRoles"
+    [target]="seletedRoles"
+    sourceHeader="Available Roles"
+    targetHeader="The Roles already"
+    [dragdrop]="true"
+    [responsive]="true"
+  >
+    <ng-template let-role pTemplate="item">
+      <div>
+        {{ role }}
+      </div>
+    </ng-template>
+  </p-pickList>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end">
+        <button type="button" (click)="saveChange()" pButton [disabled]="btnDisabled" [outlined]="true" icon="pi pi-save"></button>
+    </div>
+  </ng-template>
+
+  <p-blockUI [target]="pnlDetail" [blocked]="blockedPanelDetail">
+    <p-progressSpinner
+      [style]="{
+        width: '100px',
+        height: '100px',
+        position: 'absolute',
+        top: '25%',
+        left: '50%'
+      }"
+      strokeWidth="2"
+      animationDuration=".5s"
+    ></p-progressSpinner>
+  </p-blockUI>
+</p-panel>
