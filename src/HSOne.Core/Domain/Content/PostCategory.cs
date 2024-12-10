@@ -14,7 +14,7 @@ namespace HSOne.Core.Domain.Content
         [MaxLength(256)]
         public required string Name { set; get; }
 
-        [Column(TypeName = "varchar(250)")]
+        [Column(TypeName = "varchar(256)")]
         public required string Slug { set; get; }
 
         public Guid? ParentId { set; get; }
