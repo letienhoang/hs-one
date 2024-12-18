@@ -11,6 +11,8 @@ import { MessageConstants } from '../../../shared/constants/messages.constants';
 import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
 import { ConfirmationService } from 'primeng/api';
 import { PostCategorySharedModule } from './post-category-shared.module';
+import { PostCategoryDetailComponent } from './post-category-detail.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-post-categoryies',
@@ -19,7 +21,8 @@ import { PostCategorySharedModule } from './post-category-shared.module';
   changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
-    PostCategorySharedModule
+    PostCategorySharedModule,
+    FormsModule
   ],
 })
 export class PostCategoryComponent implements OnInit, OnDestroy {
@@ -83,21 +86,21 @@ export class PostCategoryComponent implements OnInit, OnDestroy {
   }
 
   showAddModal() {
-    // const ref = this.dialogService.open(PostCategoryDetailComponent, {
-    //   header: 'Add Post Category',
-    //   width: '70%',
-    // });
-    // const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
-    // const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
-    // const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
-    // dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
-    // ref.onClose.subscribe((data: PostCategoryDto) => {
-    //   if (data) {
-    //     this.toastService.showSuccess(MessageConstants.CREATED_OK_MSG);
-    //     this.selectedItems = [];
-    //     this.loadDatas();
-    //   }
-    // });
+    const ref = this.dialogService.open(PostCategoryDetailComponent, {
+      header: 'Add Post Category',
+      width: '70%',
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: PostCategoryDto) => {
+      if (data) {
+        this.toastService.showSuccess(MessageConstants.CREATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadDatas();
+      }
+    });
   }
 
   showEditModal() {

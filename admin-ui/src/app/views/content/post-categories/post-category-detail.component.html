@@ -1,0 +1,65 @@
+<form class="form-horizontal form-label-left" skipValidation [formGroup]="form" (ngSubmit)="saveChange()">
+    <p-panel #pnlDetail header="Information" showHeader="false" [toggleable]="false" [collapsed]="false">
+        <div class="formgrid grid">
+            <div class="row mb-3">
+                <div class="field col-6">
+                    <label for="name">Name <span class="required">*</span></label>
+                    <input id="name" type="text" pInputText [pKeyFilter]="noSpecial" formControlName="name"
+                        [style]="{ width: '100%' }" />
+                    <app-validation-message [entityForm]="form" fieldName="name"
+                        [validationMessages]="validationMessages">
+                    </app-validation-message>
+                </div>
+                <div class="field col-6">
+                    <label for="slug" class="block">Slug <span class="required">*</span></label>
+                    <input id="slug" type="text" pInputText [pKeyFilter]="noSpecial" formControlName="slug"
+                        [style]="{ width: '100%' }" />
+                    <app-validation-message [entityForm]="form" fieldName="slug"
+                        [validationMessages]="validationMessages">
+                    </app-validation-message>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="field col-6">
+                    <label for="parentId" class="block">Parent</label>
+                    <p-select [options]="parentIds" formControlName="parentId"
+                     placeholder="Select Parent" [editable]="true"
+                     optionLabel="parentId" class="w-full" [style]="{ width: '100%' }"  />
+                </div>
+                <div class="field col-3">
+                    <label for="sortOrder">Sort Order <span class="required">*</span></label>
+                    <input id="sortOrder" type="number" pInputText [pKeyFilter]="noSpecial" formControlName="sortOrder"
+                        [style]="{ width: '100%' }" />
+                    <app-validation-message [entityForm]="form" fieldName="sortOrder"
+                        [validationMessages]="validationMessages">
+                    </app-validation-message>
+                </div>
+                <div class="field-checkbox col-3 pt-4">
+                    <p-checkbox formControlName="isActive" [binary]="true" id="isActive" class="me-2"></p-checkbox>
+                    <label for="isActive">Active</label>
+                </div>
+            </div>
+        
+            <div class="row mb-3">
+                <div class="field col-6">
+                    <label for="seoKeywords">SEO Keywords</label>
+                    <textarea pTextarea formControlName="seoKeywords" placeholder="Normal" rows="3" [style]="{ width: '100%' }" ></textarea>
+                </div>
+                <div class="field col-6">
+                    <label for="seoDescription">SEO Description</label>
+                    <textarea pTextarea formControlName="seoDescription" placeholder="Normal" rows="3" [style]="{ width: '100%' }" ></textarea>
+                </div>
+            </div>
+
+        </div>
+        <ng-template #footer>
+            <div class="flex justify-content-end">
+                <button type="submit" pButton [disabled]="!form.valid || btnDisabled" [outlined]="true" icon="pi pi-save"></button>
+            </div>
+        </ng-template>
+
+        <p-blockUI [target]="pnlDetail" [blocked]="blockedPanelDetail">
+            <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px', position: 'absolute', top: '25%', left: '50%' }"/>
+        </p-blockUI>
+    </p-panel>
+</form>

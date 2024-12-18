@@ -19,10 +19,13 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { AuthGuard } from './shared/services/auth.guard';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 import { GlobalHttpInterceptorService } from './shared/interceptors/error-handler.interceptor';
-import { BlockUIModule } from 'primeng/blockui';
+import { BlockUI } from 'primeng/blockui';
 import { ConfirmationService } from 'primeng/api';
 import { UtilityService } from './shared/services/utility.service';
 import { DialogService } from 'primeng/dynamicdialog';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,7 +41,13 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
       withHashLocation()
     ),
-    importProvidersFrom(SidebarModule, DropdownModule, IconModule, BlockUIModule),
+    provideAnimationsAsync(),
+        providePrimeNG({ 
+            theme: {
+                preset: Aura
+            }
+        }),
+    importProvidersFrom(SidebarModule, DropdownModule, IconModule),
     IconSetService,
     ConfirmationService,
     UtilityService,

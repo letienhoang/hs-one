@@ -10,7 +10,7 @@ import { ToastContainerComponent } from './shared/components/toast-container.com
 import { IconSetService  } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet, } from '@coreui/icons';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DynamicDialog } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,7 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
     <router-outlet />
   `,
   standalone: true,
-  imports: [RouterOutlet, ToastContainerComponent, ConfirmDialogModule, DynamicDialogModule]
+  imports: [RouterOutlet, ToastContainerComponent, ConfirmDialogModule, DynamicDialog]
 })
 export class AppComponent implements OnInit {
   title = 'HSOne CMS Admin UI';

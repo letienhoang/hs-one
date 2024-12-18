@@ -18,6 +18,7 @@ namespace HSOne.Core.Models.Content
         [Required]
         public DateTime DateCreated { set; get; }
         public DateTime? DateModified { set; get; }
+        public string? SeoKeywords { set; get; }
         public string? SeoDescription { set; get; }
         [Required]
         public int SortOrder { set; get; }

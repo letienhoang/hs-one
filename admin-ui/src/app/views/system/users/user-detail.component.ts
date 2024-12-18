@@ -158,7 +158,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   private saveData() {
     this.toggleBlockUI(true);
-    console.log(this.form.value);
+    
     if (this.utilService.isEmpty(this.config.data?.id)) {
       this.userApiService
         .createUser(this.form.value)

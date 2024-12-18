@@ -1,10 +1,10 @@
 <p-panel class="mb-4" #pnl>
-    <ng-template pTemplate="header">
+    <ng-template #header>
       <h4 class="bold">Roles List</h4>
     </ng-template>
-    <ng-template pTemplate="content" class="p-0">
+    <ng-template #content class="p-0">
       <p-table #dt [value]="items" selectionMode="multiple" dataKey="id" [(selection)]="selectedItems" [metaKeySelection]="true" class="m-0">
-        <ng-template pTemplate="caption">
+        <ng-template #caption>
           <div class="row">
             <div class="col">
               <button pButton appPolicy="Permissons.Users.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus" cTooltip="Create new User"></button>
@@ -19,7 +19,7 @@
             </div>
           </div>
         </ng-template>
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th style="width: 3em"><p-tableHeaderCheckbox/></th>
             <th>UserName</th>
@@ -29,7 +29,7 @@
             <th>Actions</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-item>
+        <ng-template #body let-item>
           <tr>
             <td><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
             <td>{{item.userName}}</td>
@@ -49,7 +49,7 @@
       </p-table>
     </ng-template>
   
-    <ng-template pTemplate="footer">
+    <ng-template #footer>
       <div class="row">
         <div class="col">Total Records: {{totalRecords}}</div>
         <div class="col">
@@ -59,7 +59,7 @@
     </ng-template>
   
     <p-blockUI [target]="pnl" [blocked]="isBlockUI">
-      <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+      <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px', position: 'absolute', top: '25%', left: '50%' }" />
     </p-blockUI>
   </p-panel>
   

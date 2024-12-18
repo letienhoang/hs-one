@@ -9,7 +9,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminApiRoleApiClient, RoleDto } from '../../../api/admin-api.service.generated';
 import { UtilityService } from '../../../shared/services/utility.service';
-import { KeyFilterModule } from 'primeng/keyfilter';
+import { KeyFilter } from 'primeng/keyfilter';
 import { HSOneSharedModule } from '../../../shared/modules/hs-one-shared.module';
 import { RoleSharedModule } from './role-shared.module';
 
@@ -20,7 +20,7 @@ import { RoleSharedModule } from './role-shared.module';
     imports: [
         RoleSharedModule,
         HSOneSharedModule,
-        KeyFilterModule
+        KeyFilter
     ]
 })
 export class RoleDetailComponent implements OnInit, OnDestroy {

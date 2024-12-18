@@ -2305,6 +2305,7 @@ export class PostCategoryDto implements IPostCategoryDto {
     isActive!: boolean;
     dateCreated!: Date;
     dateModified?: Date | undefined;
+    seoKeywords?: string | undefined;
     seoDescription?: string | undefined;
     sortOrder!: number;
 
@@ -2326,6 +2327,7 @@ export class PostCategoryDto implements IPostCategoryDto {
             this.isActive = _data["isActive"];
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
             this.dateModified = _data["dateModified"] ? new Date(_data["dateModified"].toString()) : <any>undefined;
+            this.seoKeywords = _data["seoKeywords"];
             this.seoDescription = _data["seoDescription"];
             this.sortOrder = _data["sortOrder"];
         }
@@ -2347,6 +2349,7 @@ export class PostCategoryDto implements IPostCategoryDto {
         data["isActive"] = this.isActive;
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
         data["dateModified"] = this.dateModified ? this.dateModified.toISOString() : <any>undefined;
+        data["seoKeywords"] = this.seoKeywords;
         data["seoDescription"] = this.seoDescription;
         data["sortOrder"] = this.sortOrder;
         return data;
@@ -2361,6 +2364,7 @@ export interface IPostCategoryDto {
     isActive: boolean;
     dateCreated: Date;
     dateModified?: Date | undefined;
+    seoKeywords?: string | undefined;
     seoDescription?: string | undefined;
     sortOrder: number;
 }

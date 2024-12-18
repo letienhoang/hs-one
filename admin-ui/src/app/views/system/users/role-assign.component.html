@@ -7,29 +7,19 @@
     [dragdrop]="true"
     [responsive]="true"
   >
-    <ng-template let-role pTemplate="item">
+    <ng-template let-role #item>
       <div>
         {{ role }}
       </div>
     </ng-template>
   </p-pickList>
-  <ng-template pTemplate="footer">
+  <ng-template #footer>
     <div class="flex justify-content-end">
         <button type="button" (click)="saveChange()" pButton [disabled]="btnDisabled" [outlined]="true" icon="pi pi-save"></button>
     </div>
   </ng-template>
 
   <p-blockUI [target]="pnlDetail" [blocked]="blockedPanelDetail">
-    <p-progressSpinner
-      [style]="{
-        width: '100px',
-        height: '100px',
-        position: 'absolute',
-        top: '25%',
-        left: '50%'
-      }"
-      strokeWidth="2"
-      animationDuration=".5s"
-    ></p-progressSpinner>
+    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px', position: 'absolute', top: '25%', left: '50%' }"/>
   </p-blockUI>
 </p-panel>

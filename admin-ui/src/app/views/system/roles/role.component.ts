@@ -5,9 +5,9 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { AdminApiRoleApiClient, RoleDto, RoleDtoPagedResult } from 'src/app/api/admin-api.service.generated';
-import { ToastService } from 'src/app/shared/services/toast.service';
-import { MessageConstants } from 'src/app/shared/constants/messages.constants';
+import { AdminApiRoleApiClient, RoleDto, RoleDtoPagedResult } from '../../../api/admin-api.service.generated';
+import { ToastService } from '../../../shared/services/toast.service';
+import { MessageConstants } from '../../../shared/constants/messages.constants';
 import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
 import { RoleDetailComponent } from './role-detail.component';
 import { ConfirmationService } from 'primeng/api';

@@ -7,16 +7,16 @@ import {
     TooltipModule
 } from '@coreui/angular';
 import { PaginatorModule } from 'primeng/paginator';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { BlockUIModule } from 'primeng/blockui';
-import { PanelModule } from 'primeng/panel';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { BlockUI } from 'primeng/blockui';
+import { Panel } from 'primeng/panel';
 import { NgIf, NgFor } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { RippleModule } from 'primeng/ripple';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CheckboxModule } from 'primeng/checkbox';
+import { Ripple } from 'primeng/ripple';
+import { InputGroup } from 'primeng/inputgroup';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Checkbox } from 'primeng/checkbox';
 
 @NgModule({
     imports: [
@@ -24,38 +24,40 @@ import { CheckboxModule } from 'primeng/checkbox';
         TableModule, 
         UtilitiesModule,
         GridModule,
-        ProgressSpinnerModule,
-        BlockUIModule,
+        ProgressSpinner,
+        BlockUI,
         PaginatorModule,
         TooltipModule,
-        PanelModule,
+        Panel,
         NgIf,
         InputTextModule,
         ButtonModule,
-        RippleModule,
-        InputGroupModule,
+        Ripple,
+        InputGroup,
         ReactiveFormsModule,
-        CheckboxModule,
-        NgFor
+        Checkbox,
+        NgFor,
+        FormsModule
     ],
     exports: [
         CommonModule,
         TableModule, 
         UtilitiesModule,
         GridModule,
-        ProgressSpinnerModule,
-        BlockUIModule,
+        ProgressSpinner,
+        BlockUI,
         PaginatorModule,
         TooltipModule,
-        PanelModule,
+        Panel,
         NgIf,
         InputTextModule,
         ButtonModule,
-        RippleModule,
-        InputGroupModule,
+        Ripple,
+        InputGroup,
         ReactiveFormsModule,
-        CheckboxModule,
-        NgFor
+        Checkbox,
+        NgFor,
+        FormsModule
     ]
 })
 export class RoleSharedModule { }
