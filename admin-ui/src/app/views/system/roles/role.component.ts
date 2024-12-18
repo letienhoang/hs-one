@@ -57,8 +57,8 @@ export class RoleComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngUnsubcribe))
       .subscribe({
         next: (response: RoleDtoPagedResult) => {
-          this.items = response.results;
-          this.totalRecords = response.rowCount;
+          this.items = response.results || [];
+          this.totalRecords = response.rowCount || 0;
           this.toggleBlockUI(false);
         },
         error: (error) => {
@@ -135,7 +135,7 @@ export class RoleComponent implements OnInit, OnDestroy {
       );
       return;
     }
-    var ids = [];
+    var ids: string[] = [];
     this.selectedItems.forEach((element) => {
         ids.push(element.id);
     });

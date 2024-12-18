@@ -8,7 +8,7 @@ export class UtilityService {
     this._router = router;
   }
 
-  isEmpty(input) {
+  isEmpty(input: any) {
     if (input == undefined || input == null || input == '') {
       return true;
     }
@@ -24,7 +24,7 @@ export class UtilityService {
     this._router.navigate([path]);
   }
   unflattern = (arr: any[]): any[] => {
-    let map = {};
+    let map: {[id:string]: any} = {};
     let roots: any[] = [];
     for (let i = 0; i < arr.length; i += 1) {
       let node = arr[i];
@@ -74,7 +74,7 @@ export class UtilityService {
 
     return slug;
   }
-  getDateFormatyyyymmdd(x) {
+  getDateFormatyyyymmdd(x: Date) {
     let y = x.getFullYear().toString();
     let m = (x.getMonth() + 1).toString();
     let d = x.getDate().toString();
@@ -85,7 +85,7 @@ export class UtilityService {
   }
 
   getAllProperties = (obj: object) => {
-    const data = {};
+    const data: {[key:string]: any} = {};
 
     for (const [key, val] of Object.entries(obj)) {
       if (obj.hasOwnProperty(key)) {

@@ -28,11 +28,11 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
 
     // Default
     public blockedPanelDetail: boolean = false;
-    public form: FormGroup;
-    public title: string;
+    public form: FormGroup = new FormGroup({});
+    public title: string = '';
     public btnDisabled = false;
-    public saveBtnName: string;
-    public closeBtnName: string;
+    public saveBtnName: string = '';
+    public closeBtnName: string = '';
     selectedEntity = {} as RoleDto;
 
     formSavedEventEmitter: EventEmitter<any> = new EventEmitter();

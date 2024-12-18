@@ -1,0 +1,51 @@
+<p-panel class="mb-4" #pnl>
+  <ng-template pTemplate="header">
+    <h4 class="bold">PostCategoris List</h4>
+  </ng-template>
+  <ng-template pTemplate="content" class="p-0">
+    <p-table #dt [value]="items" selectionMode="multiple" dataKey="id" [(selection)]="selectedItems" [metaKeySelection]="true" class="m-0">
+      <ng-template pTemplate="caption">
+        <div class="row">
+          <div class="col">
+            <button pButton appPolicy="Permissons.PostCategories.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus" cTooltip="Create new Role"></button>
+            <button pButton appPolicy="Permissons.PostCategories.Delete" (click)="deleteItems()" class="p-button-sm p-button-danger me-2" [outlined]="true" icon="pi pi-trash" cTooltip="Delete PostCategories" *ngIf="selectedItems.length > 0"></button>
+            <button pButton appPolicy="Permissons.PostCategories.Edit" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" cTooltip="Update Role" *ngIf="selectedItems.length == 1" ></button>
+          </div>
+          <div class="col col-4">
+            <p-inputGroup>
+              <input type="text" pInputText (keyup.enter)="loadDatas()" [(ngModel)]="keyword" placeholder="Keyword" class=""/>
+              <button pButton (click)="loadDatas()" class="p-button-sm" severity="secondary" [outlined]="true" icon="pi pi-search"></button>
+            </p-inputGroup>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3em"><p-tableHeaderCheckbox/></th>
+          <th>Name</th>
+          <th>Describe</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
+          <td>{{item.name}}</td>
+          <td>{{item.displayName}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="row">
+      <div class="col">Total Records: {{totalRecords}}</div>
+      <div class="col">
+        <p-paginator [rows]="pageSize" [totalRecords]="totalRecords" (onPageChange)="pageChanged($event)" [rowsPerPageOptions]="[10, 20, 50, 100]"></p-paginator>
+      </div>
+    </div>
+  </ng-template>
+
+  <p-blockUI [target]="pnl" [blocked]="isBlockUI">
+    <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+  </p-blockUI>
+</p-panel>

@@ -10,7 +10,9 @@
       "@docs-components/*": [
         "./src/components/*"
       ]
-    }
+    },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "files": [
     "src/main.ts"

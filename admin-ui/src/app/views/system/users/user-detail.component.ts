@@ -37,13 +37,13 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   // Default
   public blockedPanelDetail: boolean = false;
-  public form: FormGroup;
-  public title: string;
+  public form: FormGroup = new FormGroup({});
+  public title: string = '';
   public btnDisabled = false;
-  public saveBtnName: string;
+  public saveBtnName: string = '';
   public roles: any[] = [];
   selectedEntity = {} as UserDto;
-  public avatarImage;
+  public avatarImage = '';
 
   formSavedEventEmitter: EventEmitter<any> = new EventEmitter();
 
@@ -134,7 +134,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  onFileChange(event) {
+  onFileChange(event: any) {
     const reader = new FileReader();
 
     if (event.target.files && event.target.files.length) {

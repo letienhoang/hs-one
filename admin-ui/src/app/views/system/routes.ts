@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from 'src/app/shared/services/auth.guard';
+import { AuthGuard } from '../../shared/services/auth.guard';
+import '@angular/localize/init';
 
 export const routes: Routes = [
   {

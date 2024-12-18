@@ -5561,18 +5561,18 @@ postcss@^8.4.43:
 
 primeflex@^3.3.1:
   version "3.3.1"
-  resolved "https://registry.yarnpkg.com/primeflex/-/primeflex-3.3.1.tgz#361dddf6eb5db50d733e4cddd4b6e376a3d7bd68"
+  resolved "https://registry.npmjs.org/primeflex/-/primeflex-3.3.1.tgz"
   integrity sha512-zaOq3YvcOYytbAmKv3zYc+0VNS9Wg5d37dfxZnveKBFPr7vEIwfV5ydrpiouTft8MVW6qNjfkaQphHSnvgQbpQ==
 
 primeicons@^7.0.0:
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-7.0.0.tgz#6b25c3fdcb29bb745a3035bdc1ed5902f4a419cf"
+  resolved "https://registry.npmjs.org/primeicons/-/primeicons-7.0.0.tgz"
   integrity sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==
 
 primeng@^17.18.12:
-  version "17.18.12"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-17.18.12.tgz#7514caf46c2ad087b7c04202ab2013e44166b798"
-  integrity sha512-zElkv9c3209e1j2yNXalfv71gGJeo8c7bUuW3nsvtQZcYsXjdsJvBEhTThVghBdpCUoFYD3cNmTzg3t807cL6A==
+  version "17.18.13"
+  resolved "https://registry.npmjs.org/primeng/-/primeng-17.18.13.tgz"
+  integrity sha512-G+4isb+tz2drez744i8LswxyaD+mqGupQeIzXc4hn5tb0KZCoe2G61/cEHUvUENFlBWBj2IPju1Zqu7klKNTTw==
   dependencies:
     tslib "^2.3.0"
 
@@ -6517,7 +6517,7 @@ typed-assert@^1.0.8:
 
 typescript@~5.5.4:
   version "5.5.4"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-5.5.4.tgz"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
   integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
 
 ua-parser-js@^0.7.30:

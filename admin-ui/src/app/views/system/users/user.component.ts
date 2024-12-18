@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { ConfirmationService } from 'primeng/api';
 import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
 import { Subject, takeUntil } from 'rxjs';
-import { AdminApiUserApiClient, UserDto, UserDtoPagedResult } from 'src/app/api/admin-api.service.generated';
-import { MessageConstants } from 'src/app/shared/constants/messages.constants';
-import { ToastService } from 'src/app/shared/services/toast.service';
+import { AdminApiUserApiClient, UserDto, UserDtoPagedResult } from '../../../api/admin-api.service.generated';
+import { MessageConstants } from '../../../shared/constants/messages.constants';
+import { ToastService } from '../../../shared/services/toast.service';
 import { UserSharedModule } from './user-shared.module';
 import { UserDetailComponent } from './user-detail.component';
 import { SetPasswordComponent } from './set-password.component';
@@ -29,10 +29,10 @@ export class UserComponent implements OnInit, OnDestroy {
   //Paging variables
   public pageIndex: number = 1;
   public pageSize: number = 10;
-  public totalRecords: number;
+  public totalRecords: number = 0;
 
   //Business variables
-  public items: UserDto[];
+  public items: UserDto[] = [];
   public selectedItems: UserDto[] = [];
   public keyword: string = '';
 
@@ -48,15 +48,15 @@ export class UserComponent implements OnInit, OnDestroy {
     this.loadDatas();
   }
 
-  loadDatas(selectionId = null) {
+  loadDatas(selectionId: string | null | undefined = null) {
     this.toggleBlockUI(true);
     this.userApiService
       .getUsersPaging(this.keyword, this.pageIndex, this.pageSize)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
         next: (response: UserDtoPagedResult) => {
-          this.items = response.results;
-          this.totalRecords = response.rowCount;
+          this.items = response.results || [];
+          this.totalRecords = response.rowCount ?? 0;
           if (selectionId != null && this.items.length > 0) { 
             this.selectedItems = this.items.filter(x => x.id == selectionId);
           }
@@ -140,7 +140,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.alertService.showWarning(MessageConstants.NOT_CHOOSE_ANY_RECORD);
       return;
     }
-    var ids = [];
+    var ids: string[] = [];
     this.selectedItems.forEach((item) => {
       ids.push(item.id);
     });

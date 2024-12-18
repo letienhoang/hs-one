@@ -19,10 +19,10 @@ export class RoleAssignComponent implements OnInit, OnDestroy {
 
   // Default
   public blockedPanelDetail: boolean = false;
-  public title: string;
+  public title: string = '';
   public btnDisabled = false;
-  public saveBtnName: string;
-  public closeBtnName: string;
+  public saveBtnName: string = '';
+  public closeBtnName: string = '';
   public availableRoles: string[] = [];
   public seletedRoles: string[] = [];
   formSavedEventEmitter: EventEmitter<any> = new EventEmitter();

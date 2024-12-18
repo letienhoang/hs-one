@@ -25,12 +25,12 @@ export class ChangeEmailComponent implements OnInit, OnDestroy {
 
   // Default
   public blockedPanelDetail: boolean = false;
-  public form: FormGroup;
-  public title: string;
+  public form: FormGroup = new FormGroup({});
+  public title: string = '';
   public btnDisabled = false;
-  public saveBtnName: string;
-  public closeBtnName: string;
-  public email: string;
+  public saveBtnName: string = '';
+  public closeBtnName: string = '';
+  public email: string = '';
   formSavedEventEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(

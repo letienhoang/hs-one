@@ -382,6 +382,353 @@ export class AdminApiPostApiClient {
 }
 
 @Injectable()
+export class AdminApiPostCategoryApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(ADMIN_API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createPostCategory(body?: CreateUpdatePostCategoryRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/post-categoty";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreatePostCategory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreatePostCategory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreatePostCategory(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updatePostCategory(id?: string | undefined, body?: CreateUpdatePostCategoryRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/post-categoty?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePostCategory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePostCategory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdatePostCategory(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return Success
+     */
+    deletePostCategories(ids?: string[] | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/post-categoty?";
+        if (ids !== undefined && ids !== null)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeletePostCategories(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeletePostCategories(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeletePostCategories(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getPostCategories(): Observable<PostCategoryDto[]> {
+        let url_ = this.baseUrl + "/api/admin/post-categoty";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPostCategories(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPostCategories(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PostCategoryDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PostCategoryDto[]>;
+        }));
+    }
+
+    protected processGetPostCategories(response: HttpResponseBase): Observable<PostCategoryDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(PostCategoryDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getPostCategory(id: string): Observable<PostCategoryDto> {
+        let url_ = this.baseUrl + "/api/admin/post-categoty/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPostCategory(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPostCategory(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PostCategoryDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PostCategoryDto>;
+        }));
+    }
+
+    protected processGetPostCategory(response: HttpResponseBase): Observable<PostCategoryDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PostCategoryDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param pageIndex (optional) 
+     * @param pageSize (optional) 
+     * @return Success
+     */
+    getPostCategoriesPaging(keyword?: string | null | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<PostCategoryDtoPagedResult> {
+        let url_ = this.baseUrl + "/api/admin/post-categoty/paging?";
+        if (keyword !== undefined && keyword !== null)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "pageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPostCategoriesPaging(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPostCategoriesPaging(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PostCategoryDtoPagedResult>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PostCategoryDtoPagedResult>;
+        }));
+    }
+
+    protected processGetPostCategoriesPaging(response: HttpResponseBase): Observable<PostCategoryDtoPagedResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PostCategoryDtoPagedResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class AdminApiRoleApiClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -1511,8 +1858,8 @@ export class AdminApiUserApiClient {
 }
 
 export class AuthenticatedResult implements IAuthenticatedResult {
-    token?: string | undefined;
-    refreshToken?: string | undefined;
+    token!: string;
+    refreshToken!: string;
 
     constructor(data?: IAuthenticatedResult) {
         if (data) {
@@ -1546,12 +1893,12 @@ export class AuthenticatedResult implements IAuthenticatedResult {
 }
 
 export interface IAuthenticatedResult {
-    token?: string | undefined;
-    refreshToken?: string | undefined;
+    token: string;
+    refreshToken: string;
 }
 
 export class ChangeEmailRequest implements IChangeEmailRequest {
-    email?: string | undefined;
+    email!: string;
 
     constructor(data?: IChangeEmailRequest) {
         if (data) {
@@ -1583,12 +1930,12 @@ export class ChangeEmailRequest implements IChangeEmailRequest {
 }
 
 export interface IChangeEmailRequest {
-    email?: string | undefined;
+    email: string;
 }
 
 export class ChangeMyPasswordRequest implements IChangeMyPasswordRequest {
-    currentPassword?: string | undefined;
-    newPassword?: string | undefined;
+    currentPassword!: string;
+    newPassword!: string;
 
     constructor(data?: IChangeMyPasswordRequest) {
         if (data) {
@@ -1622,14 +1969,74 @@ export class ChangeMyPasswordRequest implements IChangeMyPasswordRequest {
 }
 
 export interface IChangeMyPasswordRequest {
-    currentPassword?: string | undefined;
-    newPassword?: string | undefined;
+    currentPassword: string;
+    newPassword: string;
+}
+
+export class CreateUpdatePostCategoryRequest implements ICreateUpdatePostCategoryRequest {
+    name!: string;
+    slug!: string;
+    parentId?: string | undefined;
+    isActive!: boolean;
+    seoKeywords?: string | undefined;
+    seoDescription?: string | undefined;
+    sortOrder!: number;
+
+    constructor(data?: ICreateUpdatePostCategoryRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.slug = _data["slug"];
+            this.parentId = _data["parentId"];
+            this.isActive = _data["isActive"];
+            this.seoKeywords = _data["seoKeywords"];
+            this.seoDescription = _data["seoDescription"];
+            this.sortOrder = _data["sortOrder"];
+        }
+    }
+
+    static fromJS(data: any): CreateUpdatePostCategoryRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateUpdatePostCategoryRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["slug"] = this.slug;
+        data["parentId"] = this.parentId;
+        data["isActive"] = this.isActive;
+        data["seoKeywords"] = this.seoKeywords;
+        data["seoDescription"] = this.seoDescription;
+        data["sortOrder"] = this.sortOrder;
+        return data;
+    }
+}
+
+export interface ICreateUpdatePostCategoryRequest {
+    name: string;
+    slug: string;
+    parentId?: string | undefined;
+    isActive: boolean;
+    seoKeywords?: string | undefined;
+    seoDescription?: string | undefined;
+    sortOrder: number;
 }
 
 export class CreateUpdatePostRequest implements ICreateUpdatePostRequest {
-    title?: string | undefined;
-    slug?: string | undefined;
-    categoryId?: string;
+    title!: string;
+    slug!: string;
+    categoryId!: string;
     description?: string | undefined;
     thumbnail?: string | undefined;
     content?: string | undefined;
@@ -1683,9 +2090,9 @@ export class CreateUpdatePostRequest implements ICreateUpdatePostRequest {
 }
 
 export interface ICreateUpdatePostRequest {
-    title?: string | undefined;
-    slug?: string | undefined;
-    categoryId?: string;
+    title: string;
+    slug: string;
+    categoryId: string;
     description?: string | undefined;
     thumbnail?: string | undefined;
     content?: string | undefined;
@@ -1695,8 +2102,8 @@ export interface ICreateUpdatePostRequest {
 }
 
 export class CreateUpdateRoleRequest implements ICreateUpdateRoleRequest {
-    name?: string | undefined;
-    displayName?: string | undefined;
+    name!: string;
+    displayName!: string;
 
     constructor(data?: ICreateUpdateRoleRequest) {
         if (data) {
@@ -1730,20 +2137,20 @@ export class CreateUpdateRoleRequest implements ICreateUpdateRoleRequest {
 }
 
 export interface ICreateUpdateRoleRequest {
-    name?: string | undefined;
-    displayName?: string | undefined;
+    name: string;
+    displayName: string;
 }
 
 export class CreateUserRequest implements ICreateUserRequest {
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    userName?: string | undefined;
-    email?: string | undefined;
-    phoneNumber?: string | undefined;
-    password?: string | undefined;
+    firstName!: string;
+    lastName!: string;
+    userName!: string;
+    email!: string;
+    phoneNumber!: string;
+    password!: string;
     dob?: Date | undefined;
     avatar?: string | undefined;
-    isActive?: boolean;
+    isActive!: boolean;
 
     constructor(data?: ICreateUserRequest) {
         if (data) {
@@ -1791,20 +2198,20 @@ export class CreateUserRequest implements ICreateUserRequest {
 }
 
 export interface ICreateUserRequest {
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    userName?: string | undefined;
-    email?: string | undefined;
-    phoneNumber?: string | undefined;
-    password?: string | undefined;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
     dob?: Date | undefined;
     avatar?: string | undefined;
-    isActive?: boolean;
+    isActive: boolean;
 }
 
 export class LoginRequest implements ILoginRequest {
-    userName?: string | undefined;
-    password?: string | undefined;
+    userName!: string;
+    password!: string;
 
     constructor(data?: ILoginRequest) {
         if (data) {
@@ -1838,12 +2245,12 @@ export class LoginRequest implements ILoginRequest {
 }
 
 export interface ILoginRequest {
-    userName?: string | undefined;
-    password?: string | undefined;
+    userName: string;
+    password: string;
 }
 
 export class PermissionDto implements IPermissionDto {
-    roleId?: string | undefined;
+    roleId!: string;
     roleClaims?: RoleClaimsDto[] | undefined;
 
     constructor(data?: IPermissionDto) {
@@ -1886,28 +2293,168 @@ export class PermissionDto implements IPermissionDto {
 }
 
 export interface IPermissionDto {
-    roleId?: string | undefined;
+    roleId: string;
     roleClaims?: RoleClaimsDto[] | undefined;
 }
 
+export class PostCategoryDto implements IPostCategoryDto {
+    id!: string;
+    name!: string;
+    slug!: string;
+    parentId?: string | undefined;
+    isActive!: boolean;
+    dateCreated!: Date;
+    dateModified?: Date | undefined;
+    seoDescription?: string | undefined;
+    sortOrder!: number;
+
+    constructor(data?: IPostCategoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.slug = _data["slug"];
+            this.parentId = _data["parentId"];
+            this.isActive = _data["isActive"];
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
+            this.dateModified = _data["dateModified"] ? new Date(_data["dateModified"].toString()) : <any>undefined;
+            this.seoDescription = _data["seoDescription"];
+            this.sortOrder = _data["sortOrder"];
+        }
+    }
+
+    static fromJS(data: any): PostCategoryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostCategoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["slug"] = this.slug;
+        data["parentId"] = this.parentId;
+        data["isActive"] = this.isActive;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
+        data["dateModified"] = this.dateModified ? this.dateModified.toISOString() : <any>undefined;
+        data["seoDescription"] = this.seoDescription;
+        data["sortOrder"] = this.sortOrder;
+        return data;
+    }
+}
+
+export interface IPostCategoryDto {
+    id: string;
+    name: string;
+    slug: string;
+    parentId?: string | undefined;
+    isActive: boolean;
+    dateCreated: Date;
+    dateModified?: Date | undefined;
+    seoDescription?: string | undefined;
+    sortOrder: number;
+}
+
+export class PostCategoryDtoPagedResult implements IPostCategoryDtoPagedResult {
+    currentPage!: number;
+    pageCount!: number;
+    pageSize!: number;
+    rowCount!: number;
+    readonly firstRowOnPage!: number;
+    readonly lastRowOnPage!: number;
+    additionalData!: number;
+    results?: PostCategoryDto[] | undefined;
+
+    constructor(data?: IPostCategoryDtoPagedResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.currentPage = _data["currentPage"];
+            this.pageCount = _data["pageCount"];
+            this.pageSize = _data["pageSize"];
+            this.rowCount = _data["rowCount"];
+            (<any>this).firstRowOnPage = _data["firstRowOnPage"];
+            (<any>this).lastRowOnPage = _data["lastRowOnPage"];
+            this.additionalData = _data["additionalData"];
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(PostCategoryDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PostCategoryDtoPagedResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostCategoryDtoPagedResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["currentPage"] = this.currentPage;
+        data["pageCount"] = this.pageCount;
+        data["pageSize"] = this.pageSize;
+        data["rowCount"] = this.rowCount;
+        data["firstRowOnPage"] = this.firstRowOnPage;
+        data["lastRowOnPage"] = this.lastRowOnPage;
+        data["additionalData"] = this.additionalData;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPostCategoryDtoPagedResult {
+    currentPage: number;
+    pageCount: number;
+    pageSize: number;
+    rowCount: number;
+    firstRowOnPage: number;
+    lastRowOnPage: number;
+    additionalData: number;
+    results?: PostCategoryDto[] | undefined;
+}
+
 export class PostDto implements IPostDto {
-    id?: string;
-    title?: string | undefined;
-    slug?: string | undefined;
+    id!: string;
+    title!: string;
+    slug!: string;
     description?: string | undefined;
     thumbnail?: string | undefined;
-    viewCount?: number;
-    dateCreated?: Date;
-    status?: PostStatus;
-    categoryId?: string;
+    viewCount!: number;
+    dateCreated!: Date;
+    status!: PostStatus;
+    categoryId!: string;
     content?: string | undefined;
-    authorUserId?: string;
+    authorUserId!: string;
     source?: string | undefined;
     tags?: string | undefined;
     seoDescription?: string | undefined;
     dateModified?: Date | undefined;
-    isPaid?: boolean;
-    royaltyAmount?: number;
+    isPaid!: boolean;
+    royaltyAmount!: number;
 
     constructor(data?: IPostDto) {
         if (data) {
@@ -1971,34 +2518,34 @@ export class PostDto implements IPostDto {
 }
 
 export interface IPostDto {
-    id?: string;
-    title?: string | undefined;
-    slug?: string | undefined;
+    id: string;
+    title: string;
+    slug: string;
     description?: string | undefined;
     thumbnail?: string | undefined;
-    viewCount?: number;
-    dateCreated?: Date;
-    status?: PostStatus;
-    categoryId?: string;
+    viewCount: number;
+    dateCreated: Date;
+    status: PostStatus;
+    categoryId: string;
     content?: string | undefined;
-    authorUserId?: string;
+    authorUserId: string;
     source?: string | undefined;
     tags?: string | undefined;
     seoDescription?: string | undefined;
     dateModified?: Date | undefined;
-    isPaid?: boolean;
-    royaltyAmount?: number;
+    isPaid: boolean;
+    royaltyAmount: number;
 }
 
 export class PostInListDto implements IPostInListDto {
-    id?: string;
-    title?: string | undefined;
-    slug?: string | undefined;
+    id!: string;
+    title!: string;
+    slug!: string;
     description?: string | undefined;
     thumbnail?: string | undefined;
-    viewCount?: number;
-    dateCreated?: Date;
-    status?: PostStatus;
+    viewCount!: number;
+    dateCreated!: Date;
+    status!: PostStatus;
 
     constructor(data?: IPostInListDto) {
         if (data) {
@@ -2044,24 +2591,24 @@ export class PostInListDto implements IPostInListDto {
 }
 
 export interface IPostInListDto {
-    id?: string;
-    title?: string | undefined;
-    slug?: string | undefined;
+    id: string;
+    title: string;
+    slug: string;
     description?: string | undefined;
     thumbnail?: string | undefined;
-    viewCount?: number;
-    dateCreated?: Date;
-    status?: PostStatus;
+    viewCount: number;
+    dateCreated: Date;
+    status: PostStatus;
 }
 
 export class PostInListDtoPagedResult implements IPostInListDtoPagedResult {
-    currentPage?: number;
-    pageCount?: number;
-    pageSize?: number;
-    rowCount?: number;
-    readonly firstRowOnPage?: number;
-    readonly lastRowOnPage?: number;
-    additionalData?: number;
+    currentPage!: number;
+    pageCount!: number;
+    pageSize!: number;
+    rowCount!: number;
+    readonly firstRowOnPage!: number;
+    readonly lastRowOnPage!: number;
+    additionalData!: number;
     results?: PostInListDto[] | undefined;
 
     constructor(data?: IPostInListDtoPagedResult) {
@@ -2116,13 +2663,13 @@ export class PostInListDtoPagedResult implements IPostInListDtoPagedResult {
 }
 
 export interface IPostInListDtoPagedResult {
-    currentPage?: number;
-    pageCount?: number;
-    pageSize?: number;
-    rowCount?: number;
-    firstRowOnPage?: number;
-    lastRowOnPage?: number;
-    additionalData?: number;
+    currentPage: number;
+    pageCount: number;
+    pageSize: number;
+    rowCount: number;
+    firstRowOnPage: number;
+    lastRowOnPage: number;
+    additionalData: number;
     results?: PostInListDto[] | undefined;
 }
 
@@ -2136,10 +2683,10 @@ export enum PostStatus {
 }
 
 export class RoleClaimsDto implements IRoleClaimsDto {
-    type?: string | undefined;
-    value?: string | undefined;
+    type!: string;
+    value!: string;
     displayName?: string | undefined;
-    isSelected?: boolean;
+    isSelected!: boolean;
 
     constructor(data?: IRoleClaimsDto) {
         if (data) {
@@ -2177,16 +2724,16 @@ export class RoleClaimsDto implements IRoleClaimsDto {
 }
 
 export interface IRoleClaimsDto {
-    type?: string | undefined;
-    value?: string | undefined;
+    type: string;
+    value: string;
     displayName?: string | undefined;
-    isSelected?: boolean;
+    isSelected: boolean;
 }
 
 export class RoleDto implements IRoleDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    displayName?: string | undefined;
+    id!: string;
+    name!: string;
+    displayName!: string;
 
     constructor(data?: IRoleDto) {
         if (data) {
@@ -2222,19 +2769,19 @@ export class RoleDto implements IRoleDto {
 }
 
 export interface IRoleDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    displayName?: string | undefined;
+    id: string;
+    name: string;
+    displayName: string;
 }
 
 export class RoleDtoPagedResult implements IRoleDtoPagedResult {
-    currentPage?: number;
-    pageCount?: number;
-    pageSize?: number;
-    rowCount?: number;
-    readonly firstRowOnPage?: number;
-    readonly lastRowOnPage?: number;
-    additionalData?: number;
+    currentPage!: number;
+    pageCount!: number;
+    pageSize!: number;
+    rowCount!: number;
+    readonly firstRowOnPage!: number;
+    readonly lastRowOnPage!: number;
+    additionalData!: number;
     results?: RoleDto[] | undefined;
 
     constructor(data?: IRoleDtoPagedResult) {
@@ -2289,18 +2836,18 @@ export class RoleDtoPagedResult implements IRoleDtoPagedResult {
 }
 
 export interface IRoleDtoPagedResult {
-    currentPage?: number;
-    pageCount?: number;
-    pageSize?: number;
-    rowCount?: number;
-    firstRowOnPage?: number;
-    lastRowOnPage?: number;
-    additionalData?: number;
+    currentPage: number;
+    pageCount: number;
+    pageSize: number;
+    rowCount: number;
+    firstRowOnPage: number;
+    lastRowOnPage: number;
+    additionalData: number;
     results?: RoleDto[] | undefined;
 }
 
 export class SetPasswordRequest implements ISetPasswordRequest {
-    newPassword?: string | undefined;
+    newPassword!: string;
 
     constructor(data?: ISetPasswordRequest) {
         if (data) {
@@ -2332,12 +2879,12 @@ export class SetPasswordRequest implements ISetPasswordRequest {
 }
 
 export interface ISetPasswordRequest {
-    newPassword?: string | undefined;
+    newPassword: string;
 }
 
 export class TokenRequest implements ITokenRequest {
-    accessToken?: string | undefined;
-    refreshToken?: string | undefined;
+    accessToken!: string;
+    refreshToken!: string;
 
     constructor(data?: ITokenRequest) {
         if (data) {
@@ -2371,17 +2918,17 @@ export class TokenRequest implements ITokenRequest {
 }
 
 export interface ITokenRequest {
-    accessToken?: string | undefined;
-    refreshToken?: string | undefined;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export class UpdateUserRequest implements IUpdateUserRequest {
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    phoneNumber?: string | undefined;
+    firstName!: string;
+    lastName!: string;
+    phoneNumber!: string;
     dob?: Date | undefined;
     avatar?: string | undefined;
-    isActive?: boolean;
+    isActive!: boolean;
 
     constructor(data?: IUpdateUserRequest) {
         if (data) {
@@ -2423,31 +2970,31 @@ export class UpdateUserRequest implements IUpdateUserRequest {
 }
 
 export interface IUpdateUserRequest {
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    phoneNumber?: string | undefined;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
     dob?: Date | undefined;
     avatar?: string | undefined;
-    isActive?: boolean;
+    isActive: boolean;
 }
 
 export class UserDto implements IUserDto {
-    id?: string;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    userName?: string | undefined;
-    email?: string | undefined;
-    phoneNumber?: string | undefined;
-    isActive?: boolean;
+    id!: string;
+    firstName!: string;
+    lastName!: string;
+    userName!: string;
+    email!: string;
+    phoneNumber!: string;
+    isActive!: boolean;
     roles?: string[] | undefined;
-    dateCreated?: Date;
+    dateCreated!: Date;
     dob?: Date | undefined;
     avatar?: string | undefined;
     vipStartDate?: Date | undefined;
     vipExpireDate?: Date | undefined;
     lastLoginDate?: Date | undefined;
-    balance?: number;
-    royaltyAmountPerPost?: number;
+    balance!: number;
+    royaltyAmountPerPost!: number;
 
     constructor(data?: IUserDto) {
         if (data) {
@@ -2517,32 +3064,32 @@ export class UserDto implements IUserDto {
 }
 
 export interface IUserDto {
-    id?: string;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    userName?: string | undefined;
-    email?: string | undefined;
-    phoneNumber?: string | undefined;
-    isActive?: boolean;
+    id: string;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    email: string;
+    phoneNumber: string;
+    isActive: boolean;
     roles?: string[] | undefined;
-    dateCreated?: Date;
+    dateCreated: Date;
     dob?: Date | undefined;
     avatar?: string | undefined;
     vipStartDate?: Date | undefined;
     vipExpireDate?: Date | undefined;
     lastLoginDate?: Date | undefined;
-    balance?: number;
-    royaltyAmountPerPost?: number;
+    balance: number;
+    royaltyAmountPerPost: number;
 }
 
 export class UserDtoPagedResult implements IUserDtoPagedResult {
-    currentPage?: number;
-    pageCount?: number;
-    pageSize?: number;
-    rowCount?: number;
-    readonly firstRowOnPage?: number;
-    readonly lastRowOnPage?: number;
-    additionalData?: number;
+    currentPage!: number;
+    pageCount!: number;
+    pageSize!: number;
+    rowCount!: number;
+    readonly firstRowOnPage!: number;
+    readonly lastRowOnPage!: number;
+    additionalData!: number;
     results?: UserDto[] | undefined;
 
     constructor(data?: IUserDtoPagedResult) {
@@ -2597,13 +3144,13 @@ export class UserDtoPagedResult implements IUserDtoPagedResult {
 }
 
 export interface IUserDtoPagedResult {
-    currentPage?: number;
-    pageCount?: number;
-    pageSize?: number;
-    rowCount?: number;
-    firstRowOnPage?: number;
-    lastRowOnPage?: number;
-    additionalData?: number;
+    currentPage: number;
+    pageCount: number;
+    pageSize: number;
+    rowCount: number;
+    firstRowOnPage: number;
+    lastRowOnPage: number;
+    additionalData: number;
     results?: UserDto[] | undefined;
 }
 

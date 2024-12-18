@@ -17,14 +17,14 @@ export class PermissionGrantComponent implements OnInit, OnDestroy {
 
     // Default
     public blockedPanelDetail: boolean = false;
-    public form: FormGroup;
-    public title: string;
+    public form: FormGroup = new FormGroup({});
+    public title: string = '';
     public btnDisabled = false;
-    public saveBtnName: string;
-    public closeBtnName: string;
+    public saveBtnName: string = '';
+    public closeBtnName: string = '';
     public permissions: RoleClaimsDto[] = [];
     public selectedPermissions: RoleClaimsDto[] = [];
-    public id: string;
+    public id: string = '';
     formSavedEventEmitter: EventEmitter<any> = new EventEmitter();
 
     constructor(

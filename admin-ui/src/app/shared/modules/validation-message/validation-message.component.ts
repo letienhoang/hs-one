@@ -6,9 +6,9 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './validation-message.component.html'
 })
 export class ValidationMessageComponent implements OnInit {
-  @Input() entityForm: FormGroup;
-  @Input() fieldName: string;
-  @Input() validationMessages: any;
+  @Input() entityForm: FormGroup | any;
+  @Input() fieldName: string = '';
+  @Input() validationMessages: any = {};
   constructor() { }
 
   ngOnInit(): void { }
