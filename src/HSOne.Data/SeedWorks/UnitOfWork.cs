@@ -13,9 +13,12 @@ namespace HSOne.Data.SeedWorks
         {
             _context = context;
             Posts = new PostRepository(_context, mapper);
+            PostCategories = new PostCategoryRepository(_context, mapper);
         }
 
         public IPostRepository Posts { get; private set; }
+
+        public IPostCategoryRepository PostCategories { get; private set; }
 
         public async Task<int> CompleteAsync()
         {

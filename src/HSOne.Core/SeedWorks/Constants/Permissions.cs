@@ -69,5 +69,20 @@ namespace HSOne.Core.SeedWorks.Constants
             [Description("Delete Series")]
             public const string Delete = "Permissions.Series.Delete";
         }
+
+        public static class PostCategories
+        {
+            [Description("View Post Categories")]
+            public const string View = "Permissions.PostCategories.View";
+
+            [Description("Create Post Categories")]
+            public const string Create = "Permissions.PostCategories.Create";
+
+            [Description("Edit Post Categories")]
+            public const string Edit = "Permissions.PostCategories.Edit";
+
+            [Description("Delete Post Categories")]
+            public const string Delete = "Permissions.PostCategories.Delete";
+        }
     }
 }
