@@ -11,18 +11,15 @@ namespace HSOne.Core.Domain.Content
         [Key]
         public Guid Id { get; set; }
 
-        [Required]
         [MaxLength(256)]
         public required string Title { get; set; }
 
-        [Required]
         [Column(TypeName = "varchar(256)")]
         public required string Slug { get; set; }
 
         [MaxLength(512)]
         public string? Description { get; set; }
 
-        [Required]
         public Guid CategoryId { get; set; }
 
         [MaxLength(512)]
@@ -48,6 +45,15 @@ namespace HSOne.Core.Domain.Content
         public bool IsPaid { get; set; }
         public double RoyaltyAmount { get; set; }
         public PostStatus Status { get; set; }
+
+        [Column(TypeName = "varchar(256)")]
+        public required string CategorySlug { get; set; }
+        [MaxLength(256)]
+        public required string CategoryName { get; set; }
+        [MaxLength(256)]
+        public required string AuthorUserName { get; set; }
+        [MaxLength(256)]
+        public required string AuthorName { get; set; }
     }
 
     public enum PostStatus

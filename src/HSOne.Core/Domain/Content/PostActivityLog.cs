@@ -21,5 +21,8 @@ namespace HSOne.Core.Domain.Content
         public string? Note { set; get; }
 
         public Guid UserId { get; set; }
+
+        [MaxLength(256)]
+        public required string UserName { get; set; }
     }
 }

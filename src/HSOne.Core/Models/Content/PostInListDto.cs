@@ -21,6 +21,15 @@ namespace HSOne.Core.Models.Content
         [Required]
         public PostStatus Status { get; set; }
 
+        [Required]
+        public required string CategorySlug { get; set; }
+        [Required]
+        public required string CategoryName { get; set; }
+        [Required]
+        public required string AuthorUserName { get; set; }
+        [Required]
+        public required string AuthorName { get; set; }
+
         public class AutoMapperProfile : Profile
         {
             public AutoMapperProfile()
