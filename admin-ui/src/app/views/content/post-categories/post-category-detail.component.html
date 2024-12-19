@@ -4,7 +4,7 @@
             <div class="row mb-3">
                 <div class="field col-6">
                     <label for="name">Name <span class="required">*</span></label>
-                    <input id="name" type="text" pInputText [pKeyFilter]="noSpecial" formControlName="name"
+                    <input id="name" type="text" pInputText [pKeyFilter]="noSpecial" formControlName="name" (keyup)="generateSlug()"
                         [style]="{ width: '100%' }" />
                     <app-validation-message [entityForm]="form" fieldName="name"
                         [validationMessages]="validationMessages">
@@ -23,8 +23,8 @@
                 <div class="field col-6">
                     <label for="parentId" class="block">Parent</label>
                     <p-select [options]="parentIds" formControlName="parentId"
-                     placeholder="Select Parent" [editable]="true"
-                     optionLabel="parentId" class="w-full" [style]="{ width: '100%' }"  />
+                     placeholder="Select Parent" [editable]="true" optionValue="value"
+                     optionLabel="label" class="w-full" [style]="{ width: '100%' }"  />
                 </div>
                 <div class="field col-3">
                     <label for="sortOrder">Sort Order <span class="required">*</span></label>
@@ -43,11 +43,11 @@
             <div class="row mb-3">
                 <div class="field col-6">
                     <label for="seoKeywords">SEO Keywords</label>
-                    <textarea pTextarea formControlName="seoKeywords" placeholder="Normal" rows="3" [style]="{ width: '100%' }" ></textarea>
+                    <textarea pTextarea formControlName="seoKeywords" placeholder="Normal" rows="3" [pKeyFilter]="noSpecial" [style]="{ width: '100%' }" ></textarea>
                 </div>
                 <div class="field col-6">
                     <label for="seoDescription">SEO Description</label>
-                    <textarea pTextarea formControlName="seoDescription" placeholder="Normal" rows="3" [style]="{ width: '100%' }" ></textarea>
+                    <textarea pTextarea formControlName="seoDescription" placeholder="Normal" rows="3" [pKeyFilter]="noSpecial" [style]="{ width: '100%' }" ></textarea>
                 </div>
             </div>
 

@@ -89,6 +89,8 @@ export class UserComponent implements OnInit, OnDestroy {
     const ref = this.dialogService.open(UserDetailComponent, {
       header: 'Create new user',
       width: '70%',
+      modal: true,
+      closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -119,6 +121,8 @@ export class UserComponent implements OnInit, OnDestroy {
         },
         header: 'Update user',
         width: '70%',
+        modal: true,
+        closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -174,6 +178,8 @@ export class UserComponent implements OnInit, OnDestroy {
       },
       header: 'Set password for ' + username,
       width: '70%',
+      modal: true,
+      closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -197,6 +203,8 @@ export class UserComponent implements OnInit, OnDestroy {
       },
       header: 'Change email',
       width: '70%',
+      modal: true,
+      closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -220,6 +228,8 @@ export class UserComponent implements OnInit, OnDestroy {
       },
       header: 'Assign role',
       width: '70%',
+      modal: true,
+      closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -240,5 +250,4 @@ export class UserComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
   
-
 }

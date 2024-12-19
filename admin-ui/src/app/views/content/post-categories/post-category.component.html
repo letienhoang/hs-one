@@ -23,14 +23,19 @@
         <tr>
           <th style="width: 3em"><p-tableHeaderCheckbox/></th>
           <th>Name</th>
-          <th>Describe</th>
+          <th>Sort Order</th>
+          <th>Status</th>
         </tr>
       </ng-template>
       <ng-template #body let-item>
         <tr>
           <td><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
           <td>{{item.name}}</td>
-          <td>{{item.displayName}}</td>
+          <td>{{item.sortOrder}}</td>
+          <td>
+            <p-badge *ngIf="item.isActive == 1" value="Active" severity="success"/>
+            <p-badge *ngIf="item.isActive == 0" value="Lock" severity="danger"/>
+          </td>
         </tr>
       </ng-template>
     </p-table>

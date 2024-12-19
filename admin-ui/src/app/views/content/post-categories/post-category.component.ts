@@ -89,6 +89,8 @@ export class PostCategoryComponent implements OnInit, OnDestroy {
     const ref = this.dialogService.open(PostCategoryDetailComponent, {
       header: 'Add Post Category',
       width: '70%',
+      modal: true,
+      closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -104,29 +106,31 @@ export class PostCategoryComponent implements OnInit, OnDestroy {
   }
 
   showEditModal() {
-    // if (this.selectedItems.length == 0) {
-    //   this.toastService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
-    //   return;
-    // }
-    // var id = this.selectedItems[0].id;
-    // const ref = this.dialogService.open(PostCategoryDetailComponent, {
-    //   data: {
-    //     id: id,
-    //   },
-    //   header: 'Update Post Category',
-    //   width: '70%',
-    // });
-    // const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
-    // const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
-    // const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
-    // dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
-    // ref.onClose.subscribe((data: PostCategoryDto) => {
-    //   if (data) {
-    //     this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
-    //     this.selectedItems = [];
-    //     this.loadDatas();
-    //   }
-    // });
+    if (this.selectedItems.length == 0) {
+      this.toastService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
+      return;
+    }
+    var id = this.selectedItems[0].id;
+    const ref = this.dialogService.open(PostCategoryDetailComponent, {
+      data: {
+        id: id,
+      },
+      header: 'Update Post Category',
+      width: '70%',
+      modal: true,
+      closable: true
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: PostCategoryDto) => {
+      if (data) {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadDatas();
+      }
+    });
   }
 
   deleteItems() {

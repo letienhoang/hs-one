@@ -21,6 +21,7 @@ import { KeyFilter } from 'primeng/keyfilter';
 import { HSOneSharedModule } from '../../../shared/modules/hs-one-shared.module';
 import { Select } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
+import { BadgeModule } from 'primeng/badge';
 
 @NgModule({
     imports: [
@@ -44,7 +45,8 @@ import { TextareaModule } from 'primeng/textarea';
         KeyFilter,
         HSOneSharedModule,
         Select,
-        TextareaModule
+        TextareaModule,
+        BadgeModule
     ],
     exports: [
         CommonModule,
@@ -67,7 +69,8 @@ import { TextareaModule } from 'primeng/textarea';
         KeyFilter,
         HSOneSharedModule,
         Select,
-        TextareaModule
+        TextareaModule,
+        BadgeModule
     ]
 })
 export class PostCategorySharedModule { }

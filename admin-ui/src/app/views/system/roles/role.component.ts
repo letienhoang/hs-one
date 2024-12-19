@@ -88,6 +88,8 @@ export class RoleComponent implements OnInit, OnDestroy {
     const ref = this.dialogService.open(RoleDetailComponent, {
       header: 'Add Role',
       width: '70%',
+      modal: true,
+      closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -114,6 +116,8 @@ export class RoleComponent implements OnInit, OnDestroy {
       },
       header: 'Update Role',
       width: '70%',
+      modal: true,
+      closable: true
     });
     const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
     const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
@@ -170,8 +174,10 @@ export class RoleComponent implements OnInit, OnDestroy {
       data: {
           id: id,
       },
-      header: name,
+      header: name + ' Permissions',
       width: '70%',
+      modal: true,
+      closable: true
   });
   const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
   const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
