@@ -27,7 +27,8 @@ namespace HSOne.Api.Controllers.AdminApi
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
+        [HttpPost]
+        [Route("create")]
         [ValidateModel]
         [Authorize(Permissions.Roles.Create)]
         public async Task<IActionResult> CreateRoleAsync([FromBody] CreateUpdateRoleRequest request)
@@ -51,7 +52,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok();
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPut]
+        [Route("{id}")]
         [ValidateModel]
         [Authorize(Permissions.Roles.Edit)]
         public async Task<IActionResult> UpdateRoleAsync(Guid id,[FromBody] CreateUpdateRoleRequest request)
@@ -112,7 +114,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id}")]
         [Authorize(Permissions.Roles.View)]
         public async Task<ActionResult<RoleDto>> GetRoleAsync(Guid id)
         {
@@ -126,7 +129,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(response);
         }
 
-        [HttpGet("paging")]
+        [HttpGet]
+        [Route("paging")]
         [Authorize(Permissions.Roles.View)]
         public async Task<ActionResult<PagedResult<RoleDto>>> GetRolesPagingAsync(string? keyword, int pageIndex = 1, int pageSize = 10)
         {
@@ -151,7 +155,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(pagedResult);
         }
 
-        [HttpGet("all")]
+        [HttpGet]
+        [Route("all")]
         [Authorize(Permissions.Roles.View)]
         public async Task<ActionResult<List<RoleDto>>> GetAllRolesAsync()
         {
@@ -160,7 +165,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(response);
         }
 
-        [HttpGet("{roleId}/permissions")]
+        [HttpGet]
+        [Route("{roleId}/permissions")]
         [Authorize(Permissions.Roles.View)]
         public async Task<ActionResult<PermissionDto>> GetPermissionsAsync(string roleId)
         {
@@ -198,7 +204,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(model);
         }
 
-        [HttpPut("permissions")]
+        [HttpPut]
+        [Route("permissions")]
         [Authorize(Permissions.Roles.Edit)]
         public async Task<IActionResult> UpdatePermissionsAsync([FromBody] PermissionDto request)
         {

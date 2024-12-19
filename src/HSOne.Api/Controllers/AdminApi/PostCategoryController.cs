@@ -23,12 +23,11 @@ namespace HSOne.Api.Controllers.AdminApi
 
         [HttpPost]
         [Authorize(PostCategories.Create)]
-
         public async Task<IActionResult> CreatePostCategoryAsync([FromBody] CreateUpdatePostCategoryRequest request)
         {
-            var post = _mapper.Map<CreateUpdatePostCategoryRequest, PostCategory>(request);
+            var postCategory = _mapper.Map<CreateUpdatePostCategoryRequest, PostCategory>(request);
 
-            _unitOfWork.PostCategories.Add(post);
+            _unitOfWork.PostCategories.Add(postCategory);
 
             var result = await _unitOfWork.CompleteAsync();
             return result > 0 ? Ok() : BadRequest();
@@ -38,12 +37,12 @@ namespace HSOne.Api.Controllers.AdminApi
         [Authorize(PostCategories.Edit)]
         public async Task<IActionResult> UpdatePostCategoryAsync(Guid id, [FromBody] CreateUpdatePostCategoryRequest request)
         {
-            var post = await _unitOfWork.PostCategories.GetByIdAsync(id);
-            if (post == null)
+            var postCategory = await _unitOfWork.PostCategories.GetByIdAsync(id);
+            if (postCategory == null)
             {
                 return NotFound();
             }
-            _mapper.Map(request, post);
+            _mapper.Map(request, postCategory);
 
             await _unitOfWork.CompleteAsync();
             return Ok();

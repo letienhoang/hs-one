@@ -25,7 +25,8 @@ namespace HSOne.Api.Controllers.AdminApi
             _userManager = userManager;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id}")]
         [Authorize(Users.View)]
         public async Task<ActionResult<UserDto>> GetUserAsync(Guid id)
         {
@@ -67,7 +68,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return BadRequest(string.Join("<br>", result.Errors.Select(x => x.Description)));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("{id}")]
         [ValidateModel]
         [Authorize(Users.Edit)]
         public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] UpdateUserRequest request)
@@ -103,7 +105,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok();
         }
 
-        [HttpGet("paging")]
+        [HttpGet]
+        [Route("{id}")]
         [Authorize(Users.View)]
         public async Task<ActionResult<PagedResult<UserDto>>> GetUsersPagingAsync(string? keyword, int pageIndex, int pageSize)
         {
@@ -134,7 +137,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(pagedResponse);
         }
 
-        [HttpPut("password-change-current-user")]
+        [HttpPut]
+        [Route("password-change-current-user")]
         [ValidateModel]
         public async Task<IActionResult> ChangePassWordAsync([FromBody] ChangeMyPasswordRequest request)
         {
@@ -151,7 +155,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok();
         }
 
-        [HttpPost("set-password/{id}")]
+        [HttpPost]
+        [Route("set-password/{id}")]
         [Authorize(Users.Edit)]
         public async Task<IActionResult> SetPasswordAsync(Guid id, [FromBody] SetPasswordRequest model)
         {
@@ -169,7 +174,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok();
         }
 
-        [HttpPost("change-email/{id}")]
+        [HttpPost]
+        [Route("change-email/{id}")]
         [Authorize(Users.Edit)]
         public async Task<IActionResult> ChangeEmailAsync(Guid id, [FromBody] ChangeEmailRequest request)
         {
@@ -187,7 +193,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok();
         }
 
-        [HttpPut("{id}/assign-users")]
+        [HttpPut]
+        [Route("assign-users/{id}")]
         [ValidateModel]
         [Authorize(Users.Edit)]
         public async Task<IActionResult> AssignRolesAsync(string id, [FromBody] string[] roles)

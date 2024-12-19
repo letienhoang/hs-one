@@ -20,7 +20,8 @@ namespace HSOne.Api.Controllers.AdminApi
             _tokenService = tokenService;
         }
 
-        [HttpPost("refresh")]
+        [HttpPost]
+        [Route("refresh")]
         public async Task<ActionResult<AuthenticatedResult>> RefreshAsync(TokenRequest tokenRequest)
         {
             if (tokenRequest is null)
@@ -57,7 +58,9 @@ namespace HSOne.Api.Controllers.AdminApi
             });
         }
 
-        [HttpPost("revoke"), Authorize]
+        [HttpPost]
+        [Route("revoke")]
+        [Authorize]
         public async Task<IActionResult> RevokeAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);

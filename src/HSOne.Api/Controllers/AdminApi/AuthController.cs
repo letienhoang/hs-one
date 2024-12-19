@@ -30,7 +30,8 @@ namespace HSOne.Api.Controllers.AdminApi
             _roleManager = roleManager;
         }
 
-        [HttpPost("login")]
+        [HttpPost]
+        [Route("login")]
         public async Task<ActionResult<AuthenticatedResult>> LoginAsync([FromBody] LoginRequest request)
         {
             // Authenticate user
