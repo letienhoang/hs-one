@@ -13,8 +13,6 @@ import {
 } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
-import { DomSanitizer } from '@angular/platform-browser';
-import { formatDate } from '@angular/common';
 import {
   AdminApiPostCategoryApiClient,
   PostCategoryDto,
@@ -122,7 +120,6 @@ export class PostCategoryDetailComponent implements OnInit, OnDestroy {
       sortOrder: new FormControl(this.selectedEntity.sortOrder || 1,Validators.required),
       parentId: new FormControl(this.selectedEntity.parentId || null),
       isActive: new FormControl(this.selectedEntity.isActive || true),
-      seoKeywords: new FormControl(this.selectedEntity.seoKeywords || null),
       seoDescription: new FormControl(this.selectedEntity.seoDescription || null)
     });
   }

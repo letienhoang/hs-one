@@ -17,7 +17,6 @@ namespace HSOne.Core.Models.Content
         public Guid? ParentId { set; get; }
         [Required]
         public bool IsActive { set; get; }
-        public string? SeoKeywords { set; get; }
         public string? SeoDescription { set; get; }
         [Required]
         public int SortOrder { set; get; }
