@@ -6,12 +6,12 @@ using HSOne.Core.SeedWorks;
 using HSOne.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using HSOne.Core.SeedWorks.Constants;
 
 namespace HSOne.Api.Controllers.AdminApi
 {
     [Route("api/admin/post")]
     [ApiController]
-    [Authorize]
     public class PostController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,9 +23,10 @@ namespace HSOne.Api.Controllers.AdminApi
             _mapper = mapper;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<PostDto>> GetPostsById(Guid id)
+        [Authorize(Permissions.Posts.View)]
+        public async Task<ActionResult<PostDto>> GetPostById(Guid id)
         {
             var post = await _unitOfWork.Posts.GetByIdAsync(id);
             if (post == null)
@@ -35,15 +36,17 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(post);
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
         [Route("paging")]
+        [Authorize(Permissions.Posts.View)]
         public async Task<ActionResult<PagedResult<PostInListDto>>> GetPostsPagingAsync(string? keyword, Guid? categoryId, int pageIndex = 1, int pageSize = 10)
         {
             var posts = await _unitOfWork.Posts.GetPostsPagingAsync(keyword, categoryId, pageIndex, pageSize);
             return Ok(posts);
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
+        [Authorize(Permissions.Posts.Create)]
         public async Task<ActionResult<PostDto>> CreatePostAsync([FromBody] CreateUpdatePostRequest postDto)
         {
             var post = _mapper.Map<CreateUpdatePostRequest, Post>(postDto);
@@ -52,8 +55,9 @@ namespace HSOne.Api.Controllers.AdminApi
             return result > 0 ? Ok(post) : BadRequest();
         }
 
-        [HttpPut, Authorize]
+        [HttpPut]
         [Route("{id}")]
+        [Authorize(Permissions.Posts.Edit)]
         public async Task<ActionResult<PostDto>> UpdatePostAsync(Guid id, [FromBody] CreateUpdatePostRequest postDto)
         {
             var post = await _unitOfWork.Posts.GetByIdAsync(id);
@@ -66,7 +70,8 @@ namespace HSOne.Api.Controllers.AdminApi
             return result > 0 ? Ok(post) : BadRequest();
         }
 
-        [HttpDelete, Authorize]
+        [HttpDelete]
+        [Authorize(Permissions.Posts.Delete)]
         public async Task<ActionResult> DeletePostsAsync([FromQuery] Guid[] ids)
         {
             foreach (var id in ids)

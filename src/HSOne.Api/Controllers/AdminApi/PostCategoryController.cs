@@ -91,7 +91,7 @@ namespace HSOne.Api.Controllers.AdminApi
 
         [HttpGet]
         [Authorize(PostCategories.View)]
-        public async Task<ActionResult<List<PostCategoryDto>>> GetPostCategoriesAsync()
+        public async Task<ActionResult<List<PostCategoryDto>>> GetAllPostCategoriesAsync()
         {
             var query = await _unitOfWork.PostCategories.GetAllAsync();
             var model = _mapper.Map<List<PostCategoryDto>>(query);

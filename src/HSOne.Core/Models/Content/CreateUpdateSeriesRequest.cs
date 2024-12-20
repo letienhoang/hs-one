@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AutoMapper;
+using HSOne.Core.Domain.Content;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HSOne.Core.Models.Content
@@ -22,7 +24,13 @@ namespace HSOne.Core.Models.Content
         [MaxLength(256)]
         public string? Thumbnail { set; get; }
         public string? Content { get; set; }
-        [Required]
-        public Guid AuthorUserId { get; set; }
+
+        public class AutoMapperProfile : Profile
+        {
+            public AutoMapperProfile()
+            {
+                CreateMap<CreateUpdateSeriesRequest, Series>();
+            }
+        }
     }
 }

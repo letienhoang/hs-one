@@ -106,7 +106,7 @@ namespace HSOne.Api.Controllers.AdminApi
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("paging")]
         [Authorize(Users.View)]
         public async Task<ActionResult<PagedResult<UserDto>>> GetUsersPagingAsync(string? keyword, int pageIndex, int pageSize)
         {

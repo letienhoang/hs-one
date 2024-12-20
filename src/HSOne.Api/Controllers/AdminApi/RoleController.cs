@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using static HSOne.Core.SeedWorks.Constants.Permissions;
 
 namespace HSOne.Api.Controllers.AdminApi
 {

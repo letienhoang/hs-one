@@ -17,4 +17,8 @@
     <ProjectReference Include="..\HSOne.Data\HSOne.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\media\images\series\" />
+  </ItemGroup>
+
 </Project>

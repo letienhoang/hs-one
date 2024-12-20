@@ -29,5 +29,15 @@ export const routes: Routes = [
       requiredPolicy: 'Permissions.PostCategories.View',
     },
     canActivate: [AuthGuard],      
+  },
+  {
+    path: 'series',
+    loadComponent: () =>
+      import('./series/series.component').then((m) => m.SeriesComponent),
+    data: {
+      title: $localize`Series`,
+      requiredPolicy: 'Permissions.Series.View',
+    },
+    canActivate: [AuthGuard],
   }
 ];

@@ -16,19 +16,6 @@ namespace HSOne.Data.Repositories
             _mapper = mapper;
         }
 
-        public async Task AddPostToSeriesAsync(Guid seriesId, Guid postId, int sortOrder)
-        {
-            var postInSeries = await _context.PostInSeries.FirstOrDefaultAsync(x => x.SeriesId == seriesId && x.PostId == postId);
-            if (postInSeries == null) {
-                await _context.PostInSeries.AddAsync(new PostInSeries()
-                {
-                    SeriesId = seriesId,
-                    PostId = postId,
-                    DisplayOrder = sortOrder
-                });
-            }
-        }
-
         public async Task<List<Series>> GetPopularSeriesAsync(int count)
         {
             return await _context.Series.OrderByDescending(x => x.DateCreated).Take(count).ToListAsync();
@@ -55,15 +42,6 @@ namespace HSOne.Data.Repositories
                 PageSize = pageSize,
                 RowCount = totalRecords
             };
-        }
-
-        public async Task RemovePostToSeriesAsync(Guid seriesId, Guid postId)
-        {
-            var postInSeries = await _context.PostInSeries.FirstOrDefaultAsync(x => x.SeriesId == seriesId && x.PostId == postId);
-            if (postInSeries != null)
-            {
-                _context.PostInSeries.Remove(postInSeries);
-            }
         }
     }
 }

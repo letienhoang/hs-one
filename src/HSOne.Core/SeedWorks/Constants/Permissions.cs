@@ -53,6 +53,9 @@ namespace HSOne.Core.SeedWorks.Constants
 
             [Description("Delete Posts")]
             public const string Delete = "Permissions.Posts.Delete";
+
+            [Description("Approve Posts")]
+            public const string Approve = "Permissions.Posts.Approve";
         }
 
         public static class Series

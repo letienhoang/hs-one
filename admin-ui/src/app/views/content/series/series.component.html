@@ -1,15 +1,15 @@
 <p-panel class="mb-4" #pnl>
   <ng-template #header>
-    <h4 class="bold">Post Categoris List</h4>
+    <h4 class="bold">Series List</h4>
   </ng-template>
   <ng-template #content class="p-0">
     <p-table #dt [value]="items" selectionMode="multiple" dataKey="id" [(selection)]="selectedItems" [metaKeySelection]="true" class="m-0">
       <ng-template #caption>
         <div class="row">
           <div class="col">
-            <button pButton appPolicy="Permissons.PostCategories.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus" cTooltip="Create new Post Category"></button>
-            <button pButton appPolicy="Permissons.PostCategories.Delete" (click)="deleteItems()" class="p-button-sm p-button-danger me-2" [outlined]="true" icon="pi pi-trash" cTooltip="Delete Post Categories" *ngIf="selectedItems.length > 0"></button>
-            <button pButton appPolicy="Permissons.PostCategories.Edit" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" cTooltip="Update Post Category" *ngIf="selectedItems.length == 1" ></button>
+            <button pButton appPolicy="Permissons.Series.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus" cTooltip="Create new Series"></button>
+            <button pButton appPolicy="Permissons.Series.Delete" (click)="deleteItems()" class="p-button-sm p-button-danger me-2" [outlined]="true" icon="pi pi-trash" cTooltip="Delete Series" *ngIf="selectedItems.length > 0"></button>
+            <button pButton appPolicy="Permissons.Series.Edit" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" cTooltip="Update Series" *ngIf="selectedItems.length == 1" ></button>
           </div>
           <div class="col col-4">
             <p-inputGroup>
@@ -22,7 +22,8 @@
       <ng-template #header>
         <tr>
           <th style="width: 3em"><p-tableHeaderCheckbox/></th>
-          <th>Name</th>
+          <th>Title</th>
+          <th>URL</th>
           <th>Sort Order</th>
           <th>Status</th>
         </tr>
@@ -31,6 +32,7 @@
         <tr>
           <td><p-tableCheckbox [value]="item"></p-tableCheckbox></td>
           <td>{{item.name}}</td>
+          <td>{{item.slug}}</td>
           <td>{{item.sortOrder}}</td>
           <td>
             <p-badge *ngIf="item.isActive == 1" value="Active" severity="success"/>

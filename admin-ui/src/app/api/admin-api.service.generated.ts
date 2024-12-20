@@ -84,6 +84,68 @@ export class AdminApiAuthApiClient {
 }
 
 @Injectable()
+export class AdminApiMediaApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(ADMIN_API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param type (optional) 
+     * @return Success
+     */
+    uploadImage(type?: string | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/media?";
+        if (type !== undefined && type !== null)
+            url_ += "type=" + encodeURIComponent("" + type) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadImage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadImage(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUploadImage(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class AdminApiPostApiClient {
     private http: HttpClient;
     private baseUrl: string;
@@ -97,7 +159,7 @@ export class AdminApiPostApiClient {
     /**
      * @return Success
      */
-    getPostsById(id: string): Observable<PostDto> {
+    getPostById(id: string): Observable<PostDto> {
         let url_ = this.baseUrl + "/api/admin/post/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -113,11 +175,11 @@ export class AdminApiPostApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetPostsById(response_);
+            return this.processGetPostById(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetPostsById(response_ as any);
+                    return this.processGetPostById(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<PostDto>;
                 }
@@ -126,7 +188,7 @@ export class AdminApiPostApiClient {
         }));
     }
 
-    protected processGetPostsById(response: HttpResponseBase): Observable<PostDto> {
+    protected processGetPostById(response: HttpResponseBase): Observable<PostDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -554,7 +616,7 @@ export class AdminApiPostCategoryApiClient {
     /**
      * @return Success
      */
-    getPostCategories(): Observable<PostCategoryDto[]> {
+    getAllPostCategories(): Observable<PostCategoryDto[]> {
         let url_ = this.baseUrl + "/api/admin/post-categoty";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -567,11 +629,11 @@ export class AdminApiPostCategoryApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetPostCategories(response_);
+            return this.processGetAllPostCategories(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetPostCategories(response_ as any);
+                    return this.processGetAllPostCategories(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<PostCategoryDto[]>;
                 }
@@ -580,7 +642,7 @@ export class AdminApiPostCategoryApiClient {
         }));
     }
 
-    protected processGetPostCategories(response: HttpResponseBase): Observable<PostCategoryDto[]> {
+    protected processGetAllPostCategories(response: HttpResponseBase): Observable<PostCategoryDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -796,7 +858,7 @@ export class AdminApiRoleApiClient {
      * @return Success
      */
     updateRole(id: string, body?: CreateUpdateRoleRequest | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/admin/role/update/{id}";
+        let url_ = this.baseUrl + "/api/admin/role/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -828,56 +890,6 @@ export class AdminApiRoleApiClient {
     }
 
     protected processUpdateRole(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @param ids (optional) 
-     * @return Success
-     */
-    deleteRoles(ids?: string[] | null | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/admin/role?";
-        if (ids !== undefined && ids !== null)
-            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteRoles(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteRoles(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processDeleteRoles(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -941,6 +953,56 @@ export class AdminApiRoleApiClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = RoleDto.fromJS(resultData200);
             return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return Success
+     */
+    deleteRoles(ids?: string[] | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/role?";
+        if (ids !== undefined && ids !== null)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteRoles(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteRoles(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteRoles(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -1169,6 +1231,518 @@ export class AdminApiRoleApiClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class AdminApiSeriesApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(ADMIN_API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createSeries(body?: CreateUpdateSeriesRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/series";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreateSeries(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    updateSeries(id?: string | undefined, body?: CreateUpdateSeriesRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/series?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateSeries(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param ids (optional) 
+     * @return Success
+     */
+    deleteSeries(ids?: string[] | null | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/series?";
+        if (ids !== undefined && ids !== null)
+            ids && ids.forEach(item => { url_ += "ids=" + encodeURIComponent("" + item) + "&"; });
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteSeries(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllSeries(): Observable<SeriesDto[]> {
+        let url_ = this.baseUrl + "/api/admin/series";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SeriesDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SeriesDto[]>;
+        }));
+    }
+
+    protected processGetAllSeries(response: HttpResponseBase): Observable<SeriesDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SeriesDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getSeries(id: string): Observable<SeriesDto> {
+        let url_ = this.baseUrl + "/api/admin/series/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SeriesDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SeriesDto>;
+        }));
+    }
+
+    protected processGetSeries(response: HttpResponseBase): Observable<SeriesDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SeriesDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param pageIndex (optional) 
+     * @param pageSize (optional) 
+     * @return Success
+     */
+    getSeriesPaging(keyword?: string | null | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<SeriesInListDtoPagedResult> {
+        let url_ = this.baseUrl + "/api/admin/series/paging?";
+        if (keyword !== undefined && keyword !== null)
+            url_ += "keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "pageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSeriesPaging(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSeriesPaging(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SeriesInListDtoPagedResult>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SeriesInListDtoPagedResult>;
+        }));
+    }
+
+    protected processGetSeriesPaging(response: HttpResponseBase): Observable<SeriesInListDtoPagedResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SeriesInListDtoPagedResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    addPostSeries(body?: AddPostSeriesRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/series/post-series";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddPostSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddPostSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processAddPostSeries(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    deletePostSeries(body?: AddPostSeriesRequest | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/series/post-series";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeletePostSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeletePostSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeletePostSeries(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getPostInListSeries(seriesId: string): Observable<PostInListDto[]> {
+        let url_ = this.baseUrl + "/api/admin/series/post-series/{seriesId}";
+        if (seriesId === undefined || seriesId === null)
+            throw new Error("The parameter 'seriesId' must be defined.");
+        url_ = url_.replace("{seriesId}", encodeURIComponent("" + seriesId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPostInListSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPostInListSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PostInListDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PostInListDto[]>;
+        }));
+    }
+
+    protected processGetPostInListSeries(response: HttpResponseBase): Observable<PostInListDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(PostInListDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -1806,7 +2380,7 @@ export class AdminApiUserApiClient {
      * @return Success
      */
     assignRoles(id: string | null, body?: string[] | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/admin/user/{id}/assign-users";
+        let url_ = this.baseUrl + "/api/admin/user/assign-users/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1855,6 +2429,50 @@ export class AdminApiUserApiClient {
         }
         return _observableOf(null as any);
     }
+}
+
+export class AddPostSeriesRequest implements IAddPostSeriesRequest {
+    postId?: string;
+    seriesId?: string;
+    sortOrder?: number;
+
+    constructor(data?: IAddPostSeriesRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postId = _data["postId"];
+            this.seriesId = _data["seriesId"];
+            this.sortOrder = _data["sortOrder"];
+        }
+    }
+
+    static fromJS(data: any): AddPostSeriesRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddPostSeriesRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postId"] = this.postId;
+        data["seriesId"] = this.seriesId;
+        data["sortOrder"] = this.sortOrder;
+        return data;
+    }
+}
+
+export interface IAddPostSeriesRequest {
+    postId?: string;
+    seriesId?: string;
+    sortOrder?: number;
 }
 
 export class AuthenticatedResult implements IAuthenticatedResult {
@@ -1978,7 +2596,6 @@ export class CreateUpdatePostCategoryRequest implements ICreateUpdatePostCategor
     slug!: string;
     parentId?: string | undefined;
     isActive!: boolean;
-    seoKeywords?: string | undefined;
     seoDescription?: string | undefined;
     sortOrder!: number;
 
@@ -1997,7 +2614,6 @@ export class CreateUpdatePostCategoryRequest implements ICreateUpdatePostCategor
             this.slug = _data["slug"];
             this.parentId = _data["parentId"];
             this.isActive = _data["isActive"];
-            this.seoKeywords = _data["seoKeywords"];
             this.seoDescription = _data["seoDescription"];
             this.sortOrder = _data["sortOrder"];
         }
@@ -2016,7 +2632,6 @@ export class CreateUpdatePostCategoryRequest implements ICreateUpdatePostCategor
         data["slug"] = this.slug;
         data["parentId"] = this.parentId;
         data["isActive"] = this.isActive;
-        data["seoKeywords"] = this.seoKeywords;
         data["seoDescription"] = this.seoDescription;
         data["sortOrder"] = this.sortOrder;
         return data;
@@ -2028,7 +2643,6 @@ export interface ICreateUpdatePostCategoryRequest {
     slug: string;
     parentId?: string | undefined;
     isActive: boolean;
-    seoKeywords?: string | undefined;
     seoDescription?: string | undefined;
     sortOrder: number;
 }
@@ -2139,6 +2753,70 @@ export class CreateUpdateRoleRequest implements ICreateUpdateRoleRequest {
 export interface ICreateUpdateRoleRequest {
     name: string;
     displayName: string;
+}
+
+export class CreateUpdateSeriesRequest implements ICreateUpdateSeriesRequest {
+    name!: string;
+    slug!: string;
+    description?: string | undefined;
+    isActive!: boolean;
+    sortOrder!: number;
+    seoDescription?: string | undefined;
+    thumbnail?: string | undefined;
+    content?: string | undefined;
+
+    constructor(data?: ICreateUpdateSeriesRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.slug = _data["slug"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.sortOrder = _data["sortOrder"];
+            this.seoDescription = _data["seoDescription"];
+            this.thumbnail = _data["thumbnail"];
+            this.content = _data["content"];
+        }
+    }
+
+    static fromJS(data: any): CreateUpdateSeriesRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateUpdateSeriesRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["slug"] = this.slug;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["sortOrder"] = this.sortOrder;
+        data["seoDescription"] = this.seoDescription;
+        data["thumbnail"] = this.thumbnail;
+        data["content"] = this.content;
+        return data;
+    }
+}
+
+export interface ICreateUpdateSeriesRequest {
+    name: string;
+    slug: string;
+    description?: string | undefined;
+    isActive: boolean;
+    sortOrder: number;
+    seoDescription?: string | undefined;
+    thumbnail?: string | undefined;
+    content?: string | undefined;
 }
 
 export class CreateUserRequest implements ICreateUserRequest {
@@ -2305,7 +2983,6 @@ export class PostCategoryDto implements IPostCategoryDto {
     isActive!: boolean;
     dateCreated!: Date;
     dateModified?: Date | undefined;
-    seoKeywords?: string | undefined;
     seoDescription?: string | undefined;
     sortOrder!: number;
 
@@ -2327,7 +3004,6 @@ export class PostCategoryDto implements IPostCategoryDto {
             this.isActive = _data["isActive"];
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
             this.dateModified = _data["dateModified"] ? new Date(_data["dateModified"].toString()) : <any>undefined;
-            this.seoKeywords = _data["seoKeywords"];
             this.seoDescription = _data["seoDescription"];
             this.sortOrder = _data["sortOrder"];
         }
@@ -2349,7 +3025,6 @@ export class PostCategoryDto implements IPostCategoryDto {
         data["isActive"] = this.isActive;
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
         data["dateModified"] = this.dateModified ? this.dateModified.toISOString() : <any>undefined;
-        data["seoKeywords"] = this.seoKeywords;
         data["seoDescription"] = this.seoDescription;
         data["sortOrder"] = this.sortOrder;
         return data;
@@ -2364,7 +3039,6 @@ export interface IPostCategoryDto {
     isActive: boolean;
     dateCreated: Date;
     dateModified?: Date | undefined;
-    seoKeywords?: string | undefined;
     seoDescription?: string | undefined;
     sortOrder: number;
 }
@@ -2450,6 +3124,10 @@ export class PostDto implements IPostDto {
     viewCount!: number;
     dateCreated!: Date;
     status!: PostStatus;
+    categorySlug!: string;
+    categoryName!: string;
+    authorUserName!: string;
+    authorName!: string;
     categoryId!: string;
     content?: string | undefined;
     authorUserId!: string;
@@ -2479,6 +3157,10 @@ export class PostDto implements IPostDto {
             this.viewCount = _data["viewCount"];
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
             this.status = _data["status"];
+            this.categorySlug = _data["categorySlug"];
+            this.categoryName = _data["categoryName"];
+            this.authorUserName = _data["authorUserName"];
+            this.authorName = _data["authorName"];
             this.categoryId = _data["categoryId"];
             this.content = _data["content"];
             this.authorUserId = _data["authorUserId"];
@@ -2508,6 +3190,10 @@ export class PostDto implements IPostDto {
         data["viewCount"] = this.viewCount;
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
         data["status"] = this.status;
+        data["categorySlug"] = this.categorySlug;
+        data["categoryName"] = this.categoryName;
+        data["authorUserName"] = this.authorUserName;
+        data["authorName"] = this.authorName;
         data["categoryId"] = this.categoryId;
         data["content"] = this.content;
         data["authorUserId"] = this.authorUserId;
@@ -2530,6 +3216,10 @@ export interface IPostDto {
     viewCount: number;
     dateCreated: Date;
     status: PostStatus;
+    categorySlug: string;
+    categoryName: string;
+    authorUserName: string;
+    authorName: string;
     categoryId: string;
     content?: string | undefined;
     authorUserId: string;
@@ -2550,6 +3240,10 @@ export class PostInListDto implements IPostInListDto {
     viewCount!: number;
     dateCreated!: Date;
     status!: PostStatus;
+    categorySlug!: string;
+    categoryName!: string;
+    authorUserName!: string;
+    authorName!: string;
 
     constructor(data?: IPostInListDto) {
         if (data) {
@@ -2570,6 +3264,10 @@ export class PostInListDto implements IPostInListDto {
             this.viewCount = _data["viewCount"];
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
             this.status = _data["status"];
+            this.categorySlug = _data["categorySlug"];
+            this.categoryName = _data["categoryName"];
+            this.authorUserName = _data["authorUserName"];
+            this.authorName = _data["authorName"];
         }
     }
 
@@ -2590,6 +3288,10 @@ export class PostInListDto implements IPostInListDto {
         data["viewCount"] = this.viewCount;
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
         data["status"] = this.status;
+        data["categorySlug"] = this.categorySlug;
+        data["categoryName"] = this.categoryName;
+        data["authorUserName"] = this.authorUserName;
+        data["authorName"] = this.authorName;
         return data;
     }
 }
@@ -2603,6 +3305,10 @@ export interface IPostInListDto {
     viewCount: number;
     dateCreated: Date;
     status: PostStatus;
+    categorySlug: string;
+    categoryName: string;
+    authorUserName: string;
+    authorName: string;
 }
 
 export class PostInListDtoPagedResult implements IPostInListDtoPagedResult {
@@ -2848,6 +3554,214 @@ export interface IRoleDtoPagedResult {
     lastRowOnPage: number;
     additionalData: number;
     results?: RoleDto[] | undefined;
+}
+
+export class SeriesDto implements ISeriesDto {
+    id!: string;
+    name!: string;
+    slug!: string;
+    description?: string | undefined;
+    isActive!: boolean;
+    sortOrder!: number;
+    seoDescription?: string | undefined;
+    thumbnail?: string | undefined;
+    content?: string | undefined;
+    authorUserId!: string;
+    dateCreated!: Date;
+
+    constructor(data?: ISeriesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.slug = _data["slug"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.sortOrder = _data["sortOrder"];
+            this.seoDescription = _data["seoDescription"];
+            this.thumbnail = _data["thumbnail"];
+            this.content = _data["content"];
+            this.authorUserId = _data["authorUserId"];
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): SeriesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SeriesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["slug"] = this.slug;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["sortOrder"] = this.sortOrder;
+        data["seoDescription"] = this.seoDescription;
+        data["thumbnail"] = this.thumbnail;
+        data["content"] = this.content;
+        data["authorUserId"] = this.authorUserId;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ISeriesDto {
+    id: string;
+    name: string;
+    slug: string;
+    description?: string | undefined;
+    isActive: boolean;
+    sortOrder: number;
+    seoDescription?: string | undefined;
+    thumbnail?: string | undefined;
+    content?: string | undefined;
+    authorUserId: string;
+    dateCreated: Date;
+}
+
+export class SeriesInListDto implements ISeriesInListDto {
+    id!: string;
+    name!: string;
+    slug!: string;
+    description?: string | undefined;
+    isActive!: boolean;
+    sortOrder!: number;
+    authorUserId!: string;
+
+    constructor(data?: ISeriesInListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.slug = _data["slug"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.sortOrder = _data["sortOrder"];
+            this.authorUserId = _data["authorUserId"];
+        }
+    }
+
+    static fromJS(data: any): SeriesInListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SeriesInListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["slug"] = this.slug;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["sortOrder"] = this.sortOrder;
+        data["authorUserId"] = this.authorUserId;
+        return data;
+    }
+}
+
+export interface ISeriesInListDto {
+    id: string;
+    name: string;
+    slug: string;
+    description?: string | undefined;
+    isActive: boolean;
+    sortOrder: number;
+    authorUserId: string;
+}
+
+export class SeriesInListDtoPagedResult implements ISeriesInListDtoPagedResult {
+    currentPage!: number;
+    pageCount!: number;
+    pageSize!: number;
+    rowCount!: number;
+    readonly firstRowOnPage!: number;
+    readonly lastRowOnPage!: number;
+    additionalData!: number;
+    results?: SeriesInListDto[] | undefined;
+
+    constructor(data?: ISeriesInListDtoPagedResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.currentPage = _data["currentPage"];
+            this.pageCount = _data["pageCount"];
+            this.pageSize = _data["pageSize"];
+            this.rowCount = _data["rowCount"];
+            (<any>this).firstRowOnPage = _data["firstRowOnPage"];
+            (<any>this).lastRowOnPage = _data["lastRowOnPage"];
+            this.additionalData = _data["additionalData"];
+            if (Array.isArray(_data["results"])) {
+                this.results = [] as any;
+                for (let item of _data["results"])
+                    this.results!.push(SeriesInListDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SeriesInListDtoPagedResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new SeriesInListDtoPagedResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["currentPage"] = this.currentPage;
+        data["pageCount"] = this.pageCount;
+        data["pageSize"] = this.pageSize;
+        data["rowCount"] = this.rowCount;
+        data["firstRowOnPage"] = this.firstRowOnPage;
+        data["lastRowOnPage"] = this.lastRowOnPage;
+        data["additionalData"] = this.additionalData;
+        if (Array.isArray(this.results)) {
+            data["results"] = [];
+            for (let item of this.results)
+                data["results"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ISeriesInListDtoPagedResult {
+    currentPage: number;
+    pageCount: number;
+    pageSize: number;
+    rowCount: number;
+    firstRowOnPage: number;
+    lastRowOnPage: number;
+    additionalData: number;
+    results?: SeriesInListDto[] | undefined;
 }
 
 export class SetPasswordRequest implements ISetPasswordRequest {

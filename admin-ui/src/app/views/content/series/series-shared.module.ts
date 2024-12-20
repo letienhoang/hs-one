@@ -9,19 +9,20 @@ import {
 import { PaginatorModule } from 'primeng/paginator';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { BlockUI } from 'primeng/blockui';
-import { PanelModule } from 'primeng/panel';
+import { Panel } from 'primeng/panel';
 import { NgIf, NgFor } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Ripple } from 'primeng/ripple';
 import { InputGroup } from 'primeng/inputgroup';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Checkbox } from 'primeng/checkbox';
-import { BadgeModule } from 'primeng/badge';
 import { KeyFilter } from 'primeng/keyfilter';
-import { Image } from 'primeng/image';
 import { HSOneSharedModule } from '../../../shared/modules/hs-one-shared.module';
-import { PickListModule } from 'primeng/picklist';
+import { Select } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { BadgeModule } from 'primeng/badge';
+import { Image } from 'primeng/image';
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { PickListModule } from 'primeng/picklist';
         ProgressSpinner,
         BlockUI,
         PaginatorModule,
-        PanelModule,
+        TooltipModule,
+        Panel,
         NgIf,
         InputTextModule,
         ButtonModule,
@@ -41,13 +43,12 @@ import { PickListModule } from 'primeng/picklist';
         ReactiveFormsModule,
         Checkbox,
         NgFor,
-        TooltipModule,
-        BadgeModule,
         KeyFilter,
-        Image,
         HSOneSharedModule,
-        PickListModule,
-        FormsModule
+        Select,
+        TextareaModule,
+        BadgeModule,
+        Image
     ],
     exports: [
         CommonModule,
@@ -57,7 +58,8 @@ import { PickListModule } from 'primeng/picklist';
         ProgressSpinner,
         BlockUI,
         PaginatorModule,
-        PanelModule,
+        TooltipModule,
+        Panel,
         NgIf,
         InputTextModule,
         ButtonModule,
@@ -66,13 +68,12 @@ import { PickListModule } from 'primeng/picklist';
         ReactiveFormsModule,
         Checkbox,
         NgFor,
-        TooltipModule,
-        BadgeModule,
         KeyFilter,
-        Image,
         HSOneSharedModule,
-        PickListModule,
-        FormsModule
+        Select,
+        TextareaModule,
+        BadgeModule,
+        Image
     ]
 })
-export class UserSharedModule { }
+export class SeriesSharedModule { }
