@@ -26,6 +26,7 @@
           <th>URL</th>
           <th>Sort Order</th>
           <th>Status</th>
+          <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template #body let-item>
@@ -37,6 +38,9 @@
           <td>
             <p-badge *ngIf="item.isActive == 1" value="Active" severity="success"/>
             <p-badge *ngIf="item.isActive == 0" value="Lock" severity="danger"/>
+          </td>
+          <td>
+            <button pButton (click)="showPosts(item.id, item.name)" class="p-button-sm" severity="contrast" [outlined]="true" icon="pi pi-objects-column" cTooltip="Update Post In Series"></button>
           </td>
         </tr>
       </ng-template>
