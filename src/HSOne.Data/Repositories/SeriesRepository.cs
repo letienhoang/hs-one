@@ -43,5 +43,14 @@ namespace HSOne.Data.Repositories
                 RowCount = totalRecords
             };
         }
+
+        public async Task<List<SeriesInListDto>> GetAllSeriesForPostAsync(Guid postId)
+        {
+            var query = from pis in _context.PostInSeries
+                        join s in _context.Series on pis.SeriesId equals s.Id
+                        where pis.PostId == postId
+                        select s;
+            return await _mapper.ProjectTo<SeriesInListDto>(query).ToListAsync();
+        }
     }
 }

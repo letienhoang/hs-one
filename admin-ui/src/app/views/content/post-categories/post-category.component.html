@@ -7,9 +7,9 @@
       <ng-template #caption>
         <div class="row">
           <div class="col">
-            <button pButton appPolicy="Permissons.PostCategories.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus" cTooltip="Create new Post Category"></button>
-            <button pButton appPolicy="Permissons.PostCategories.Delete" (click)="deleteItems()" class="p-button-sm p-button-danger me-2" [outlined]="true" icon="pi pi-trash" cTooltip="Delete Post Categories" *ngIf="selectedItems.length > 0"></button>
-            <button pButton appPolicy="Permissons.PostCategories.Edit" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" cTooltip="Update Post Category" *ngIf="selectedItems.length == 1" ></button>
+            <button pButton appPermission appPolicy="Permissons.PostCategories.Create" (click)="showAddModal()" class="p-button-sm p-button-success me-2" [outlined]="true" icon="pi pi-plus" cTooltip="Create new Post Category"></button>
+            <button pButton appPermission appPolicy="Permissons.PostCategories.Delete" (click)="deleteItems()" class="p-button-sm p-button-danger me-2" [outlined]="true" icon="pi pi-trash" cTooltip="Delete Post Categories" *ngIf="selectedItems.length > 0"></button>
+            <button pButton appPermission appPolicy="Permissons.PostCategories.Edit" (click)="showEditModal()" class="p-button-sm p-button-info me-2" [outlined]="true" icon="pi pi-pencil" cTooltip="Update Post Category" *ngIf="selectedItems.length == 1" ></button>
           </div>
           <div class="col col-4">
             <p-inputGroup>

@@ -14,23 +14,26 @@ import {
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import {
-  AdminApiSeriesApiClient,
-  SeriesDto,
+  AdminApiPostApiClient,
+  AdminApiPostCategoryApiClient,
+  PostCategoryDto,
+  PostDto,
 } from '../../../api/admin-api.service.generated';
 import { UtilityService } from '../../../shared/services/utility.service';
 import { UploadService } from '../../../shared/services/upload.service';
-import { SeriesSharedModule } from './series-shared.module';
+import { PostSharedModule } from './post-shared.module';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../shared/services/toast.service';
 
 
 @Component({
-  templateUrl: 'series-detail.component.html',
+  templateUrl: 'post-detail.component.html',
   standalone: true,
   imports: [
-    SeriesSharedModule,
+    PostSharedModule
 ],
 })
-export class SeriesDetailComponent implements OnInit, OnDestroy {
+export class PostDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   // Default
@@ -39,32 +42,34 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
   public title: string = '';
   public btnDisabled = false;
   public saveBtnName: string = '';
-  public parentIds: any[] = [];
-  selectedEntity = {} as SeriesDto;
+  selectedEntity = {} as PostDto;
   public avatarImage = '';
   public thumbnailImage = '';
   public canImportImage = false;
+  public postCategories: any[] = [];
 
   formSavedEventEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
-    private seriesApiService: AdminApiSeriesApiClient,
+    private postApiService: AdminApiPostApiClient,
+    private postCategoryApiService: AdminApiPostCategoryApiClient,
     private utilService: UtilityService,
     private fb: FormBuilder,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    public toastService: ToastService,
   ) {}
 
   noSpecial: RegExp = /^[^<>*!_~]+$/;
   validationMessages = {
-    name: [
-      { type: 'required', message: 'You must enter a name' },
-      { type: 'minlength', message: 'The name must be at least 3 characters long' },
-      { type: 'maxlength', message: 'The name cannot be more than 256 characters long' },
+    title: [
+      { type: 'required', message: 'You must enter a title' },
+      { type: 'minlength', message: 'The title must be at least 3 characters long' },
+      { type: 'maxlength', message: 'The title cannot be more than 256 characters long' },
     ],
     slug: [{ type: 'required', message: 'You must enter an slug' }],
-    sortOrder: [{ type: 'required', message: 'You must enter a sort order' }],
+    categoryId: [{ type: 'required', message: 'You must enter a slug category' }],
     description: [{ type: 'maxlength', message: 'The description cannot be more than 256 characters long' }],
     seoDescription: [{ type: 'maxlength', message: 'The seo description cannot be more than 160 characters long' }],
   };
@@ -72,6 +77,7 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
     this.toggleBlockUI(true);
+    this.loadPostCategories();
     if (this.utilService.isEmpty(this.config.data?.id) == false) {
       this.loadFormDetails(this.config.data?.id);
     } else {
@@ -80,11 +86,11 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
   }
 
   loadFormDetails(id: string) {
-    this.seriesApiService
-      .getSeries(id)
+    this.postApiService
+      .getPost(id)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
-        next: (response: SeriesDto) => {
+        next: (response: PostDto) => {
           this.selectedEntity = response;
           this.buildForm();
           this.toggleBlockUI(false);
@@ -94,21 +100,41 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  loadPostCategories() {
+    this.postCategoryApiService
+      .getAllPostCategories()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: (response: PostCategoryDto[]) => {
+          response.forEach((element) => {
+            this.postCategories.push({
+              label: element.name,
+              value: element.id,
+            });
+          });
+        },
+        error: (error) => {
+          this.toastService.showError(error);
+        },
+      });
+  }
     
   buildForm() {
     this.form = this.fb.group({
-      name: new FormControl(this.selectedEntity.name || null,Validators.compose([
+      title: new FormControl(this.selectedEntity.title || null,Validators.compose([
         Validators.required,
         Validators.maxLength(256),
         Validators.minLength(3)
       ])),
       slug: new FormControl(this.selectedEntity.slug || null,Validators.required),
-      sortOrder: new FormControl(this.selectedEntity.sortOrder || 1,Validators.required),
+      categoryId: new FormControl(this.selectedEntity.categoryId || null,Validators.required),
       description: new FormControl(this.selectedEntity.description || null, Validators.maxLength(256)),
-      isActive: new FormControl(this.selectedEntity.isActive || true),
-      seoDescription: new FormControl(this.selectedEntity.seoDescription || null, Validators.maxLength(160)),
       thumbnail: new FormControl(this.selectedEntity.thumbnail || null),
       content: new FormControl(this.selectedEntity.content || null),
+      source: new FormControl(this.selectedEntity.source || null),
+      tags: new FormControl(this.selectedEntity.tags || null),
+      seoDescription: new FormControl(this.selectedEntity.seoDescription || null, Validators.maxLength(160)),
     });
     if (this.selectedEntity.thumbnail) {
       this.thumbnailImage = environment.API_URL + this.selectedEntity.thumbnail;
@@ -118,7 +144,7 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
 
   onFileChange(event: any) {
     if (event.target.files && event.target.files.length) {
-      this.uploadService.uploadImage('series', this.utilService.makeSeoTitle(this.form.value.name), event.target.files)
+      this.uploadService.uploadImage('posts', this.utilService.makeSeoTitle(this.form.value.title), event.target.files)
         .subscribe({
           next: (response: any) => {
             this.form.controls['thumbnail'].setValue(response.path);
@@ -140,8 +166,8 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
     this.toggleBlockUI(true);
 
     if (this.utilService.isEmpty(this.config.data?.id)) {
-      this.seriesApiService
-        .createSeries(this.form.value)
+      this.postApiService
+        .createPost(this.form.value)
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe({
           next: () => {
@@ -153,8 +179,8 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
           },
         });
     } else {
-      this.seriesApiService
-        .updateSeries(this.config.data?.id, this.form.value)
+      this.postApiService
+        .updatePost(this.config.data?.id, this.form.value)
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe({
           next: () => {
@@ -170,7 +196,7 @@ export class SeriesDetailComponent implements OnInit, OnDestroy {
   }
 
   public generateSlug() {
-    var slug = this.utilService.makeSeoTitle(this.form.value.name);
+    var slug = this.utilService.makeSeoTitle(this.form.value.title);
     this.form.patchValue({
       slug: slug,
     });

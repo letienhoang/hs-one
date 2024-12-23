@@ -26,7 +26,7 @@ import { RoleSharedModule } from './role-shared.module';
 })
 export class RoleComponent implements OnInit, OnDestroy {
   // System variables
-  private ngUnsubcribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   public isBlockUI: boolean = false;
 
   // Pagination variables
@@ -54,7 +54,7 @@ export class RoleComponent implements OnInit, OnDestroy {
     this.toggleBlockUI(true);
     this.roleApiService
       .getRolesPaging(this.keyword, this.pageIndex, this.pageSize)
-      .pipe(takeUntil(this.ngUnsubcribe))
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
         next: (response: RoleDtoPagedResult) => {
           this.items = response.results || [];
@@ -195,7 +195,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.ngUnsubcribe.next();
-    this.ngUnsubcribe.complete();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

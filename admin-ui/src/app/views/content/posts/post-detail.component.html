@@ -3,17 +3,16 @@
         <div class="formgrid grid">
             <div class="row mb-3">
                 <div class="field col-6">
-                    <label for="name">Name <span class="required">*</span></label>
-                    <input id="name" type="text" pInputText [pKeyFilter]="noSpecial" formControlName="name" (keyup)="generateSlug()"
+                    <label for="title">Title <span class="required">*</span></label>
+                    <input id="title" type="text" pInputText [pKeyFilter]="noSpecial" formControlName="title" (keyup)="generateSlug()"
                         [style]="{ width: '100%' }" />
-                    <app-validation-message [entityForm]="form" fieldName="name"
+                    <app-validation-message [entityForm]="form" fieldName="title"
                         [validationMessages]="validationMessages">
                     </app-validation-message>
                 </div>
                 <div class="field col-6">
                     <label for="slug" class="block">Slug <span class="required">*</span></label>
-                    <input id="slug" type="text" pInputText [pKeyFilter]="noSpecial" formControlName="slug"
-                        [style]="{ width: '100%' }" />
+                    <input id="slug" type="text" pInputText formControlName="slug" [style]="{ width: '100%' }" />
                     <app-validation-message [entityForm]="form" fieldName="slug"
                         [validationMessages]="validationMessages">
                     </app-validation-message>
@@ -21,25 +20,42 @@
             </div>
             <div class="row mb-3">
                 <div class="field col-6">
-                    <label for="parentId" class="block">Parent</label>
-                    <p-select [options]="parentIds" formControlName="parentId"
-                     placeholder="Select Parent" [editable]="true" optionValue="value" [showClear]="true" [checkmark]="true"
+                    <label for="categoryId" class="block">Category <span class="required">*</span></label>
+                    <p-select [options]="postCategories" formControlName="categoryId"
+                     placeholder="Select Category" [editable]="true" optionValue="value" [showClear]="true" [checkmark]="true"
                      optionLabel="label" class="w-full" [style]="{ width: '100%' }"/>
-                </div>
-                <div class="field col-3">
-                    <label for="sortOrder">Sort Order <span class="required">*</span></label>
-                    <input id="sortOrder" type="number" pInputText [pKeyFilter]="noSpecial" formControlName="sortOrder"
-                        [style]="{ width: '100%' }" />
-                    <app-validation-message [entityForm]="form" fieldName="sortOrder"
+                     <app-validation-message [entityForm]="form" fieldName="categoryId"
                         [validationMessages]="validationMessages">
                     </app-validation-message>
                 </div>
-                <div class="field-checkbox col-3 pt-4">
-                    <p-checkbox formControlName="isActive" [binary]="true" id="isActive" class="me-2"></p-checkbox>
-                    <label for="isActive">Active</label>
+                <div class="field-checkbox col-6">
+                    <label for="source" class="block">Source</label>
+                    <input id="source" type="text" pInputText formControlName="source" [style]="{ width: '100%' }" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="field col-6">
+                    <label for="description">Description</label>
+                    <textarea pTextarea formControlName="description" placeholder="Normal" rows="3" [pKeyFilter]="noSpecial" [style]="{ width: '100%' }" ></textarea>
+                    <app-validation-message [entityForm]="form" fieldName="description"
+                        [validationMessages]="validationMessages">
+                    </app-validation-message>
+                </div>
+                <div class="field col-6">
+                    <label for="thumbnailFileContent">Thumbnail</label>
+                    <input *ngIf="canImportImage" (change)="onFileChange($event)" type="file" class="w-full" />
+                    <p-image [src]="thumbnailImage" [preview]="true" width="250"></p-image>
                 </div>
             </div>
         
+            <div class="row mb-3">
+                <div class="field col-12">
+                    <label for="content">Content</label>
+                    <p-editor formControlName="content" [pKeyFilter]="noSpecial" [style]="{ width: '100%', height: '320px' }" />
+                </div>
+            </div>
+
             <div class="row mb-3">
                 <div class="field col-12">
                     <label for="seoDescription">SEO Description</label>

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using HSOne.Core.Domain.Identity;
 using HSOne.Core.Repositories;
 using HSOne.Core.SeedWorks;
 using HSOne.Data.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace HSOne.Data.SeedWorks
 {
@@ -9,10 +11,10 @@ namespace HSOne.Data.SeedWorks
     {
         private readonly HSOneContext _context;
 
-        public UnitOfWork(HSOneContext context, IMapper mapper)
+        public UnitOfWork(HSOneContext context, IMapper mapper, UserManager<AppUser> userManager)
         {
             _context = context;
-            Posts = new PostRepository(_context, mapper);
+            Posts = new PostRepository(_context, mapper, userManager);
             PostCategories = new PostCategoryRepository(_context, mapper);
             Series = new SeriesRepository(_context, mapper);
             PostInSeries = new PostInSeriesRepository(_context, mapper);

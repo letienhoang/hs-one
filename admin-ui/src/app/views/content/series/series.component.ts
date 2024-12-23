@@ -27,7 +27,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class SeriesComponent implements OnInit, OnDestroy {
   // System variables
-  private ngUnsubcribe: Subject<void> = new Subject<void>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   public isBlockUI: boolean = false;
 
   // Pagination variables
@@ -55,7 +55,7 @@ export class SeriesComponent implements OnInit, OnDestroy {
     this.toggleBlockUI(true);
     this.seriesApiService
       .getSeriesPaging(this.keyword, this.pageIndex, this.pageSize)
-      .pipe(takeUntil(this.ngUnsubcribe))
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
         next: (response: SeriesInListDtoPagedResult) => {
           this.items = response.results || [];
@@ -173,7 +173,7 @@ export class SeriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.ngUnsubcribe.next();
-    this.ngUnsubcribe.complete();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
