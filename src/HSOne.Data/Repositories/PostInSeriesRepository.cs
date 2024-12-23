@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HSOne.Core.Domain.Content;
+using HSOne.Core.Models.Content;
 using HSOne.Core.Repositories;
 using HSOne.Data.SeedWorks;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,12 @@ namespace HSOne.Data.Repositories
             {
                 _context.PostInSeries.Remove(postInSeries);
             }
+        }
+
+        public async Task<PostInSeriesDto> GetPostInSeriesAsync(Guid postId, Guid seriesId)
+        {
+            var postInSeries = await _context.PostInSeries.FirstOrDefaultAsync(x => x.SeriesId == seriesId && x.PostId == postId);
+            return _mapper.Map<PostInSeriesDto>(postInSeries);
         }
     }
 }

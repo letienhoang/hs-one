@@ -122,10 +122,19 @@ namespace HSOne.Api.Controllers.AdminApi
         [HttpGet]
         [Route("series-post")]
         [Authorize(Permissions.Posts.View)]
-        public async Task<ActionResult<List<SeriesInListDto>>> GetSeriesForPostAsync(Guid postId)
+        public async Task<ActionResult<List<SeriesInListDto>>> GetAllSeriesForPostAsync(Guid postId)
         {
             var series = await _unitOfWork.Series.GetAllSeriesForPostAsync(postId);
             return Ok(series);
+        }
+
+        [HttpGet]
+        [Route("post-in-series")]
+        [Authorize(Permissions.Posts.View)]
+        public async Task<ActionResult<PostInSeriesDto>> GetPostsInSeriesAsync(Guid postId, Guid seriesId)
+        {
+            var postInSeries = await _unitOfWork.PostInSeries.GetPostInSeriesAsync(postId, seriesId);
+            return Ok(postInSeries);
         }
 
         [HttpPatch]

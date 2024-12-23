@@ -21,7 +21,9 @@ namespace HSOne.Core.Models.Content
         [MaxLength(512)]
         public string? Thumbnail { get; set; }
         public string? Content { get; set; }
+        [MaxLength(512)]
         public string? Source { get; set; }
+        [MaxLength(256)]
         public string? Tags { get; set; }
         [MaxLength(160)]
         public string? SeoDescription { get; set; }

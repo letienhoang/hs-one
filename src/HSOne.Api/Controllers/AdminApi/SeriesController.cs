@@ -109,7 +109,7 @@ namespace HSOne.Api.Controllers.AdminApi
             {
                 return BadRequest("Post is already in series");
             }
-            await _unitOfWork.PostInSeries.AddPostToSeriesAsync(request.PostId, request.SeriesId, request.SortOrder);
+            await _unitOfWork.PostInSeries.AddPostToSeriesAsync(request.SeriesId, request.PostId, request.SortOrder);
             var result = await _unitOfWork.CompleteAsync();
             return result > 0 ? Ok() : BadRequest();
         }
@@ -132,7 +132,7 @@ namespace HSOne.Api.Controllers.AdminApi
         [HttpGet]
         [Route("post-series/{seriesId}")]
         [Authorize(Permissions.Series.View)]
-        public async Task<ActionResult<List<PostInListDto>>> GetPostInSeriesAsync(Guid seriesId)
+        public async Task<ActionResult<List<PostInListDto>>> GetAllPostInSeriesAsync(Guid seriesId)
         {
             var posts = await _unitOfWork.Posts.GetAllPostsInSeriesAsync(seriesId);
             return Ok(posts);

@@ -449,7 +449,7 @@ export class AdminApiPostApiClient {
      * @param postId (optional) 
      * @return Success
      */
-    getSeriesForPost(postId?: string | undefined): Observable<SeriesInListDto[]> {
+    getAllSeriesForPost(postId?: string | undefined): Observable<SeriesInListDto[]> {
         let url_ = this.baseUrl + "/api/admin/post/series-post?";
         if (postId === null)
             throw new Error("The parameter 'postId' cannot be null.");
@@ -466,11 +466,11 @@ export class AdminApiPostApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetSeriesForPost(response_);
+            return this.processGetAllSeriesForPost(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetSeriesForPost(response_ as any);
+                    return this.processGetAllSeriesForPost(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<SeriesInListDto[]>;
                 }
@@ -479,7 +479,7 @@ export class AdminApiPostApiClient {
         }));
     }
 
-    protected processGetSeriesForPost(response: HttpResponseBase): Observable<SeriesInListDto[]> {
+    protected processGetAllSeriesForPost(response: HttpResponseBase): Observable<SeriesInListDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -498,6 +498,67 @@ export class AdminApiPostApiClient {
             else {
                 result200 = <any>null;
             }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param postId (optional) 
+     * @param seriesId (optional) 
+     * @return Success
+     */
+    getPostsInSeries(postId?: string | undefined, seriesId?: string | undefined): Observable<PostInSeriesDto> {
+        let url_ = this.baseUrl + "/api/admin/post/post-in-series?";
+        if (postId === null)
+            throw new Error("The parameter 'postId' cannot be null.");
+        else if (postId !== undefined)
+            url_ += "postId=" + encodeURIComponent("" + postId) + "&";
+        if (seriesId === null)
+            throw new Error("The parameter 'seriesId' cannot be null.");
+        else if (seriesId !== undefined)
+            url_ += "seriesId=" + encodeURIComponent("" + seriesId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPostsInSeries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPostsInSeries(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PostInSeriesDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PostInSeriesDto>;
+        }));
+    }
+
+    protected processGetPostsInSeries(response: HttpResponseBase): Observable<PostInSeriesDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PostInSeriesDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2031,7 +2092,7 @@ export class AdminApiSeriesApiClient {
     /**
      * @return Success
      */
-    getPostInSeries(seriesId: string): Observable<PostInListDto[]> {
+    getAllPostInSeries(seriesId: string): Observable<PostInListDto[]> {
         let url_ = this.baseUrl + "/api/admin/series/post-series/{seriesId}";
         if (seriesId === undefined || seriesId === null)
             throw new Error("The parameter 'seriesId' must be defined.");
@@ -2047,11 +2108,11 @@ export class AdminApiSeriesApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetPostInSeries(response_);
+            return this.processGetAllPostInSeries(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetPostInSeries(response_ as any);
+                    return this.processGetAllPostInSeries(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<PostInListDto[]>;
                 }
@@ -2060,7 +2121,7 @@ export class AdminApiSeriesApiClient {
         }));
     }
 
-    protected processGetPostInSeries(response: HttpResponseBase): Observable<PostInListDto[]> {
+    protected processGetAllPostInSeries(response: HttpResponseBase): Observable<PostInListDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3774,6 +3835,50 @@ export interface IPostInListDtoPagedResult {
     lastRowOnPage: number;
     additionalData: number;
     results?: PostInListDto[] | undefined;
+}
+
+export class PostInSeriesDto implements IPostInSeriesDto {
+    postId?: string;
+    seriesId?: string;
+    displayOrder?: number;
+
+    constructor(data?: IPostInSeriesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.postId = _data["postId"];
+            this.seriesId = _data["seriesId"];
+            this.displayOrder = _data["displayOrder"];
+        }
+    }
+
+    static fromJS(data: any): PostInSeriesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostInSeriesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["postId"] = this.postId;
+        data["seriesId"] = this.seriesId;
+        data["displayOrder"] = this.displayOrder;
+        return data;
+    }
+}
+
+export interface IPostInSeriesDto {
+    postId?: string;
+    seriesId?: string;
+    displayOrder?: number;
 }
 
 export enum PostStatus {

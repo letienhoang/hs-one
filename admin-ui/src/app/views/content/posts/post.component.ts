@@ -13,6 +13,7 @@ import { ConfirmationService } from 'primeng/api';
 import { PostSharedModule } from './post-shared.module';
 import { PostDetailComponent } from './post-detail.component';
 import { FormsModule } from '@angular/forms';
+import { PostSeriesComponent } from './post-series.component';
 
 @Component({
   selector: 'app-post',
@@ -195,7 +196,28 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
-  addToSeries(id: string) {}
+  addToSeries(id: string) {
+    const ref = this.dialogService.open(PostSeriesComponent, {
+      data: {
+        id: id
+      },
+      header: 'Add to Series',
+      width: '70%',
+      modal: true,
+      closable: true
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: PostDto) => {
+      if (data) {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadDatas();
+      }
+    });
+  }
 
   approve(id: string) {}
 

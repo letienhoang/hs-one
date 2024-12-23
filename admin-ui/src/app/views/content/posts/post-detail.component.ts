@@ -71,6 +71,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     slug: [{ type: 'required', message: 'You must enter an slug' }],
     categoryId: [{ type: 'required', message: 'You must enter a slug category' }],
     description: [{ type: 'maxlength', message: 'The description cannot be more than 256 characters long' }],
+    source: [{ type: 'maxlength', message: 'The source cannot be more than 512 characters long' }],
+    tags: [{ type: 'maxlength', message: 'The tags cannot be more than 256 characters long' }],
     seoDescription: [{ type: 'maxlength', message: 'The seo description cannot be more than 160 characters long' }],
   };
 
@@ -132,8 +134,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       description: new FormControl(this.selectedEntity.description || null, Validators.maxLength(256)),
       thumbnail: new FormControl(this.selectedEntity.thumbnail || null),
       content: new FormControl(this.selectedEntity.content || null),
-      source: new FormControl(this.selectedEntity.source || null),
-      tags: new FormControl(this.selectedEntity.tags || null),
+      source: new FormControl(this.selectedEntity.source || null, Validators.maxLength(512)),
+      tags: new FormControl(this.selectedEntity.tags || null, Validators.maxLength(256)),
       seoDescription: new FormControl(this.selectedEntity.seoDescription || null, Validators.maxLength(160)),
     });
     if (this.selectedEntity.thumbnail) {
