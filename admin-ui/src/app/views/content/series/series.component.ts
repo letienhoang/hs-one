@@ -13,6 +13,7 @@ import { ConfirmationService } from 'primeng/api';
 import { SeriesSharedModule } from './series-shared.module';
 import { SeriesDetailComponent } from './series-detail.component';
 import { FormsModule } from '@angular/forms';
+import { SeriesPostsComponent } from './series-posts.component';
 
 @Component({
   selector: 'app-series',
@@ -128,6 +129,29 @@ export class SeriesComponent implements OnInit, OnDestroy {
       if (data) {
         this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
         this.selectedItems = [];
+        this.loadDatas();
+      }
+    });
+  }
+
+  showPosts(id: string, seriesName: string) {
+    const ref = this.dialogService.open(SeriesPostsComponent, {
+      data: {
+        id: id,
+        seriesName: seriesName
+      },
+      header: 'Posts in Series',
+      width: '70%',
+      modal: true,
+      closable: true
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: SeriesDto) => {
+      if (data) {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
         this.loadDatas();
       }
     });

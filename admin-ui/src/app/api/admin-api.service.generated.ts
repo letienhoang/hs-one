@@ -2031,7 +2031,7 @@ export class AdminApiSeriesApiClient {
     /**
      * @return Success
      */
-    getPostInListSeries(seriesId: string): Observable<PostInListDto[]> {
+    getPostInSeries(seriesId: string): Observable<PostInListDto[]> {
         let url_ = this.baseUrl + "/api/admin/series/post-series/{seriesId}";
         if (seriesId === undefined || seriesId === null)
             throw new Error("The parameter 'seriesId' must be defined.");
@@ -2047,11 +2047,11 @@ export class AdminApiSeriesApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetPostInListSeries(response_);
+            return this.processGetPostInSeries(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetPostInListSeries(response_ as any);
+                    return this.processGetPostInSeries(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<PostInListDto[]>;
                 }
@@ -2060,7 +2060,7 @@ export class AdminApiSeriesApiClient {
         }));
     }
 
-    protected processGetPostInListSeries(response: HttpResponseBase): Observable<PostInListDto[]> {
+    protected processGetPostInSeries(response: HttpResponseBase): Observable<PostInListDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

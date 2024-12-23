@@ -132,7 +132,7 @@ namespace HSOne.Api.Controllers.AdminApi
         [HttpGet]
         [Route("post-series/{seriesId}")]
         [Authorize(Permissions.Series.View)]
-        public async Task<ActionResult<List<PostInListDto>>> GetPostInListSeriesAsync(Guid seriesId)
+        public async Task<ActionResult<List<PostInListDto>>> GetPostInSeriesAsync(Guid seriesId)
         {
             var posts = await _unitOfWork.Posts.GetAllPostsInSeriesAsync(seriesId);
             return Ok(posts);
