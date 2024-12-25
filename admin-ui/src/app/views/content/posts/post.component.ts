@@ -14,6 +14,8 @@ import { PostSharedModule } from './post-shared.module';
 import { PostDetailComponent } from './post-detail.component';
 import { FormsModule } from '@angular/forms';
 import { PostSeriesComponent } from './post-series.component';
+import { PostRejectReasonComponent } from './post-reject-reason.component';
+import { PostActivityLogsComponent } from './post-activity-logs.component';
 
 @Component({
   selector: 'app-post',
@@ -196,12 +198,12 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
-  addToSeries(id: string) {
+  addToSeries(id: string, postName: string) {
     const ref = this.dialogService.open(PostSeriesComponent, {
       data: {
         id: id
       },
-      header: 'Add to Series',
+      header: 'Add to Series for ' + postName,
       width: '70%',
       modal: true,
       closable: true
@@ -219,13 +221,96 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
-  approve(id: string) {}
+  approve(id: string) {
+    this.toggleBlockUI(true);
+    this.postApiService.approvePost(id).subscribe({
+      next: () => {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.loadDatas();
+        this.selectedItems = [];
+        this.toggleBlockUI(false);
+      },
+      error: () => {
+        this.toggleBlockUI(false);
+      }
+    });
+  }
 
-  sendForApproval(id: string) {}
+  sendForApproval(id: string) {
+    this.toggleBlockUI(true);
+    this.postApiService.sendForApprovalPost(id).subscribe({
+      next: () => {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.loadDatas();
+        this.selectedItems = [];
+        this.toggleBlockUI(false);
+      },
+      error: () => {
+        this.toggleBlockUI(false);
+      }
+    });
+  }
 
-  reject(id: string) {}
+  reject(id: string, postName: string) {
+    const ref = this.dialogService.open(PostRejectReasonComponent, {
+      data: {
+        id: id
+      },
+      header: 'Reject: ' + postName,
+      width: '70%',
+      modal: true,
+      closable: true
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: PostDto) => {
+      if (data) {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadDatas();
+      }
+    });
+  }
 
-  showLogs(id: string) {}
+  showLogs(id: string, postName: string) {
+    const ref = this.dialogService.open(PostActivityLogsComponent, {
+      data: {
+        id: id
+      },
+      header: 'Activity Logs: ' + postName,
+      width: '80%',
+      modal: true,
+      closable: true
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: PostDto) => {
+      if (data) {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadDatas();
+      }
+    });
+  }
+
+  backToDraft(id: string) {
+    this.toggleBlockUI(true);
+    this.postApiService.backToDraft(id).subscribe({
+      next: () => {
+        this.toastService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.loadDatas();
+        this.selectedItems = [];
+        this.toggleBlockUI(false);
+      },
+      error: () => {
+        this.toggleBlockUI(false);
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();

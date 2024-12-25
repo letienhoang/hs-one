@@ -1,0 +1,38 @@
+<p-panel class="mb-4" #pnl>
+  <ng-template #content class="p-0">
+    <p-table #dt [value]="items" selectionMode="multiple" dataKey="id" [(selection)]="selectedItems" [metaKeySelection]="true" class="m-0">
+      <ng-template #header>
+        <tr>
+          <th>From Status</th>
+          <th>To Status</th>
+          <th>User</th>
+          <th>Date Change</th>
+          <th>Note</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-item>
+        <tr>
+          <td style="width: 20%;">
+            <p-badge *ngIf="item.fromStatus == 1" value="Draft" severity="secondary"/>
+            <p-badge *ngIf="item.fromStatus == 2" value="Waiting Approval" severity="info"/>
+            <p-badge *ngIf="item.fromStatus == 3" value="Rejected" severity="danger"/>
+            <p-badge *ngIf="item.fromStatus == 4" value="Published" severity="success"/>
+          </td>
+          <td style="width: 20%;">
+            <p-badge *ngIf="item.toStatus == 1" value="Draft" severity="secondary"/>
+            <p-badge *ngIf="item.toStatus == 2" value="Waiting Approval" severity="info"/>
+            <p-badge *ngIf="item.toStatus == 3" value="Rejected" severity="danger"/>
+            <p-badge *ngIf="item.toStatus == 4" value="Published" severity="success"/>
+          </td>
+          <td>{{ item.userName }}</td>
+          <td>{{ item.dateCreated | date : 'dd-MM-yyyy hh:mm' }}</td>
+          <td>{{ item.note }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+
+  <p-blockUI [target]="pnl" [blocked]="isBlockUI">
+    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px', position: 'absolute', top: '25%', left: '50%' }" />
+  </p-blockUI>
+</p-panel>

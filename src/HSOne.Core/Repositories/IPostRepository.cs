@@ -14,6 +14,7 @@ namespace HSOne.Core.Repositories
         Task ApproveAsync(Guid id, Guid userId);
         Task SendForApprovalAsync(Guid id, Guid userId);
         Task RejectAsync(Guid id, Guid userId, string note);
+        Task BackToDraftAsync(Guid id, Guid userId);
         Task<string> GetRejectReasonAsync(Guid id);
         Task<bool> HasPublishInLastAsync(Guid id);
         Task<List<PostActivityLogDto>> GetActivityLogsAsync(Guid id);

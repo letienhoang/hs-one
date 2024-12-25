@@ -175,5 +175,25 @@ namespace HSOne.Data.Repositories
                 .OrderByDescending(x => x.DateCreated);
             return await _mapper.ProjectTo<PostActivityLogDto>(query).ToListAsync();
         }
+
+        public async Task BackToDraftAsync(Guid id, Guid userId)
+        {
+            var post = await _context.Posts.FindAsync(id) ?? throw new Exception("Post does not exist");
+            var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new Exception("User does not exist");
+
+            await _context.PostActivityLogs.AddAsync(new PostActivityLog
+            {
+                Id = Guid.NewGuid(),
+                FromStatus = post.Status,
+                ToStatus = PostStatus.Draft,
+                PostId = id,
+                UserId = userId,
+                UserName = user.UserName!,
+                Note = $"{user.UserName} return back to draft"
+            });
+
+            post.Status = PostStatus.Draft;
+            _context.Posts.Update(post);
+        }
     }
 }

@@ -185,5 +185,15 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(logs);
 
         }
+
+        [HttpPatch]
+        [Route("back-to-draft/{id}")]
+        [Authorize(Permissions.Posts.Approve)]
+        public async Task<IActionResult> BackToDraftAsync(Guid id)
+        {
+            await _unitOfWork.Posts.BackToDraftAsync(id, User.GetUserId());
+            await _unitOfWork.CompleteAsync();
+            return Ok();
+        }
     }
 }

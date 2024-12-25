@@ -1,0 +1,25 @@
+<form class="form-horizontal form-label-left" skipValidation [formGroup]="form" (ngSubmit)="saveChange()">
+    <p-panel #pnlDetail header="Information" showHeader="false" [toggleable]="false" [collapsed]="false" >
+        <div class="formgrid grid pt-2">
+            <div class="row mb-3">
+                <div class="field col-12">
+                    <label for="reason">Reason <span class="required">*</span></label>
+                    <textarea pTextarea formControlName="reason" placeholder="Normal" rows="3" [pKeyFilter]="noSpecial" [style]="{ width: '100%' }" ></textarea>
+                    <app-validation-message [entityForm]="form" fieldName="reason"
+                        [validationMessages]="validationMessages">
+                    </app-validation-message>
+                </div>
+            </div>
+
+        </div>
+        <ng-template #footer>
+            <div class="flex justify-content-end">
+                <button type="submit" pButton [disabled]="!form.valid || btnDisabled" [outlined]="true" icon="pi pi-save"></button>
+            </div>
+        </ng-template>
+
+        <p-blockUI [target]="pnlDetail" [blocked]="blockedPanelRejectReason">
+            <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px', position: 'absolute', top: '25%', left: '50%' }"/>
+        </p-blockUI>
+    </p-panel>
+</form>
