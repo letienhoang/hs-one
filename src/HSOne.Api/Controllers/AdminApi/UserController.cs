@@ -137,6 +137,15 @@ namespace HSOne.Api.Controllers.AdminApi
             return Ok(pagedResponse);
         }
 
+        [HttpGet]
+        [Authorize(Users.View)]
+        public async Task<ActionResult<List<UserDto>>> GetAllUsersAsync()
+        {
+            var query = _userManager.Users;
+            query = query.OrderByDescending(x => x.DateCreated);
+            return await _mapper.ProjectTo<UserDto>(query).ToListAsync();
+        }
+
         [HttpPut]
         [Route("password-change-current-user")]
         [ValidateModel]

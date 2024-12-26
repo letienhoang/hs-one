@@ -49,14 +49,37 @@ export const navItems: INavData[] = [
           "policyName": "Permissions.Series.View"
         }
       },
+    ]
+  },
+  {
+    name: 'Royalty',
+    url: '/royalty',
+    iconComponent: { name: 'cil-star' },
+    children: [
       {
-        name: 'Royalty',
-        url: '/content/royalty',
+        name: 'Month Report',
+        url: '/royalty/royalty-month',
         icon: 'nav-icon-bullet',
         attributes: {
-          "policyName": "Permissions.Loyalty.View"
+          "policyName": "Permissions.Royalty.View"
         }
-      }
+      },
+      {
+        name: 'User Report',
+        url: '/royalty/royalty-user',
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.Royalty.View"
+        }
+      },
+      {
+        name: 'Transaction',
+        url: '/royalty/transactions',
+        icon: 'nav-icon-bullet',
+        attributes: {
+          "policyName": "Permissions.Royalty.View"
+        }
+      },
     ]
   },
   {
@@ -88,5 +111,5 @@ export const navItems: INavData[] = [
         }
       },
     ]
-  }
+  },
 ];

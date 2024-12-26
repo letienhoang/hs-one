@@ -6,9 +6,11 @@ using HSOne.Core.ConfigOptions;
 using HSOne.Core.Domain.Identity;
 using HSOne.Core.Models.Content;
 using HSOne.Core.SeedWorks;
+using HSOne.Core.Services;
 using HSOne.Data;
 using HSOne.Data.Repositories;
 using HSOne.Data.SeedWorks;
+using HSOne.Data.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -88,6 +90,7 @@ builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
+builder.Services.AddScoped<IRoyaltyService, RoyaltyService>();
 
 // Default config for ASP.NET Core
 builder.Services.AddControllers();

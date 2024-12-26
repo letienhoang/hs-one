@@ -1,0 +1,55 @@
+<p-panel class="mb-4" #pnl>
+    <ng-template #header>
+      <h4 class="bold">Month Report</h4>
+    </ng-template>
+    <ng-template #content class="p-0">
+      <p-table #dt [value]="items" selectionMode="multiple" dataKey="id" [(selection)]="selectedItems" [metaKeySelection]="true" class="m-0">
+        <ng-template #caption>
+          <div class="row">
+            <div class="col-6">
+                <p-select [options]="users" [(ngModel)]="userId" (onChange)="loadDatas()" placeholder="Select User" [editable]="true" optionValue="value" [showClear]="true" [checkmark]="true"
+                     optionLabel="label" class="w-50" [style]="{ width: '100%' }"/>
+            </div>
+            <div class="col col-4">
+                <p-floatlabel variant="on">
+                    <p-datepicker [(ngModel)]="rangeDate" dateFormat="mm/yy" (ngModelChange)="dateChanged($event)" [showIcon]="true" inputId="rangeDate" selectionMode="range" [showOnFocus]="false" />
+                    <label for="rangeDate">From Date - To Date</label>
+                </p-floatlabel>
+            </div>
+            <div class="col">
+              <button pButton (click)="loadDatas()" class="p-button" size="large" severity="secondary" [outlined]="true" icon="pi pi-search"></button>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #header>
+          <tr>
+            <th>Month</th>
+            <th>Draft</th>
+            <th>Waiting Approval</th>
+            <th>Reject</th>
+            <th>Publishing</th>
+            <th>Total Post</th>
+            <th>Unpaid Post</th>
+            <th>Paid Post</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-item>
+          <tr>
+            <td>{{item.month}}/{{item.year}}</td>
+            <td>{{item.numberOfDraftPosts | number}}</td>
+            <td>{{item.numberOfWaitingApprovalPosts | number}}</td>
+            <td>{{item.numberOfRejectedPosts | number}}</td>
+            <td>{{item.numberOfPublishPosts | number}}</td>
+            <td>{{item.numberOfDraftPosts + item.numberOfWaitingApprovalPosts + item.numberOfRejectedPosts + item.numberOfPublishPosts | number}}</td>
+            <td>{{item.numberOfUnpaidPublishPosts | number}}</td>
+            <td>{{item.numberOfPaidPublishPosts | number}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-template>
+  
+    <p-blockUI [target]="pnl" [blocked]="isBlockUI">
+      <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px', position: 'absolute', top: '25%', left: '50%' }" />
+    </p-blockUI>
+  </p-panel>
+  

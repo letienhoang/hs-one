@@ -17,6 +17,7 @@ namespace HSOne.Core.Models.System
         public string? Avatar { get; set; }
         [Required]
         public bool IsActive { get; set; }
+        public double RoyaltyAmountPerPost { get; set; }
         public class AutoMapperProfiles : Profile
         {
             public AutoMapperProfiles()

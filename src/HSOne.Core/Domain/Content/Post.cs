@@ -54,6 +54,8 @@ namespace HSOne.Core.Domain.Content
         public required string AuthorUserName { get; set; }
         [MaxLength(256)]
         public required string AuthorName { get; set; }
+
+        public DateTime? PaidDate { get; set; }
     }
 
     public enum PostStatus

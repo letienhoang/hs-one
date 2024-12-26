@@ -29,6 +29,11 @@ namespace HSOne.Core.Models.Content
         public required string AuthorUserName { get; set; }
         [Required]
         public required string AuthorName { get; set; }
+        [Required]
+        public bool IsPaid { get; set; }
+        [Required]
+        public double RoyaltyAmount { get; set; }
+        public DateTime? PaidDate { get; set; }
 
         public class AutoMapperProfile : Profile
         {

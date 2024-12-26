@@ -195,5 +195,10 @@ namespace HSOne.Data.Repositories
             post.Status = PostStatus.Draft;
             _context.Posts.Update(post);
         }
+
+        public async Task<List<Post>> GetUnpaidPublishPostsAsync(Guid userId)
+        {
+            return await _context.Posts.Where(x => x.AuthorUserId == userId && x.Status == PostStatus.Published && !x.IsPaid).ToListAsync();
+        }
     }
 }

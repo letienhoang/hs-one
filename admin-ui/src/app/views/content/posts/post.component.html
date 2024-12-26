@@ -30,6 +30,7 @@
           <th>Category</th>
           <th>View Count</th>
           <th>Created Date</th>
+          <th>Royalty</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -41,6 +42,10 @@
           <td>{{item.categoryName}}</td>
           <td>{{item.viewCount | number}}</td>
           <td>{{item.dateCreated | date : 'dd-MM-yyyy hh:mm'}}</td>
+          <td>
+            <p-badge *ngIf="item.isPaid == 0" value="Unpaid" severity="secondary"/>
+            <p-badge *ngIf="item.isPaid == 1" value="Paid" severity="info"/>
+          </td>
           <td>
             <p-badge *ngIf="item.status == 1" value="Draft" severity="secondary"/>
             <p-badge *ngIf="item.status == 2" value="Waiting Approval" severity="info"/>

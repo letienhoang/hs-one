@@ -1,5 +1,6 @@
 ﻿using HSOne.Core.Domain.Content;
 using HSOne.Core.Domain.Identity;
+using HSOne.Core.Domain.Royalty;
 using HSOne.Core.SeedWorks.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace HSOne.Data
         public DbSet<PostTag> PostTags { get; set; }
         public DbSet<Series> Series { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

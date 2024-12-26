@@ -18,5 +18,6 @@ namespace HSOne.Core.Repositories
         Task<string> GetRejectReasonAsync(Guid id);
         Task<bool> HasPublishInLastAsync(Guid id);
         Task<List<PostActivityLogDto>> GetActivityLogsAsync(Guid id);
+        Task<List<Post>> GetUnpaidPublishPostsAsync(Guid userId);
     }
 }

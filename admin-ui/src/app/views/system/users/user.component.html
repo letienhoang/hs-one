@@ -25,6 +25,7 @@
             <th>UserName</th>
             <th>Email</th>
             <th>Join Date</th>
+            <th>Balance</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -35,6 +36,7 @@
             <td>{{item.userName}}</td>
             <td>{{item.email}}</td>
             <td>{{item.dateCreated | date: 'dd/MM/yyyy hh:mm'}}</td>
+            <td>{{item.balance | number}}</td>
             <td>
                 <p-badge *ngIf="item.isActive == 1" value="Active" severity="success"></p-badge>
                 <p-badge *ngIf="item.isActive == 0" value="Lock" severity="danger"></p-badge>
