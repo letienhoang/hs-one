@@ -17,7 +17,7 @@ namespace HSOne.Data.Repositories
 
         public async Task<bool> IsPostInSeriesAsync(Guid seriesId, Guid postId)
         {
-            return await _context.PostInSeries.AnyAsync(x => x.SeriesId == seriesId && x.PostId == postId);
+            return await _context.PostInSeries.AnyAsync(x => x.PostId == postId && x.SeriesId == seriesId);
         }
 
         public async Task AddPostToSeriesAsync(Guid seriesId, Guid postId, int sortOrder)

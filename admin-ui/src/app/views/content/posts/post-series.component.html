@@ -34,7 +34,7 @@
                 <th style="width: 3em"><p-tableHeaderCheckbox /></th>
                 <th>Title</th>
                 <th>Sort Order</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </ng-template>
             <ng-template #body let-item>
@@ -43,7 +43,7 @@
                 <td>{{ item.seriesName }}</td>
                 <td>{{ item.displayOrder }}</td>
                 <td>
-                  <button pButton appPolicy="Permissons.Series.Edit" (click)="removeSeries(item.seriesId)" class="p-button-sm p-button-danger me-2"
+                  <button pButton appPolicy="Permissons.Series.Edit" (click)="removeSeries(item.seriesId, item.displayOrder)" class="p-button-sm p-button-danger me-2"
                     [outlined]="true" icon="pi pi-trash" cTooltip="Remove post in Series"></button>
                 </td>
               </tr>

@@ -3246,8 +3246,8 @@ export class AdminApiUserApiClient {
 }
 
 export class AddPostSeriesRequest implements IAddPostSeriesRequest {
-    postId?: string;
-    seriesId?: string;
+    postId!: string;
+    seriesId!: string;
     sortOrder?: number;
 
     constructor(data?: IAddPostSeriesRequest) {
@@ -3284,8 +3284,8 @@ export class AddPostSeriesRequest implements IAddPostSeriesRequest {
 }
 
 export interface IAddPostSeriesRequest {
-    postId?: string;
-    seriesId?: string;
+    postId: string;
+    seriesId: string;
     sortOrder?: number;
 }
 

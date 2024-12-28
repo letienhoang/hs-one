@@ -104,7 +104,7 @@ namespace HSOne.Api.Controllers.AdminApi
         [Authorize(Permissions.Series.Edit)]
         public async Task<IActionResult> AddPostSeriesAsync([FromBody] AddPostSeriesRequest request)
         {
-            var isExisted = await _unitOfWork.PostInSeries.IsPostInSeriesAsync(request.PostId, request.SeriesId);
+            var isExisted = await _unitOfWork.PostInSeries.IsPostInSeriesAsync(request.SeriesId, request.PostId);
             if (isExisted)
             {
                 return BadRequest("Post is already in series");
@@ -119,7 +119,7 @@ namespace HSOne.Api.Controllers.AdminApi
         [Authorize(Permissions.Series.Edit)]
         public async Task<IActionResult> DeletePostSeriesAsync([FromBody] AddPostSeriesRequest request)
         {
-            var isExisted = await _unitOfWork.PostInSeries.IsPostInSeriesAsync(request.PostId, request.SeriesId);
+            var isExisted = await _unitOfWork.PostInSeries.IsPostInSeriesAsync(request.SeriesId, request.PostId);
             if (!isExisted)
             {
                 return BadRequest("Post is not in series");

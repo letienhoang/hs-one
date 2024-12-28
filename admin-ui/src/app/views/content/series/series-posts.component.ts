@@ -3,8 +3,8 @@ import {
   FormBuilder,
 } from "@angular/forms";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
-import { Subject, takeUntil } from "rxjs";
-import { AddPostSeriesRequest, AdminApiSeriesApiClient, PostInListDto } from "../../../api/admin-api.service.generated";
+import { forkJoin, map, Subject, switchMap, takeUntil } from "rxjs";
+import { AddPostSeriesRequest, AdminApiPostApiClient, AdminApiSeriesApiClient, PostInListDto } from "../../../api/admin-api.service.generated";
 import { MessageConstants } from "../../../shared/constants/messages.constants";
 import { ToastService } from "../../../shared/services/toast.service";
 import { SeriesSharedModule } from "./series-shared.module";
@@ -20,13 +20,14 @@ export class SeriesPostsComponent implements OnInit {
   private ngUnsubscribe = new Subject<void>();
 
   public isBlockUI: boolean = false;
-  public posts: PostInListDto[] = [];
+  public items: any[] = [];
   public seriesName: string = '';
 
   constructor(
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private seriesApiClient: AdminApiSeriesApiClient,
+    private postApiService: AdminApiPostApiClient,
     private toastService: ToastService
   ) { }
 
@@ -41,33 +42,53 @@ export class SeriesPostsComponent implements OnInit {
   }
 
   loadDatas(id: string) {
-    this.toggleBlockUI(true);
+      var allPostInSeries = this.seriesApiClient.getAllPostInSeries(id);
+      this.toggleBlockUI(false);
+      allPostInSeries
+        .pipe(
+          takeUntil(this.ngUnsubscribe),
+          switchMap((allPostInSeries: PostInListDto[]) => {
+            const postInSeriesRequests = allPostInSeries.map(post =>
+              this.postApiService.getPostsInSeries(post.id, this.config.data.id)
+              .pipe(
+                map(postInSeries => ({
+                  seriesId: this.config.data.id,
+                  postId: post.id,
+                  postName: post.title,
+                  displayOrder: postInSeries.displayOrder 
+                }))
+              )
+            );
+            return forkJoin(postInSeriesRequests);
+          })
+        
+        )
+        .subscribe({
+          next: (items: any[]) => {
+            this.items = items || [];
+            this.toggleBlockUI(false);
+          },
+          error: () => {
+            this.toggleBlockUI(false);
+          },
+        });
+    }
 
-    this.seriesApiClient.getAllPostInSeries(id)
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe({
-        next: (response: PostInListDto[]) => {
-          this.posts = response;
-          this.toggleBlockUI(false);
-        },
-        error: (error) => {
-          this.toggleBlockUI(false);
-        }
-      }
-      );
-  }
-  removePost(id: string) {
+  removePost(id: string, displayOrder: number) {
     var body: AddPostSeriesRequest = new AddPostSeriesRequest({
       postId: id,
-      seriesId: this.config.data.id
+      seriesId: this.config.data.id,
+      sortOrder: displayOrder
     });
+    console.log('Payload:', body);
+    this.toggleBlockUI(true);
     this.seriesApiClient
       .deletePostSeries(body)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
         next: () => {
-          this.toastService.showSuccess(MessageConstants.DELETED_OK_MSG);
           this.loadDatas(this.config.data?.id);
+          this.toastService.showSuccess(MessageConstants.DELETED_OK_MSG);
           this.toggleBlockUI(false);
         },
         error: () => {
@@ -75,6 +96,7 @@ export class SeriesPostsComponent implements OnInit {
         },
       });
   }
+
   private toggleBlockUI(enabled: boolean) {
     if (enabled == true) {
       this.isBlockUI = true;

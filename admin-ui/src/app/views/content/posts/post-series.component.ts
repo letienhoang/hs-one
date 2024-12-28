@@ -18,12 +18,12 @@ import {
   AdminApiPostApiClient,
   AdminApiSeriesApiClient,
   PostCategoryDto,
-  PostInSeriesDto,
   SeriesInListDto,
 } from '../../../api/admin-api.service.generated';
 import { UtilityService } from '../../../shared/services/utility.service';
 import { PostSharedModule } from './post-shared.module';
 import { ToastService } from '../../../shared/services/toast.service';
+import { MessageConstants } from '../../../shared/constants/messages.constants';
 
 
 @Component({
@@ -99,7 +99,7 @@ export class PostSeriesComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (items: any[]) => {
-          this.items = items;
+          this.items = items || [];
           this.buildForm();
           this.toggleBlockUI(false);
         },
@@ -148,7 +148,8 @@ export class PostSeriesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
         next: () => {
-          this.ref.close(this.form.value);
+          // this.ref.close(this.form.value);
+          this.loadSeriesForPost(this.config.data.id);
           this.toggleBlockUI(false);
         },
         error: () => {
@@ -157,7 +158,28 @@ export class PostSeriesComponent implements OnInit, OnDestroy {
       });
   }
 
-  removeSeries(id: string) {}
+  removeSeries(id: string, displayOrder: number) {
+    var body: AddPostSeriesRequest = new AddPostSeriesRequest({
+      postId: this.config.data.id,
+      seriesId: id,
+      sortOrder: displayOrder
+    });
+    console.log('Payload:', body);
+    this.toggleBlockUI(true);
+    this.seriesApiService
+      .deletePostSeries(body)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: () => {
+          this.loadSeriesForPost(this.config.data?.id);
+          this.toastService.showSuccess(MessageConstants.DELETED_OK_MSG);
+          this.toggleBlockUI(false);
+        },
+        error: () => {
+          this.toggleBlockUI(false);
+        },
+      });
+  }
 
   private toggleBlockUI(enabled: boolean) {
     if (enabled == true) {
