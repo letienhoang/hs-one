@@ -8,7 +8,6 @@ namespace HSOne.Core.Repositories
     public interface IPostCategoryRepository : IRepository<PostCategory, Guid>
     {
         Task<List<PostCategory>> GetPopularPostCategoriesAsync(int count);
-
         Task<PagedResult<PostCategoryDto>> GetPostCategoriesPagingAsync(string? keyword, int pageIndex = 1, int pageSize = 10);
     }
 }

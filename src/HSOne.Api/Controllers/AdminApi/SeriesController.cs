@@ -55,12 +55,16 @@ namespace HSOne.Api.Controllers.AdminApi
         {
             foreach (var id in ids)
             {
-                var postCategory = await _unitOfWork.Series.GetByIdAsync(id);
-                if (postCategory == null)
+                var series = await _unitOfWork.Series.GetByIdAsync(id);
+                if (series == null)
                 {
                     return NotFound();
                 }
-                _unitOfWork.Series.Remove(postCategory);
+                if (await _unitOfWork.PostInSeries.HasPostsInSeriesAsync(id))
+                {
+                    return BadRequest("Series has posts");
+                }
+                _unitOfWork.Series.Remove(series);
             }
 
             var result = await _unitOfWork.CompleteAsync();

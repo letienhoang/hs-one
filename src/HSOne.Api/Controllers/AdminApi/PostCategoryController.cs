@@ -59,6 +59,10 @@ namespace HSOne.Api.Controllers.AdminApi
                 {
                     return NotFound();
                 }
+                if (await _unitOfWork.Posts.HasPostsInCategoryAsync(id))
+                {
+                    return BadRequest("Category has posts");
+                }
                 _unitOfWork.PostCategories.Remove(postCategory);
             }
 

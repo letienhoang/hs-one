@@ -48,5 +48,10 @@ namespace HSOne.Data.Repositories
             var postInSeries = await _context.PostInSeries.FirstOrDefaultAsync(x => x.SeriesId == seriesId && x.PostId == postId);
             return _mapper.Map<PostInSeriesDto>(postInSeries);
         }
+
+        public async Task<bool> HasPostsInSeriesAsync(Guid seriesId)
+        {
+            return await _context.PostInSeries.AnyAsync(x => x.SeriesId == seriesId);
+        }
     }
 }

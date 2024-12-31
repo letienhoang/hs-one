@@ -19,5 +19,6 @@ namespace HSOne.Core.Repositories
         Task<bool> HasPublishInLastAsync(Guid id);
         Task<List<PostActivityLogDto>> GetActivityLogsAsync(Guid id);
         Task<List<Post>> GetUnpaidPublishPostsAsync(Guid userId);
+        Task<bool> HasPostsInCategoryAsync(Guid categoryId);
     }
 }

@@ -8,6 +8,7 @@ using HSOne.Core.SeedWorks.Constants;
 using HSOne.Data.SeedWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static HSOne.Core.SeedWorks.Constants.Permissions;
 
 namespace HSOne.Data.Repositories
 {
@@ -200,5 +201,11 @@ namespace HSOne.Data.Repositories
         {
             return await _context.Posts.Where(x => x.AuthorUserId == userId && x.Status == PostStatus.Published && !x.IsPaid).ToListAsync();
         }
+
+        public async Task<bool> HasPostsInCategoryAsync(Guid categoryId)
+        {
+            return await _context.Posts.AnyAsync(x => x.CategoryId == categoryId);
+        }
+    }
     }
 }
