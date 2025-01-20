@@ -205,5 +205,13 @@ namespace HSOne.Data.Repositories
         {
             return await _context.Posts.AnyAsync(x => x.CategoryId == categoryId);
         }
+
+        public async Task<List<PostInListDto>> GetLatestPublishPostsAsync(int count)
+        {
+            var query = _context.Posts.Where(x => x.Status == PostStatus.Published)
+                .Take(count)
+                .OrderByDescending(x => x.DateCreated);
+            return await _mapper.ProjectTo<PostInListDto>(query).ToListAsync();
+        }
     }
 }

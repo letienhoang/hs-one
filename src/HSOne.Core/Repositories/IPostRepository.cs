@@ -7,6 +7,7 @@ namespace HSOne.Core.Repositories
 {
     public interface IPostRepository : IRepository<Post, Guid>
     {
+        // For Admin
         Task<List<Post>> GetPopularPostsAsync(int count);
         Task<PagedResult<PostInListDto>> GetPostsPagingAsync(string? keyword, Guid userId, Guid? categoryId, int pageIndex = 1, int pageSize = 10);
         Task<List<PostInListDto>> GetAllPostsInSeriesAsync(Guid seriesId);
@@ -20,5 +21,8 @@ namespace HSOne.Core.Repositories
         Task<List<PostActivityLogDto>> GetActivityLogsAsync(Guid id);
         Task<List<Post>> GetUnpaidPublishPostsAsync(Guid userId);
         Task<bool> HasPostsInCategoryAsync(Guid categoryId);
+
+        // For Public
+        Task<List<PostInListDto>> GetLatestPublishPostsAsync(int count);
     }
 }
