@@ -207,5 +207,4 @@ namespace HSOne.Data.Repositories
             return await _context.Posts.AnyAsync(x => x.CategoryId == categoryId);
         }
     }
-    }
 }
