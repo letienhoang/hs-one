@@ -8,7 +8,6 @@ using HSOne.Core.SeedWorks.Constants;
 using HSOne.Data.SeedWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using static HSOne.Core.SeedWorks.Constants.Permissions;
 
 namespace HSOne.Data.Repositories
 {
