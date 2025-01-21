@@ -10,6 +10,7 @@ using HSOne.Core.SeedWorks.Constants;
 using HSOne.Api.Extensions;
 using Microsoft.AspNetCore.Identity;
 using HSOne.Core.Domain.Identity;
+using HSOne.Core.Helpers;
 
 namespace HSOne.Api.Controllers.AdminApi
 {
@@ -61,6 +62,26 @@ namespace HSOne.Api.Controllers.AdminApi
             post.AuthorName = user.GetFullName();
 
             post.Status = PostStatus.Draft;
+
+            post.Id = Guid.NewGuid();
+            // Process Tag
+            if (request.Tags != null && request.Tags.Length > 0)
+            {
+                foreach (var tag in request.Tags)
+                {
+                    var tagSlug = TextHelper.ToUnsignedString(tag);
+                    var tagEntity = await _unitOfWork.Tags.GetTagBySlugAsync(tagSlug);
+                    var tagId = tagEntity?.Id ?? Guid.NewGuid();
+                    if (tagEntity == null)
+                    {
+                        _unitOfWork.Tags.Add(new Tag { Id = tagId, Name = tag, Slug = tagSlug });
+                    }
+                    await _unitOfWork.Tags.AddPostTagAsync(post.Id, tagId);
+                }
+
+                post.Tags = string.Join(",", request.Tags);
+            }
+
             _unitOfWork.Posts.Add(post);
             var result = await _unitOfWork.CompleteAsync();
             return result > 0 ? Ok(post) : BadRequest();
@@ -85,7 +106,26 @@ namespace HSOne.Api.Controllers.AdminApi
                 var category = await _unitOfWork.PostCategories.GetByIdAsync(request.CategoryId) ?? throw new Exception("Category does not exist");
                 post.CategoryName = category.Name;
                 post.CategorySlug = category.Slug;
-            }    
+            } 
+            // Process Tag
+            if (request.Tags != null && request.Tags.Length > 0)
+            {
+                foreach (var tag in request.Tags)
+                {
+                    var tagSlug = TextHelper.ToUnsignedString(tag);
+                    var tagEntity = await _unitOfWork.Tags.GetTagBySlugAsync(tagSlug);
+                    var tagId = tagEntity?.Id ?? Guid.NewGuid();
+                    if (tagEntity == null)
+                    {
+                        _unitOfWork.Tags.Add(new Tag { Id = tagId, Name = tag, Slug = tagSlug });
+                    }
+                    if (!await _unitOfWork.Tags.IsExistsPostTagAsync(id, tagId))
+                    {
+                        await _unitOfWork.Tags.AddPostTagAsync(id, tagId);
+                    }
+                }
+            }
+
             _mapper.Map(request, post);
             var result = await _unitOfWork.CompleteAsync();
             return result > 0 ? Ok(post) : BadRequest();

@@ -96,5 +96,11 @@ namespace HSOne.Core.SeedWorks.Constants
             [Description("Pay Royalty")]
             public const string Pay = "Permissions.Royalty.Pay";
         }
+
+        public static class Tags
+        {
+            [Description("View Tags")]
+            public const string View = "Permissions.Tags.View";
+        }
     }
 }

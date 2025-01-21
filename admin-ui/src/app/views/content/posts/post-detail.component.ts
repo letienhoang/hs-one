@@ -3,7 +3,6 @@ import {
   OnInit,
   EventEmitter,
   OnDestroy,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {
   Validators,
@@ -12,12 +11,14 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import {
   AdminApiPostApiClient,
   AdminApiPostCategoryApiClient,
+  AdminApiTagApiClient,
   PostCategoryDto,
   PostDto,
+  TagDto,
 } from '../../../api/admin-api.service.generated';
 import { UtilityService } from '../../../shared/services/utility.service';
 import { UploadService } from '../../../shared/services/upload.service';
@@ -25,6 +26,10 @@ import { PostSharedModule } from './post-shared.module';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/services/toast.service';
 
+interface AutoCompleteCompleteEvent {
+  originalEvent: Event;
+  query: string;
+}
 
 @Component({
   templateUrl: 'post-detail.component.html',
@@ -48,6 +53,9 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   public canImportImage = false;
   public postCategories: any[] = [];
 
+  public tagList: any[] = [];
+  public filteredTags: any[] = [];
+
   formSavedEventEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -55,6 +63,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     public config: DynamicDialogConfig,
     private postApiService: AdminApiPostApiClient,
     private postCategoryApiService: AdminApiPostCategoryApiClient,
+    private tagApiService: AdminApiTagApiClient,
     private utilService: UtilityService,
     private fb: FormBuilder,
     private uploadService: UploadService,
@@ -80,6 +89,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.toggleBlockUI(true);
     this.loadPostCategories();
+    this.loadTags();
     if (this.utilService.isEmpty(this.config.data?.id) == false) {
       this.loadFormDetails(this.config.data?.id);
     } else {
@@ -121,6 +131,20 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  loadTags() {
+    this.tagApiService
+      .getAllNameTags()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: (response: string[]) => {
+          this.tagList = response;
+        },
+        error: (error) => {
+          this.toastService.showError(error);
+        },
+      });
+  }
     
   buildForm() {
     this.form = this.fb.group({
@@ -135,7 +159,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       thumbnail: new FormControl(this.selectedEntity.thumbnail || null),
       content: new FormControl(this.selectedEntity.content || null),
       source: new FormControl(this.selectedEntity.source || null, Validators.maxLength(512)),
-      tags: new FormControl(this.selectedEntity.tags || null, Validators.maxLength(256)),
+      tags: new FormControl(this.convertStringToArray(this.selectedEntity.tags || '') || [], Validators.maxLength(256)),
       seoDescription: new FormControl(this.selectedEntity.seoDescription || null, Validators.maxLength(160)),
     });
     if (this.selectedEntity.thumbnail) {
@@ -220,6 +244,32 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         this.blockedPanelDetail = false;
       }, 1000);
     }
+  }
+
+  filterTags(event: AutoCompleteCompleteEvent) {
+    let filtered: any[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < (this.tagList as any[]).length; i++) {
+        let item = (this.tagList as any[])[i];
+        if (item.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+            filtered.push(item);
+        }
+    }
+
+    if (filtered.length == 0) {
+        filtered.push(query.trim());
+    }
+
+    this.filteredTags = filtered;
+  }
+
+  convertStringToArray(tagsString: string): string[] {
+    const arr = tagsString.split(',').map(tag => tag.trim());
+    if (arr.length == 1 && tagsString == '') {
+      return [];
+    }
+    return arr || [];
   }
 
   ngOnDestroy(): void {
