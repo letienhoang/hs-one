@@ -225,7 +225,8 @@ namespace HSOne.Data.Repositories
 
             var totalRecords = await query.CountAsync();
 
-            query = query.OrderByDescending(x => x.DateCreated)
+            query = query.Where(x => x.Status == PostStatus.Published)
+                .OrderByDescending(x => x.DateCreated)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize);
 
