@@ -20,9 +20,15 @@ namespace HSOne.WebApp.Controllers
         }
 
         [Route("post/{slug}")]
-        public IActionResult Detail([FromRoute] string slug)
+        public async Task<IActionResult> Detail([FromRoute] string slug)
         {
-            return View();
+            var post = await _unitOfWork.Posts.GetBySlugAsync(slug);
+            var category = await _unitOfWork.PostCategories.GetBySlugAsync(post.CategorySlug);
+            return View(new PostDetailViewModel
+            {
+                Post = post,
+                Category = category
+            });
         }
 
         [Route("posts/{categorySlug}")]
