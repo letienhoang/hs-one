@@ -7,7 +7,7 @@
         public static string Contact = "/contact";
         public static string Posts = "/posts";
         public static string PostsByCategorySlug = "/posts/{0}";
-        public static string PostDetails = "/post/{0}";
+        public static string PostDetail = "/post/{0}";
         public static string PostsByTagSlug = "/tag/{0}";
         public static string Login = "/login";
         public static string Register = "/register";
