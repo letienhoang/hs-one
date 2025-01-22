@@ -269,5 +269,29 @@ namespace HSOne.Data.Repositories
                 PageSize = pageSize
             };
         }
+
+        public async Task<PagedResult<PostInListDto>> GetAllPostBySeriesSlugPagingAsync(string seriesSlug, int pageIndex = 1, int pageSize = 10)
+        {
+            var query = from p in _context.Posts
+                        join ps in _context.PostInSeries on p.Id equals ps.PostId
+                        join s in _context.Series on ps.SeriesId equals s.Id
+                        where s.Slug == seriesSlug
+                        select p;
+
+            var totalRecords = await query.CountAsync();
+
+            query = query.Where(x => x.Status == PostStatus.Published)
+                .OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRecords,
+                PageSize = pageSize
+            };
+        }
     }
 }
