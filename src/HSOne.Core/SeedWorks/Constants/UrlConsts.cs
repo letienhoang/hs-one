@@ -2,9 +2,11 @@
 {
     public static class UrlConsts
     {
+        // Site
         public static string Home = "/";
         public static string About = "/about";
         public static string Contact = "/contact";
+
         // Content
         public static string Posts = "/posts";
         public static string PostsByCategorySlug = "/posts/{0}";
@@ -19,5 +21,6 @@
         public static string Register = "/register";
         public static string Profile = "/profile";
         public static string ChangePassword = "/change-password";
+        public static string ChangeProfile = "/profile/edit";
     }
 }

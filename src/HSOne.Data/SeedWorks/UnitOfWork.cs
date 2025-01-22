@@ -20,6 +20,7 @@ namespace HSOne.Data.SeedWorks
             PostInSeries = new PostInSeriesRepository(_context, mapper);
             Transactions = new TransactionRepository(_context, mapper);
             Tags = new TagRepository(_context, mapper);
+            Users = new UserRepository(_context);
         }
 
         public IPostRepository Posts { get; private set; }
@@ -28,6 +29,7 @@ namespace HSOne.Data.SeedWorks
         public IPostInSeriesRepository PostInSeries { get; private set; }
         public ITransactionRepository Transactions { get; private set; }
         public ITagRepository Tags { get; private set; }
+        public IUserRepository Users { get; private set; }
 
         public async Task<int> CompleteAsync()
         {
