@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -23,6 +24,7 @@ builder.Services.Configure<SystemConfig>(configuration.GetSection("SystemConfig"
 
 builder.Services.AddDbContext<HSOneContext>(options => options.UseSqlServer(connectionString));
 
+#region Configure Identity
 builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<HSOneContext>()
     .AddDefaultTokenProviders();
@@ -47,9 +49,20 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 });
 
+// Authenication and Authorization
+builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
+builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
+builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
+
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPrincipalFactory>();
+
+#endregion
+
+#region Configure Service
 // Add services to the container.
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 // Business services and repositories
 var services = typeof(PostRepository).Assembly.GetTypes()
     .Where(x => x.GetInterfaces().Any(i => i.Name == typeof(IRepository<,>).Name)
@@ -65,15 +78,10 @@ foreach (var service in services)
     }
 }
 
+#endregion
+
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(PostInListDto));
-
-// Authenication and Authorization
-builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
-builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
-builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
-
-builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPrincipalFactory>();
 
 // Start up the application pipeline
 var app = builder.Build();
