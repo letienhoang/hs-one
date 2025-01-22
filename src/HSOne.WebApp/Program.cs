@@ -1,5 +1,6 @@
 using HSOne.Core.ConfigOptions;
 using HSOne.Core.Domain.Identity;
+using HSOne.Core.Events.LoginSuccessed;
 using HSOne.Core.Models.Content;
 using HSOne.Core.SeedWorks;
 using HSOne.Data;
@@ -82,6 +83,7 @@ foreach (var service in services)
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(PostInListDto));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginSuccessedEvent).Assembly));
 
 // Start up the application pipeline
 var app = builder.Build();
