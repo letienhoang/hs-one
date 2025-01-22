@@ -5,7 +5,7 @@ namespace HSOne.WebApp.Models
 {
     public class PostListByCategoryViewModel
     {
-        public PagedResult<PostInListDto>? Posts { get; set; }
-        public PostCategoryDto? Category { get; set; }
+        public required PagedResult<PostInListDto> Posts { get; set; }
+        public required PostCategoryDto Category { get; set; }
     }
 }

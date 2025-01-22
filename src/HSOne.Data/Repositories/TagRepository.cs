@@ -18,6 +18,10 @@ namespace HSOne.Data.Repositories
         public async Task<TagDto?> GetTagBySlugAsync(string slug)
         {
             var tag = await _context.Tags.FirstOrDefaultAsync(x => x.Slug == slug);
+            if (tag == null)
+            {
+                return null;
+            }
             return _mapper.Map<TagDto>(tag);
         }
 
@@ -35,6 +39,15 @@ namespace HSOne.Data.Repositories
         public async Task<bool> IsExistsPostTagAsync(Guid postId, Guid tagId)
         {
             return await _context.PostTags.AnyAsync(x => x.PostId == postId && x.TagId == tagId);
+        }
+
+        public async Task<List<TagDto>> GetPostTagsAsync(Guid postId)
+        {
+            var query = from pt in _context.PostTags
+                        join t in _context.Tags on pt.TagId equals t.Id
+                        where pt.PostId == postId
+                        select t;
+            return await _mapper.ProjectTo<TagDto>(query).ToListAsync();
         }
     }
 }

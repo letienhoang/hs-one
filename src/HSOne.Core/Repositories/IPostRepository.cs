@@ -23,6 +23,7 @@ namespace HSOne.Core.Repositories
         Task<bool> HasPostsInCategoryAsync(Guid categoryId);
         Task<List<PostInListDto>> GetLatestPublishPostsAsync(int count);
         Task<PagedResult<PostInListDto>> GetPostsByCategoryPagingAsync(string categortSlug, int pageIndex = 1, int pageSize = 10);
+        Task<PagedResult<PostInListDto>> GetPostsByTagPagingAsync(string tagSlug, int pageIndex = 1, int pageSize = 10);
         Task<PostDto> GetBySlugAsync(string slug);
     }
 }

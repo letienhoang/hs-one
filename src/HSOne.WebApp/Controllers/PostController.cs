@@ -24,10 +24,12 @@ namespace HSOne.WebApp.Controllers
         {
             var post = await _unitOfWork.Posts.GetBySlugAsync(slug);
             var category = await _unitOfWork.PostCategories.GetBySlugAsync(post.CategorySlug);
+            var tags = await _unitOfWork.Tags.GetPostTagsAsync(post.Id);
             return View(new PostDetailViewModel
             {
                 Post = post,
-                Category = category
+                Category = category,
+                Tags = tags
             });
         }
 
@@ -44,9 +46,15 @@ namespace HSOne.WebApp.Controllers
         }
 
         [Route("tag/{tagSlug}")]
-        public IActionResult ListByTag([FromRoute] string tagSlug, [FromQuery] int? page = 1)
+        public async Task<IActionResult> ListByTag([FromRoute] string tagSlug, [FromQuery] int page = 1)
         {
-            return View();
+            var posts = await _unitOfWork.Posts.GetPostsByTagPagingAsync(tagSlug, page);
+            var tag = await _unitOfWork.Tags.GetTagBySlugAsync(tagSlug);
+            return View(new PostListByTagViewModel
+            {
+                Posts = posts,
+                Tag = tag!
+            });
         }
     }
 }

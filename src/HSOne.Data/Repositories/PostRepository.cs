@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using HSOne.Core.Domain.Content;
 using HSOne.Core.Domain.Identity;
 using HSOne.Core.Models;
@@ -243,6 +244,30 @@ namespace HSOne.Data.Repositories
         {
             var post = await _context.Posts.FirstOrDefaultAsync(x => x.Slug == slug);
             return post == null ? throw new Exception($"Cannot find post with Slug: {slug}") : _mapper.Map<PostDto>(post);
+        }
+
+        public async Task<PagedResult<PostInListDto>> GetPostsByTagPagingAsync(string tagSlug, int pageIndex = 1, int pageSize = 10)
+        {
+            var query = from p in _context.Posts
+                        join pt in _context.PostTags on p.Id equals pt.PostId
+                        join t in _context.Tags on pt.TagId equals t.Id
+                        where t.Slug == tagSlug
+                        select p;
+
+            var totalRecords = await query.CountAsync();
+
+            query = query.Where(x => x.Status == PostStatus.Published)
+                .OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRecords,
+                PageSize = pageSize
+            };
         }
     }
 }

@@ -7,5 +7,6 @@ namespace HSOne.WebApp.Models
     {
         public required PostDto Post { get; set; }
         public required PostCategoryDto Category { get; set; }
+        public List<TagDto>? Tags { get; set; }
     }
 }

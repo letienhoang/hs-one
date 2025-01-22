@@ -10,5 +10,6 @@ namespace HSOne.Core.Repositories
         Task<TagDto?> GetTagBySlugAsync(string slug);
         Task AddPostTagAsync(Guid postId, Guid tagId);
         Task<bool> IsExistsPostTagAsync(Guid postId, Guid tagId);
+        Task<List<TagDto>> GetPostTagsAsync(Guid postId);
     }
 }
