@@ -22,14 +22,20 @@ namespace HSOne.WebApp.Controllers
             _userManager = userManager;
         }
 
+        private async Task<AppUser> GetUser()
+        {
+            var userId = User.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            return user!;
+        }
+
         [Route("profile")]
         public async Task<IActionResult> Index()
         {
-            var userId = User.GetUserId();
-            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            var user = await GetUser();
             return View(new ProfileViewModel
             {
-                FirstName = user!.FirstName,
+                FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email!
             });
@@ -39,24 +45,22 @@ namespace HSOne.WebApp.Controllers
         [Route("profile/edit")]
         public async Task<IActionResult> ChangeProfile()
         {
-            TempData["Success"] = null;
-            var userId = User.GetUserId();
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var user = await GetUser();
 
             return View(new ChangeProfileViewModel
             {
-                FirstName = user!.FirstName,
+                FirstName = user.FirstName,
                 LastName = user.LastName
             });
         }
 
         [HttpPost]
         [Route("profile/edit")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeProfile([FromForm] ChangeProfileViewModel model)
         {
-            var userId = User.GetUserId();
-            var user = await _userManager.FindByIdAsync(userId.ToString());
-            user!.FirstName = model.FirstName;
+            var user = await GetUser();
+            user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
@@ -78,6 +82,47 @@ namespace HSOne.WebApp.Controllers
             await _signInManager.SignOutAsync();
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [Route("profile/change-password")]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("profile/change-password")]
+        public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await GetUser();
+            
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, model.OldPassword);
+            if (!isPasswordCorrect)
+            {
+                ModelState.AddModelError("OldPassword", "Old password is incorrect");
+                return View(model);
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+                TempData["Success"] = "Password changed successfully";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View(model);
+            }
         }
     }
 }

@@ -20,7 +20,7 @@
         public static string Login = "/login";
         public static string Register = "/register";
         public static string Profile = "/profile";
-        public static string ChangePassword = "/change-password";
+        public static string ChangePassword = "profile/change-password";
         public static string ChangeProfile = "/profile/edit";
     }
 }
