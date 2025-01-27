@@ -22,9 +22,9 @@
         <div class="col-md-10 col-lg-8 col-xl-7">
             <form asp-controller="Profile" asp-action="ChangeProfile" method="post" class="row g-12">
                 <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
-                @if(TempData["Success"] != null)
+                @if (TempData[SystemConsts.FormSuccessMessage] != null)
                 {
-                    <div class="alert alert-success">@TempData["Success"]</div>
+                    <div class="alert alert-success">@TempData[SystemConsts.FormSuccessMessage]</div>
                 }
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">First name</label>

@@ -2,6 +2,7 @@
 using HSOne.Core.Events.LoginSuccessed;
 using HSOne.Core.Events.RegisterSuccessed;
 using HSOne.Core.SeedWorks.Constants;
+using HSOne.WebApp.Extensions;
 using HSOne.WebApp.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -106,6 +107,94 @@ namespace HSOne.WebApp.Controllers
             else
             {
                 ModelState.AddModelError("", "Invalid email or password");
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        [Route("forgot-password")]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("forgot-password")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Email not found");
+                return View();
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), token, Request.Scheme);
+            
+            TempData[SystemConsts.FormSuccessMessage] = "Please check your email to reset password";
+            return Redirect(UrlConsts.Login);
+        }
+
+        [HttpGet]
+        [Route("reset-password")]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if(token == null || email == null)
+            {
+                ModelState.AddModelError("", "Invalid token");
+                return View();
+            }
+            var model = new ResetPasswordViewModel
+            {
+                Token = token,
+                Email = email,
+                Password = "",
+                ConfirmPassword = ""
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("reset-password")]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Email not found");
+                return View();
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+            {
+                TempData[SystemConsts.FormSuccessMessage] = "Password has been reset successfully";
+                return Redirect(UrlConsts.Login);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
             }
 
             return View();

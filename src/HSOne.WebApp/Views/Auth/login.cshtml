@@ -22,22 +22,25 @@
         <div class="col-md-10 col-lg-8 col-xl-7">
             <form asp-controller="Auth" asp-action="Login" method="post" class="row g-12">
                 <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
-
-                <div class="col-md-12">
+                @if (TempData[SystemConsts.FormSuccessMessage] != null)
+                {
+                    <div class="alert alert-success">@TempData[SystemConsts.FormSuccessMessage]</div>
+                }
+                <div class="col-md-12 my-2">
                     <label for="email" class="form-label">Email</label>
                     <div class="input-group has-validation">
                         <input type="email" class="form-control" id="email" asp-for="Email" required>
                         <span id="validationEmail" asp-validation-for="Email" class="invalid-feedback"></span>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12 my-2">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group has-validation">
                         <input type="password" class="form-control" id="password" asp-for="Password" required>
                         <span id="validationPassword" asp-validation-for="Password" class="invalid-feedback"></span>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12 my-2">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="rememberMe" asp-for="RememberMe">
                         <label class="form-check-label" for="rememberMe">
@@ -45,8 +48,11 @@
                         </label>
                     </div>
                 </div>
+                <div class="col-12 my-2">
+                    <a href="@UrlConsts.ForgotPassword">Forgot password</a>
+                </div>
                 <div class="col-12 my-3">
-                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-outline-primary" type="submit">Submit</button>
                 </div>
             </form>
         </div>

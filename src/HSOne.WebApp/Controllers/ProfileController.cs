@@ -1,5 +1,6 @@
 ﻿using HSOne.Core.Domain.Identity;
 using HSOne.Core.SeedWorks;
+using HSOne.Core.SeedWorks.Constants;
 using HSOne.WebApp.Extensions;
 using HSOne.WebApp.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -66,7 +67,7 @@ namespace HSOne.WebApp.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.RefreshSignInAsync(user);
-                TempData["Success"] = "Profile updated successfully";
+                TempData[SystemConsts.FormSuccessMessage] = "Profile updated successfully";
             }
             else
             {
@@ -112,7 +113,7 @@ namespace HSOne.WebApp.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.RefreshSignInAsync(user);
-                TempData["Success"] = "Password changed successfully";
+                TempData[SystemConsts.FormSuccessMessage] = "Password changed successfully";
                 return RedirectToAction("Index");
             }
             else

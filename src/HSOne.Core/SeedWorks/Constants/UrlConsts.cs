@@ -22,5 +22,7 @@
         public static string Profile = "/profile";
         public static string ChangePassword = "profile/change-password";
         public static string ChangeProfile = "/profile/edit";
+        public static string ForgotPassword = "/forgot-password";
+        public static string ResetPassword = "/reset-password";
     }
 }

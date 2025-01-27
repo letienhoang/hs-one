@@ -22,6 +22,7 @@ builder.Services.AddControllersWithViews();
 
 // Custom setup
 builder.Services.Configure<SystemConfig>(configuration.GetSection("SystemConfig"));
+builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
 builder.Services.AddDbContext<HSOneContext>(options => options.UseSqlServer(connectionString));
 
