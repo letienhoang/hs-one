@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Handlebars.Net" Version="2.1.6" />
     <PackageReference Include="MailKit" Version="4.9.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
@@ -15,6 +16,13 @@
   <ItemGroup>
     <ProjectReference Include="..\HSOne.Core\HSOne.Core.csproj" />
     <ProjectReference Include="..\HSOne.Data\HSOne.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Auth\ResetPassword.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

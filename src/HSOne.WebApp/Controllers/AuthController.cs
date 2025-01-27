@@ -1,13 +1,16 @@
-﻿using HSOne.Core.Domain.Identity;
+﻿using HSOne.Core.ConfigOptions;
+using HSOne.Core.Domain.Identity;
 using HSOne.Core.Events.LoginSuccessed;
 using HSOne.Core.Events.RegisterSuccessed;
 using HSOne.Core.SeedWorks.Constants;
 using HSOne.WebApp.Extensions;
 using HSOne.WebApp.Models;
+using HSOne.WebApp.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HSOne.WebApp.Controllers
 {
@@ -16,11 +19,19 @@ namespace HSOne.WebApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IMediator _mediator;
-        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMediator mediator)
+        private readonly IEmailSender _emailSender;
+        private readonly IOptions<SystemConfig> _systemConfig;
+        public AuthController(UserManager<AppUser> userManager, 
+            SignInManager<AppUser> signInManager, 
+            IMediator mediator, 
+            IEmailSender emailSender,
+            IOptions<SystemConfig> systemConfig)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mediator = mediator;
+            _emailSender = emailSender;
+            _systemConfig = systemConfig;
         }
 
         [HttpGet]
@@ -140,7 +151,19 @@ namespace HSOne.WebApp.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), token, Request.Scheme);
-            
+
+            //EmailData emailData = new EmailData
+            //{
+            //    ToEmail = model.Email,
+            //    Subject = $"{_systemConfig.AppName} - Retrieve password",
+            //    Content = $"Hi {user.FirstName}. </br>" +
+            //    $"You have just requested to retrieve your password at {_systemConfig.AppName}. </br>" +
+            //    $"Please click <a href='{callbackUrl}'>here</a> to reset your password. </br>" +
+            //    $"Thank you.",
+            //};
+
+            //await _emailSender.SendEmail(emailData);
+
             TempData[SystemConsts.FormSuccessMessage] = "Please check your email to reset password";
             return Redirect(UrlConsts.Login);
         }
@@ -148,9 +171,9 @@ namespace HSOne.WebApp.Controllers
         [HttpGet]
         [Route("reset-password")]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string token, string email)
+        public IActionResult ResetPassword(string token)
         {
-            if(token == null || email == null)
+            if(token == null)
             {
                 ModelState.AddModelError("", "Invalid token");
                 return View();
@@ -158,7 +181,7 @@ namespace HSOne.WebApp.Controllers
             var model = new ResetPasswordViewModel
             {
                 Token = token,
-                Email = email,
+                Email = "",
                 Password = "",
                 ConfirmPassword = ""
             };

@@ -7,6 +7,7 @@ using HSOne.Data;
 using HSOne.Data.Repositories;
 using HSOne.Data.SeedWorks;
 using HSOne.WebApp.Helpers;
+using HSOne.WebApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,7 +65,7 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPri
 // Add services to the container.
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 // Business services and repositories
 var services = typeof(PostRepository).Assembly.GetTypes()
     .Where(x => x.GetInterfaces().Any(i => i.Name == typeof(IRepository<,>).Name)

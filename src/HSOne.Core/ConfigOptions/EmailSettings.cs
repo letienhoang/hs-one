@@ -7,6 +7,6 @@
         public string? SmtpUsername { get; set; }
         public string? SmtpPassword { get; set; }
         public string? SenderEmail { get; set; }
-        public string? SenderUsername { get; set; }
+        public string? SenderName { get; set; }
     }
 }
