@@ -22,6 +22,10 @@ using System.Text;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                      .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
+
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 var HSOneCorsPolicy = "HSOneCorsPolicy";
@@ -30,7 +34,7 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProv
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddCors(o => o.AddPolicy(HSOneCorsPolicy, builder =>
 {
-    builder.WithOrigins(configuration["AllowedOrigins"])
+    builder.WithOrigins(configuration["AllowedOrigins"]?.Split(";")!)
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
@@ -128,7 +132,7 @@ builder.Services.AddAuthentication(o =>
     {
         ValidIssuer = configuration["JwtTokenSettings:Issuer"],
         ValidAudience = configuration["JwtTokenSettings:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSettings:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSettings:Key"]!))
     };
 });
 
