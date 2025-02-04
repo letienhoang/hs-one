@@ -293,5 +293,36 @@ namespace HSOne.Data.Repositories
                 PageSize = pageSize
             };
         }
+
+        public async Task<PagedResult<PostInListDto>> GetPostsByUserPagingAsync(Guid userId, string keyword, int pageIndex = 1, int pageSize = 10)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+
+            var query = _context.Posts
+                .Where(x => x.AuthorUserId == userId)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(x => x.Title.Contains(keyword));
+            }
+
+            var totalRecords = await query.CountAsync();
+
+            query = query.OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRecords,
+                PageSize = pageSize
+            };
+        }
     }
 }

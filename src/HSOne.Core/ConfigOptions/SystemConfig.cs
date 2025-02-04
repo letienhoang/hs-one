@@ -2,7 +2,8 @@
 {
     public class SystemConfig
     {
-        public string? AppName { get; set; }
-        public string? AppSlogan { get; set; }
+        public required string AppName { get; set; }
+        public required string AppSlogan { get; set; }
+        public required string BackendApiUrl { get; set; }
     }
 }

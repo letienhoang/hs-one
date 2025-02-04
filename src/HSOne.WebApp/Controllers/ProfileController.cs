@@ -1,12 +1,20 @@
-﻿using HSOne.Core.Domain.Identity;
+﻿using HSOne.Core.Domain.Content;
+using HSOne.Core.Domain.Identity;
+using HSOne.Core.Helpers;
 using HSOne.Core.SeedWorks;
 using HSOne.Core.SeedWorks.Constants;
+using HSOne.Data.Repositories;
 using HSOne.WebApp.Extensions;
 using HSOne.WebApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Text.Json;
+using HSOne.Core.ConfigOptions;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HSOne.WebApp.Controllers
 {
@@ -16,11 +24,16 @@ namespace HSOne.WebApp.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
-        public ProfileController(IUnitOfWork unitOfWork, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
+        private readonly IOptions<SystemConfig> _systemConfig;
+        public ProfileController(IUnitOfWork unitOfWork, 
+            SignInManager<AppUser> signInManager, 
+            UserManager<AppUser> userManager,
+            IOptions<SystemConfig> systemConfig)
         {
             _unitOfWork = unitOfWork;
             _signInManager = signInManager;
             _userManager = userManager;
+            _systemConfig = systemConfig;
         }
 
         private async Task<AppUser> GetUser()
@@ -28,6 +41,52 @@ namespace HSOne.WebApp.Controllers
             var userId = User.GetUserId();
             var user = await _userManager.FindByIdAsync(userId.ToString());
             return user!;
+        }
+
+        private async Task UploadThumbnail(IFormFile thumbnailFile, Post post)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_systemConfig.Value.BackendApiUrl);
+
+                byte[] data;
+                using (var br = new BinaryReader(thumbnailFile.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)thumbnailFile.OpenReadStream().Length);
+                }
+
+                var bytes = new ByteArrayContent(data);
+
+                var multiContent = new MultipartFormDataContent
+                {
+                    { bytes, "file", thumbnailFile.FileName }
+                };
+
+                var uploadResult = await client.PostAsync($"api/admin/media?type=posts&newFileName={post.Slug}", multiContent);
+                if (uploadResult.StatusCode != HttpStatusCode.OK)
+                {
+                    ModelState.AddModelError("", await uploadResult.Content.ReadAsStringAsync());
+                }
+                else
+                {
+                    var path = await uploadResult.Content.ReadAsStringAsync();
+                    var pathObj = JsonSerializer.Deserialize<UploadResponse>(path);
+                    post.Thumbnail = pathObj?.Path;
+                }
+
+            }
+        }
+
+        private async Task<CreatePostViewModel> SetCreatePostViewModelAsync()
+        {
+            var categories = await _unitOfWork.PostCategories.GetAllAsync();
+            return new CreatePostViewModel()
+            {
+                Title = "",
+                Description = "",
+                Content = "",
+                Categories = new SelectList(categories, "Id", "Name")
+            };
         }
 
         [Route("profile")]
@@ -124,6 +183,67 @@ namespace HSOne.WebApp.Controllers
                 }
                 return View(model);
             }
+        }
+
+        [HttpGet]
+        [Route("profile/posts/list")]
+        public async Task<IActionResult> PostListByUser(string keyword, int page = 1)
+        {
+            var posts = await _unitOfWork.Posts.GetPostsByUserPagingAsync(User.GetUserId(), keyword, page, 12);
+            return View(new PostListByUserViewModel { 
+                Posts = posts,
+            });
+        }
+
+        [HttpGet]
+        [Route("profile/posts/create")]
+        public async Task<IActionResult> CreatePost()
+        {
+            return View(await SetCreatePostViewModelAsync());
+        }
+
+        [HttpPost]
+        [Route("profile/posts/create")]
+        public async Task<IActionResult> CreatePost([FromForm] CreatePostViewModel model, IFormFile thumbnailFile)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(await SetCreatePostViewModelAsync());
+            }
+            var user = await GetUser();
+            var category = await _unitOfWork.PostCategories.GetByIdAsync(model.CategoryId);
+            var post = new Post
+            {
+                Title = model.Title,
+                CategoryId = category!.Id,
+                CategoryName = category.Name,
+                CategorySlug = category.Slug,
+                Slug = TextHelper.ToUnsignedString(model.Title),
+                Content = model.Content,
+                SeoDescription = model.SeoDescription,
+                Source = model.Source,
+                Status = PostStatus.Draft,
+                AuthorUserId = user.Id,
+                AuthorName = user.GetFullName(),
+                AuthorUserName = user.UserName!,
+                Description = model.Description,
+            };
+            _unitOfWork.Posts.Add(post);
+            if (thumbnailFile != null)
+            {
+                await UploadThumbnail(thumbnailFile, post);
+            }
+            var result = await _unitOfWork.CompleteAsync();
+            if (result > 0)
+            {
+                TempData[SystemConsts.FormSuccessMessage] = "Post created successfully";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Failed to create post");
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

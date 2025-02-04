@@ -26,5 +26,6 @@ namespace HSOne.Core.Repositories
         Task<PagedResult<PostInListDto>> GetPostsByTagPagingAsync(string tagSlug, int pageIndex = 1, int pageSize = 10);
         Task<PostDto> GetBySlugAsync(string slug);
         Task<PagedResult<PostInListDto>> GetAllPostBySeriesSlugPagingAsync(string seriesSlug, int pageIndex = 1, int pageSize = 10);
+        Task<PagedResult<PostInListDto>> GetPostsByUserPagingAsync(Guid userId, string keyword, int pageIndex = 1, int pageSize = 10);
     }
 }

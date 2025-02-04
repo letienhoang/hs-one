@@ -19,10 +19,14 @@
         // User
         public static string Login = "/login";
         public static string Register = "/register";
+        public static string ForgotPassword = "/forgot-password";
+        public static string ResetPassword = "/reset-password";
+
+        // Profile
         public static string Profile = "/profile";
         public static string ChangePassword = "profile/change-password";
         public static string ChangeProfile = "/profile/edit";
-        public static string ForgotPassword = "/forgot-password";
-        public static string ResetPassword = "/reset-password";
+        public static string PostListByUser = "/profile/posts/list";
+        public static string CreatePost = "/profile/posts/create-post";
     }
 }
