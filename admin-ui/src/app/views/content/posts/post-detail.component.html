@@ -62,7 +62,7 @@
             <div class="row mb-3">
                 <div class="field col-6">
                     <label for="tags">Tags</label>
-                    <input id="tags" type="text" pInputText formControlName="tags" [style]="{ width: '100%' }" />
+                    <p-autocomplete formControlName="tags" [suggestions]="filteredTags || []" (completeMethod)="filterTags($event)" multiple [style]="{ width: '100%' }" [pKeyFilter]="noSpecial"/>
                     <app-validation-message [entityForm]="form" fieldName="tags"
                         [validationMessages]="validationMessages">
                     </app-validation-message>

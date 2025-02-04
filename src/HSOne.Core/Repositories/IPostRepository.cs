@@ -2,6 +2,7 @@
 using HSOne.Core.Models;
 using HSOne.Core.Models.Content;
 using HSOne.Core.SeedWorks;
+using HSOne.Data.Repositories;
 
 namespace HSOne.Core.Repositories
 {
@@ -20,5 +21,11 @@ namespace HSOne.Core.Repositories
         Task<List<PostActivityLogDto>> GetActivityLogsAsync(Guid id);
         Task<List<Post>> GetUnpaidPublishPostsAsync(Guid userId);
         Task<bool> HasPostsInCategoryAsync(Guid categoryId);
+        Task<List<PostInListDto>> GetLatestPublishPostsAsync(int count);
+        Task<PagedResult<PostInListDto>> GetPostsByCategoryPagingAsync(string categortSlug, int pageIndex = 1, int pageSize = 10);
+        Task<PagedResult<PostInListDto>> GetPostsByTagPagingAsync(string tagSlug, int pageIndex = 1, int pageSize = 10);
+        Task<PostDto> GetBySlugAsync(string slug);
+        Task<PagedResult<PostInListDto>> GetAllPostBySeriesSlugPagingAsync(string seriesSlug, int pageIndex = 1, int pageSize = 10);
+        Task<PagedResult<PostInListDto>> GetPostsByUserPagingAsync(Guid userId, string keyword, int pageIndex = 1, int pageSize = 10);
     }
 }

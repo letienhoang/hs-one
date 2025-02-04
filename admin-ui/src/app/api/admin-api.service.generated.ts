@@ -2510,7 +2510,7 @@ export class AdminApiSeriesApiClient {
 }
 
 @Injectable()
-export class AdminApiTestApiClient {
+export class AdminApiTagApiClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -2523,32 +2523,33 @@ export class AdminApiTestApiClient {
     /**
      * @return Success
      */
-    get(): Observable<void> {
-        let url_ = this.baseUrl + "/api/Test";
+    getAllTags(): Observable<TagDto[]> {
+        let url_ = this.baseUrl + "/api/admin/tag";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet(response_);
+            return this.processGetAllTags(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGet(response_ as any);
+                    return this.processGetAllTags(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<TagDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<TagDto[]>;
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<void> {
+    protected processGetAllTags(response: HttpResponseBase): Observable<TagDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2557,7 +2558,75 @@ export class AdminApiTestApiClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TagDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getAllNameTags(): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/admin/tag/tag-name";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllNameTags(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllNameTags(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string[]>;
+        }));
+    }
+
+    protected processGetAllNameTags(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3469,7 +3538,7 @@ export class CreateUpdatePostRequest implements ICreateUpdatePostRequest {
     thumbnail?: string | undefined;
     content?: string | undefined;
     source?: string | undefined;
-    tags?: string | undefined;
+    tags?: string[] | undefined;
     seoDescription?: string | undefined;
 
     constructor(data?: ICreateUpdatePostRequest) {
@@ -3490,7 +3559,11 @@ export class CreateUpdatePostRequest implements ICreateUpdatePostRequest {
             this.thumbnail = _data["thumbnail"];
             this.content = _data["content"];
             this.source = _data["source"];
-            this.tags = _data["tags"];
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
             this.seoDescription = _data["seoDescription"];
         }
     }
@@ -3511,7 +3584,11 @@ export class CreateUpdatePostRequest implements ICreateUpdatePostRequest {
         data["thumbnail"] = this.thumbnail;
         data["content"] = this.content;
         data["source"] = this.source;
-        data["tags"] = this.tags;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         data["seoDescription"] = this.seoDescription;
         return data;
     }
@@ -3525,7 +3602,7 @@ export interface ICreateUpdatePostRequest {
     thumbnail?: string | undefined;
     content?: string | undefined;
     source?: string | undefined;
-    tags?: string | undefined;
+    tags?: string[] | undefined;
     seoDescription?: string | undefined;
 }
 
@@ -4894,6 +4971,50 @@ export class SetPasswordRequest implements ISetPasswordRequest {
 
 export interface ISetPasswordRequest {
     newPassword: string;
+}
+
+export class TagDto implements ITagDto {
+    id?: string;
+    name?: string | undefined;
+    slug?: string | undefined;
+
+    constructor(data?: ITagDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.slug = _data["slug"];
+        }
+    }
+
+    static fromJS(data: any): TagDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TagDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["slug"] = this.slug;
+        return data;
+    }
+}
+
+export interface ITagDto {
+    id?: string;
+    name?: string | undefined;
+    slug?: string | undefined;
 }
 
 export class TokenRequest implements ITokenRequest {

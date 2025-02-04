@@ -282,6 +282,11 @@ namespace HSOne.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Tags");

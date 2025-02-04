@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Create Post";
+    ViewData["Description"] = "Create post page";
+}
+@section Styles {
+    <link href="~/libs/ckeditor5/ckeditor5.css" rel="stylesheet" />
+}
+@section Scripts {
+    <script src="~/libs/ckeditor5/ckeditor5.umd.js"></script>
+    <script>
+        CKEDITOR.ClassicEditor.create(document.querySelector('#ckeditorContent'), {
+            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3MzkyMzE5OTksImp0aSI6IjBhMzdlM2RjLWIzODYtNDliZi04MWYzLTRlMmIzZDFmZDI0MyIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImZlN2NmOGFjIn0.envS6YN0uu2orwZ-ETUR1-8m7hiroqjUQPFAWDcKvZihCIs4fc_wKlkNazVr87FbNcTNZl1Y8NBM4Sr-byueeg',
+            plugins: [
+                CKEDITOR.Essentials,
+                CKEDITOR.Bold,
+                CKEDITOR.Italic,
+                CKEDITOR.Font,
+                CKEDITOR.Paragraph
+            ],
+            toolbar: [
+                'undo', 'redo', '|', 'bold', 'italic', '|',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+            ]
+        }).then(
+            editor => {
+                // After mounting the application change the height
+                editor.editing.view.change(writer => {
+                    writer.setStyle('height', '400px', editor.editing.view.document.getRoot());
+                    writer.setStyle('width', '600px', editor.editing.view.document.getRoot());
+                })
+            });
+    </script>
+}
+@model CreatePostViewModel
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('/assets/img/home-bg.jpg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="site-heading">
+                    <h1>Create new post</h1>
+                </div>
+            </div>
+        </div>  
+    </div>
+</header>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <form asp-controller="Profile" asp-action="CreatePost" method="post" enctype="multipart/form-data" class="row g-12">
+                <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
+                @if (TempData[SystemConsts.FormSuccessMessage] != null)
+                {
+                    <div class="alert alert-success">@TempData[SystemConsts.FormSuccessMessage]</div>
+                }
+                <div class="col-md-6">
+                    <label for="titles" class="form-label">Title</label>
+                    <div class="input-group has-validation">
+                        <input type="text" class="form-control" id="title" asp-for="Title" required>
+                        <span id="validationTitle" asp-validation-for="Title" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="categoryId" class="form-label">Category</label>
+                    <div class="input-group has-validation">
+                        <select type="text" class="form-control" id="categoryId" asp-for="CategoryId" asp-items="Model.Categories" required>
+                            <option value="">Select category</option>
+                        </select>
+                        <span id="validationCategoryId" asp-validation-for="CategoryId" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="description" class="form-label">Description</label>
+                    <div class="input-group has-validation">
+                        <input type="text" class="form-control" id="description" asp-for="Description" required>
+                        <span id="validationDescription" asp-validation-for="Description" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="thumbnailImage" class="form-label">Thumbnail Image</label>
+                    <div class="input-group has-validation">
+                        <input type="file" class="form-control" id="thumbnailFile" name="thumbnailFile" required>
+                        <input type="hidden" class="form-control" id="thumbnailImage" asp-for="ThumbnailImage" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="seoDescription" class="form-label">Seo description</label>
+                    <div class="input-group has-validation">
+                        <textarea type="text" class="form-control" id="seoDescription" asp-for="SeoDescription" rows="5" required></textarea>
+                        <span id="validationSeoDescription" asp-validation-for="SeoDescription" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="content" class="form-label">Content</label>
+                    <div class="input-group has-validation w-100">
+                        <textarea type="text" class="form-control" id="ckeditorContent" asp-for="Content" rows="10" required></textarea>
+                        <span id="validationContent" asp-validation-for="Content" class="invalid-feedback"></span>
+                    </div>
+                </div>
+
+                <div class="col-12 my-3">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

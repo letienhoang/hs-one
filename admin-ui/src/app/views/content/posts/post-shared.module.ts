@@ -24,6 +24,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { BadgeModule } from 'primeng/badge';
 import { Image } from 'primeng/image';
 import { Editor } from 'primeng/editor';
+import { AutoComplete } from 'primeng/autocomplete';
 
 @NgModule({
     imports: [
@@ -50,7 +51,8 @@ import { Editor } from 'primeng/editor';
         TextareaModule,
         BadgeModule,
         Image,
-        Editor
+        Editor,
+        AutoComplete
     ],
     exports: [
         CommonModule,
@@ -76,7 +78,8 @@ import { Editor } from 'primeng/editor';
         TextareaModule,
         BadgeModule,
         Image,
-        Editor
+        Editor,
+        AutoComplete
     ]
 })
 export class PostSharedModule { }

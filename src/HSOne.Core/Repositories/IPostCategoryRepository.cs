@@ -9,5 +9,6 @@ namespace HSOne.Core.Repositories
     {
         Task<List<PostCategory>> GetPopularPostCategoriesAsync(int count);
         Task<PagedResult<PostCategoryDto>> GetPostCategoriesPagingAsync(string? keyword, int pageIndex = 1, int pageSize = 10);
+        Task<PostCategoryDto> GetBySlugAsync(string slug);
     }
 }

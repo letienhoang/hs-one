@@ -42,5 +42,11 @@ namespace HSOne.Data.Repositories
                 PageSize = pageSize
             };
         }
+
+        public async Task<PostCategoryDto> GetBySlugAsync(string slug)
+        {
+            var category = await _context.PostCategories.FirstOrDefaultAsync(x => x.Slug == slug);
+            return category == null ? throw new Exception($"Cannot find {slug}") : _mapper.Map<PostCategoryDto>(category);
+        }
     }
 }

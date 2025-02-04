@@ -12,5 +12,9 @@ namespace HSOne.Core.Domain.Content
         [Required]
         [MaxLength(128)]
         public required string Name { get; set; }
+
+        [Required]
+        [MaxLength(128)]
+        public required string Slug { get; set; }
     }
 }

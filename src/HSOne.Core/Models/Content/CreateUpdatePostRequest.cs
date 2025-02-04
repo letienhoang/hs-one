@@ -24,7 +24,7 @@ namespace HSOne.Core.Models.Content
         [MaxLength(512)]
         public string? Source { get; set; }
         [MaxLength(256)]
-        public string? Tags { get; set; }
+        public string[]? Tags { get; set; }
         [MaxLength(160)]
         public string? SeoDescription { get; set; }
 
@@ -32,7 +32,8 @@ namespace HSOne.Core.Models.Content
         {
             public AutoMapperProfile()
             {
-                CreateMap<CreateUpdatePostRequest, Post>();
+                CreateMap<CreateUpdatePostRequest, Post>()
+                    .ForMember(x => x.Tags, opt => opt.MapFrom(src => src.Tags != null ? string.Join(",", src.Tags) : string.Empty));
             }
         }
     }

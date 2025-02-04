@@ -9,6 +9,8 @@ namespace HSOne.Core.SeedWorks
         ISeriesRepository Series { get; }
         IPostInSeriesRepository PostInSeries { get; }
         ITransactionRepository Transactions { get; }
+        ITagRepository Tags { get; }
+        IUserRepository Users { get; }
         Task<int> CompleteAsync();
     }
 }

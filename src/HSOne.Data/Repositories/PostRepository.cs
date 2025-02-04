@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using HSOne.Core.Domain.Content;
 using HSOne.Core.Domain.Identity;
 using HSOne.Core.Models;
@@ -204,6 +205,124 @@ namespace HSOne.Data.Repositories
         public async Task<bool> HasPostsInCategoryAsync(Guid categoryId)
         {
             return await _context.Posts.AnyAsync(x => x.CategoryId == categoryId);
+        }
+
+        public async Task<List<PostInListDto>> GetLatestPublishPostsAsync(int count)
+        {
+            var query = _context.Posts.Where(x => x.Status == PostStatus.Published)
+                .Take(count)
+                .OrderByDescending(x => x.DateCreated);
+            return await _mapper.ProjectTo<PostInListDto>(query).ToListAsync();
+        }
+
+        public async Task<PagedResult<PostInListDto>> GetPostsByCategoryPagingAsync(string categortSlug, int pageIndex = 1, int pageSize = 10)
+        {
+            var query = _context.Posts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(categortSlug))
+            {
+                query = query.Where(x => x.CategorySlug == categortSlug);
+            }
+
+            var totalRecords = await query.CountAsync();
+
+            query = query.Where(x => x.Status == PostStatus.Published)
+                .OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRecords,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<PostDto> GetBySlugAsync(string slug)
+        {
+            var post = await _context.Posts.FirstOrDefaultAsync(x => x.Slug == slug);
+            return post == null ? throw new Exception($"Cannot find post with Slug: {slug}") : _mapper.Map<PostDto>(post);
+        }
+
+        public async Task<PagedResult<PostInListDto>> GetPostsByTagPagingAsync(string tagSlug, int pageIndex = 1, int pageSize = 10)
+        {
+            var query = from p in _context.Posts
+                        join pt in _context.PostTags on p.Id equals pt.PostId
+                        join t in _context.Tags on pt.TagId equals t.Id
+                        where t.Slug == tagSlug
+                        select p;
+
+            var totalRecords = await query.CountAsync();
+
+            query = query.Where(x => x.Status == PostStatus.Published)
+                .OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRecords,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<PagedResult<PostInListDto>> GetAllPostBySeriesSlugPagingAsync(string seriesSlug, int pageIndex = 1, int pageSize = 10)
+        {
+            var query = from p in _context.Posts
+                        join ps in _context.PostInSeries on p.Id equals ps.PostId
+                        join s in _context.Series on ps.SeriesId equals s.Id
+                        where s.Slug == seriesSlug
+                        select p;
+
+            var totalRecords = await query.CountAsync();
+
+            query = query.Where(x => x.Status == PostStatus.Published)
+                .OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRecords,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<PagedResult<PostInListDto>> GetPostsByUserPagingAsync(Guid userId, string keyword, int pageIndex = 1, int pageSize = 10)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+
+            var query = _context.Posts
+                .Where(x => x.AuthorUserId == userId)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(x => x.Title.Contains(keyword));
+            }
+
+            var totalRecords = await query.CountAsync();
+
+            query = query.OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRecords,
+                PageSize = pageSize
+            };
         }
     }
 }

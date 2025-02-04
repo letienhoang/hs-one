@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Profile " + Model.FirstName;
+    ViewData["Description"] = "Profile page";
+}
+@model ProfileViewModel
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('/assets/img/home-bg.jpg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="site-heading">
+                    <h1>@Model.FullName</h1>
+                    <span class="subheading">@Model.Email</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            @if (TempData[SystemConsts.FormSuccessMessage] != null)
+            {
+                <div class="alert alert-success">@TempData[SystemConsts.FormSuccessMessage]</div>
+            }
+            <div class="row my-1">
+                <div class="col">
+                    Name
+                </div>
+                <div class="col">
+                    @Model.FullName
+                </div>
+            </div>
+
+            <div class="row my-1">
+                <div class="col">
+                    Email
+                </div>
+                <div class="col">
+                    @Model.Email
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col">
+                    <a class="btn btn-outline-info" href="@UrlConsts.ChangeProfile">Update Profile</a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-outline-info" href="@UrlConsts.ChangePassword">Change Password</a>
+                </div>
+                
+                <div class="col">
+                    <form id="logoutForm" class="form-inline" asp-controller="Profile" asp-action="Logout" method="post">
+                        <button class="btn btn-outline-danger" type="submit">Sign Out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Register";
+    ViewData["Description"] = "Register to get access to more features, register for new member";
+}
+@model RegisterViewModel
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('/assets/img/home-bg.jpg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="site-heading">
+                    <h1>Register new member</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <form asp-controller="Auth" asp-action="Register" method="post" class="row g-12">
+                <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
+
+                <div class="col-md-6">
+                    <label for="firstName" class="form-label">First name</label>
+                    <div class="input-group has-validation">
+                        <input type="text" class="form-control" id="firstName" asp-for="FirstName" required>
+                        <span id="validationFirstName" asp-validation-for="FirstName" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="lastName" class="form-label">Last name</label>
+                    <div class="input-group has-validation">
+                        <input type="text" class="form-control" id="lastName" asp-for="LastName" required>
+                        <span id="validationLastName" asp-validation-for="LastName" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group has-validation">
+                        <input type="email" class="form-control" id="email" asp-for="Email" required>
+                        <span id="validationEmail" asp-validation-for="Email" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group has-validation">
+                        <input type="password" class="form-control" id="password" asp-for="Password" required>
+                        <span id="validationPassword" asp-validation-for="Password" class="invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="agree" required>
+                        <label class="form-check-label" for="agree">
+                            Agree to <a href="#">terms and conditions</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 my-3">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

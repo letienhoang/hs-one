@@ -1,0 +1,46 @@
+﻿@using HSOne.Core.Models
+@model PagedResultBase
+@{
+    var urlTemplate = Url.Action() + "?page={0}";
+    var request = ViewContext.HttpContext.Request;
+    foreach (var key in request.Query.Keys)
+    {
+        if (key == "page")
+        {
+            continue;
+        }
+        if (request.Query[key].Count > 1)
+        {
+            foreach (var item in (string[])request.Query[key])
+            {
+                urlTemplate += $"&{key}={item}";
+            }
+        }
+        else
+        {
+            urlTemplate += $"&{key}={request.Query[key]}";
+        }
+    }
+
+    var startIndex = Math.Max(Model.CurrentPage - 5, 1);
+    var finishIndex = Math.Min(Model.CurrentPage + 5, Model.PageCount);
+}
+@if (Model.PageCount > 0)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.CurrentPage == startIndex ? "disabled" : "")">
+                <a class="page-link" href="@urlTemplate.Replace("{0}", "1")">Previous</a>
+            </li>
+            @for (var i = startIndex; i <= finishIndex; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="@(i != Model.CurrentPage ? urlTemplate.Replace("{0}", i.ToString()) : "javascript:")" title="Page @i.ToString()"><span>@i</span></a>
+                </li>
+            }
+            <li class="page-item @(Model.CurrentPage == finishIndex ? "disabled" : "")">
+                <a class="page-link" href="@urlTemplate.Replace("{0}", Model.PageCount.ToString())">Next</a>
+            </li>
+        </ul>
+    </nav>
+}

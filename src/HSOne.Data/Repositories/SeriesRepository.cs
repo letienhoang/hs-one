@@ -52,5 +52,11 @@ namespace HSOne.Data.Repositories
                         select s;
             return await _mapper.ProjectTo<SeriesInListDto>(query).ToListAsync();
         }
+
+        public async Task<SeriesDto> GetSeriesBySlugAsync(string slug)
+        {
+            var series = await _context.Series.Where(x => x.Slug == slug).FirstOrDefaultAsync();
+            return  _mapper.Map<SeriesDto>(series);
+        }
     }
 }
