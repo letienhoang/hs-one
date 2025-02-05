@@ -23,7 +23,6 @@ import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
 
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
-import { AdminApiTestApiClient } from 'src/app/api/admin-api.service.generated';
 
 interface IUser {
   name: string;
@@ -145,7 +144,7 @@ export class DashboardComponent implements OnInit {
     trafficRadio: new FormControl('Month')
   });
 
-  constructor(private apiTestApiClient: AdminApiTestApiClient) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.initCharts();
@@ -187,16 +186,5 @@ export class DashboardComponent implements OnInit {
         this.mainChartRef().update();
       });
     }
-  }
-
-  Test() {
-    this.apiTestApiClient.get().subscribe({
-      next: (res) => {
-        console.log(res);
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
   }
 }
