@@ -14,6 +14,24 @@ namespace HSOne.Data.Repositories
         {
             _mapper = mapper;
         }
+        public async Task<bool> IsExistsPostTagAsync(Guid postId, Guid tagId)
+        {
+            return await _context.PostTags.AnyAsync(x => x.PostId == postId && x.TagId == tagId);
+        }
+
+        public async Task<bool> IsExistsTagOfPostAsync(Guid postId)
+        {
+            return await _context.PostTags.AnyAsync(x => x.PostId == postId);
+        }
+
+        public async Task<List<TagDto>> GetPostTagsAsync(Guid postId)
+        {
+            var query = from pt in _context.PostTags
+                        join t in _context.Tags on pt.TagId equals t.Id
+                        where pt.PostId == postId
+                        select t;
+            return await _mapper.ProjectTo<TagDto>(query).ToListAsync();
+        }
 
         public async Task<TagDto?> GetTagBySlugAsync(string slug)
         {
@@ -25,29 +43,21 @@ namespace HSOne.Data.Repositories
             return _mapper.Map<TagDto>(tag);
         }
 
-        public async Task AddPostTagAsync(Guid postId, Guid tagId)
-        {
-            await _context.PostTags.AddAsync(new PostTag { PostId = postId, TagId = tagId });
-        }
-
         public async Task<List<string>> GetAllNameTagsAsync()
         {
             var query = _context.Tags.Select(x => x.Name);
             return await query.ToListAsync();
         }
 
-        public async Task<bool> IsExistsPostTagAsync(Guid postId, Guid tagId)
+        public async Task AddPostTagAsync(Guid postId, Guid tagId)
         {
-            return await _context.PostTags.AnyAsync(x => x.PostId == postId && x.TagId == tagId);
+            await _context.PostTags.AddAsync(new PostTag { PostId = postId, TagId = tagId });
         }
-
-        public async Task<List<TagDto>> GetPostTagsAsync(Guid postId)
+        
+        public async Task RemoveTagsOfPostAsync(Guid postId)
         {
-            var query = from pt in _context.PostTags
-                        join t in _context.Tags on pt.TagId equals t.Id
-                        where pt.PostId == postId
-                        select t;
-            return await _mapper.ProjectTo<TagDto>(query).ToListAsync();
+            var postTags = await _context.PostTags.Where(x => x.PostId == postId).ToListAsync();
+            _context.PostTags.RemoveRange(postTags);
         }
     }
 }

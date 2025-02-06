@@ -147,6 +147,11 @@ namespace HSOne.Api.Controllers.AdminApi
                 {
                     await _unitOfWork.PostInSeries.RemovePostInAllSeriesAsync(id);
                 }
+
+                if (await _unitOfWork.Tags.IsExistsTagOfPostAsync(id))
+                {
+                    await _unitOfWork.Tags.RemoveTagsOfPostAsync(id);
+                }
                 _unitOfWork.Posts.Remove(post);
             }
 
