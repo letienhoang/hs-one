@@ -20,6 +20,22 @@ namespace HSOne.Data.Repositories
             return await _context.PostInSeries.AnyAsync(x => x.PostId == postId && x.SeriesId == seriesId);
         }
 
+        public async Task<bool> HasPostsInSeriesAsync(Guid seriesId)
+        {
+            return await _context.PostInSeries.AnyAsync(x => x.SeriesId == seriesId);
+        }
+
+        public async Task<bool> HasSeriesContainingPostAsync(Guid postId)
+        {
+            return await _context.PostInSeries.AnyAsync(x => x.PostId == postId);
+        }
+
+        public async Task<PostInSeriesDto> GetPostInSeriesAsync(Guid postId, Guid seriesId)
+        {
+            var postInSeries = await _context.PostInSeries.FirstOrDefaultAsync(x => x.SeriesId == seriesId && x.PostId == postId);
+            return _mapper.Map<PostInSeriesDto>(postInSeries);
+        }
+
         public async Task AddPostToSeriesAsync(Guid seriesId, Guid postId, int sortOrder)
         {
             var postInSeries = await _context.PostInSeries.FirstOrDefaultAsync(x => x.SeriesId == seriesId && x.PostId == postId);
@@ -43,15 +59,13 @@ namespace HSOne.Data.Repositories
             }
         }
 
-        public async Task<PostInSeriesDto> GetPostInSeriesAsync(Guid postId, Guid seriesId)
+        public async Task RemovePostInAllSeriesAsync(Guid postId)
         {
-            var postInSeries = await _context.PostInSeries.FirstOrDefaultAsync(x => x.SeriesId == seriesId && x.PostId == postId);
-            return _mapper.Map<PostInSeriesDto>(postInSeries);
-        }
-
-        public async Task<bool> HasPostsInSeriesAsync(Guid seriesId)
-        {
-            return await _context.PostInSeries.AnyAsync(x => x.SeriesId == seriesId);
+            var postInSeries = await _context.PostInSeries.Where(x => x.PostId == postId).ToListAsync();
+            if (postInSeries.Any())
+            {
+                _context.PostInSeries.RemoveRange(postInSeries);
+            }
         }
     }
 }

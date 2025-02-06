@@ -142,6 +142,11 @@ namespace HSOne.Api.Controllers.AdminApi
                 {
                     return NotFound();
                 }
+
+                if (await _unitOfWork.PostInSeries.HasSeriesContainingPostAsync(id))
+                {
+                    await _unitOfWork.PostInSeries.RemovePostInAllSeriesAsync(id);
+                }
                 _unitOfWork.Posts.Remove(post);
             }
 
