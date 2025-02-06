@@ -190,8 +190,10 @@ namespace HSOne.WebApp.Controllers
         public async Task<IActionResult> PostListByUser(string keyword, int page = 1)
         {
             var posts = await _unitOfWork.Posts.GetPostsByUserPagingAsync(User.GetUserId(), keyword, page, 12);
+            var userName = User.GetUserName();
             return View(new PostListByUserViewModel { 
                 Posts = posts,
+                UserName = userName
             });
         }
 

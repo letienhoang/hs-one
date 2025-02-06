@@ -6,6 +6,7 @@ namespace HSOne.WebApp.Models
 {
     public class PostListByUserViewModel
     {
-        public required PagedResult<PostInListDto> Posts { get; set; }
+        public PagedResult<PostInListDto>? Posts { get; set; }
+        public string? UserName { get; set; }
     }
 }

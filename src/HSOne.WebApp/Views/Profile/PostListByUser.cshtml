@@ -1,7 +1,7 @@
 ﻿@inject IOptions<SystemConfig> _systemConfig;
 @{
-    ViewData["Title"] = "Post list by " + @Model.Posts.Results[0].AuthorName + (Model.Posts.CurrentPage > 1 ? $" - Page {Model.Posts.CurrentPage}" : "");
-    ViewData["Description"] = "Post list by " + @Model.Posts.Results[0].AuthorName + (Model.Posts.CurrentPage > 1 ? $" - Page {Model.Posts.CurrentPage}" : "");
+    ViewData["Title"] = "Post list by " + @Model.UserName + (Model.Posts?.CurrentPage > 1 ? $" - Page {Model.Posts.CurrentPage}" : "");
+    ViewData["Description"] = "Post list by " + @Model.UserName + (Model.Posts?.CurrentPage > 1 ? $" - Page {Model.Posts.CurrentPage}" : "");
 }
 @model PostListByUserViewModel
 <!-- Page Header-->
@@ -10,7 +10,7 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
-                    <h1>@(Model.Posts.Results[0].AuthorName + "\' Post")</h1>
+                    <h1>@(Model.UserName + "\' Post")</h1>
                 </div>
             </div>
         </div>
@@ -20,6 +20,10 @@
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-12 col-xl-12">
+            <div class="mb-3">
+                <a class="btn btn-outline-success" href="@UrlConsts.CreatePost">Create Post</a>
+            </div>
+           
             <table class="table">
                 <thead class="table-light">
                     <tr>
@@ -32,19 +36,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var post in Model.Posts.Results)
+                    @if(Model.Posts != null)
                     {
-                        <tr>
-                            <td>@post.Title</td>
-                            <td>@post.CategoryName</td>
-                            <td>@post.DateCreated</td>
-                            <td>@post.ViewCount</td>
-                            <td>@post.Status</td>
-                            <td>
-                                <a class="btn btn-outline-info" href="@UrlConsts.CreatePost?id=@post.Id">Detail</a>
-                                @* <a class="btn btn-outline-info" href="@UrlConsts.CreatePost?id=@post.Id">Send to approval</a> *@
-                            </td>
-                        </tr>
+                        @foreach (var post in Model.Posts.Results)
+                        {
+                            <tr>
+                                <td>@post.Title</td>
+                                <td>@post.CategoryName</td>
+                                <td>@post.DateCreated</td>
+                                <td>@post.ViewCount</td>
+                                <td>@post.Status</td>
+                                <td>
+                                    <a class="btn btn-outline-info" href="@string.Format(UrlConsts.EditPost, post.Id)">Edit Post</a>
+                                    @* <a class="btn btn-outline-info" href="@UrlConsts.CreatePost?id=@post.Id">Send to approval</a> *@
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>

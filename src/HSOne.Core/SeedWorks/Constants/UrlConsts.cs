@@ -27,6 +27,7 @@
         public static string ChangePassword = "profile/change-password";
         public static string ChangeProfile = "/profile/edit";
         public static string PostListByUser = "/profile/posts/list";
-        public static string CreatePost = "/profile/posts/create-post";
+        public static string CreatePost = "/profile/posts/create";
+        public static string EditPost = "/profile/posts/edit/{0}";
     }
 }

@@ -6,29 +6,29 @@
     <link href="~/libs/ckeditor5/ckeditor5.css" rel="stylesheet" />
 }
 @section Scripts {
-    <script src="~/libs/ckeditor5/ckeditor5.umd.js"></script>
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/6ctn2mshvl1z9mblzmeebjzxw7tsvnktqipa5zpme9aazqqc/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
-        CKEDITOR.ClassicEditor.create(document.querySelector('#ckeditorContent'), {
-            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3MzkyMzE5OTksImp0aSI6IjBhMzdlM2RjLWIzODYtNDliZi04MWYzLTRlMmIzZDFmZDI0MyIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImZlN2NmOGFjIn0.envS6YN0uu2orwZ-ETUR1-8m7hiroqjUQPFAWDcKvZihCIs4fc_wKlkNazVr87FbNcTNZl1Y8NBM4Sr-byueeg',
+        tinymce.init({
+            selector: 'textarea#ckeditorContent',
             plugins: [
-                CKEDITOR.Essentials,
-                CKEDITOR.Bold,
-                CKEDITOR.Italic,
-                CKEDITOR.Font,
-                CKEDITOR.Paragraph
+                // Core editing features
+                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+                // Your account includes a free trial of TinyMCE premium features
+                // Try the most popular premium features until Feb 20, 2025:
+                'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
             ],
-            toolbar: [
-                'undo', 'redo', '|', 'bold', 'italic', '|',
-                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
-            ]
-        }).then(
-            editor => {
-                // After mounting the application change the height
-                editor.editing.view.change(writer => {
-                    writer.setStyle('height', '400px', editor.editing.view.document.getRoot());
-                    writer.setStyle('width', '600px', editor.editing.view.document.getRoot());
-                })
-            });
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+        });
     </script>
 }
 @model CreatePostViewModel
