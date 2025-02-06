@@ -1,6 +1,7 @@
 ﻿using HSOne.Core.ConfigOptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 
@@ -57,6 +58,32 @@ namespace HSOne.Api.Controllers.AdminApi
             }
             var path = Path.Combine(imageFolder, finalFileName!).Replace(@"\", @"/");
             return Ok(new { path });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetImage([FromQuery] string filePath)
+        {
+            if (filePath == null) {
+                return BadRequest("File path is required.");
+            }
+            
+            var relativePath = filePath.TrimStart('/').Replace("/", @"\");
+            var fullPath = Path.Combine(_hostingEnvironment.WebRootPath, relativePath);
+
+            if (!System.IO.File.Exists(fullPath))
+            {
+                return NotFound("File not found.");
+            }
+
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(fullPath, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            var imageBytes = System.IO.File.ReadAllBytes(fullPath);
+            return File(imageBytes, contentType);
         }
     }
 }

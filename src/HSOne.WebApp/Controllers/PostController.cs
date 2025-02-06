@@ -1,16 +1,20 @@
-﻿using HSOne.Core.SeedWorks;
+﻿using HSOne.Core.ConfigOptions;
+using HSOne.Core.SeedWorks;
 using HSOne.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HSOne.WebApp.Controllers
 {
     public class PostController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IOptions<SystemConfig> _systemConfig;
 
-        public PostController(IUnitOfWork unitOfWork)
+        public PostController(IUnitOfWork unitOfWork, IOptions<SystemConfig> systemConfig)
         {
             _unitOfWork = unitOfWork;
+            _systemConfig = systemConfig;
         }
 
         [Route("posts")]
@@ -55,6 +59,41 @@ namespace HSOne.WebApp.Controllers
                 Posts = posts,
                 Tag = tag!
             });
+        }
+
+        [HttpGet]
+        [Route("post-thumbnail")]
+        public async Task<IActionResult> PostThumbnail(Guid postId)
+        {
+            if (postId == Guid.Empty)
+            {
+                return NotFound("Post id is required.");
+            }
+
+            var post = await _unitOfWork.Posts.GetByIdAsync(postId);
+            if (post == null)
+            {
+                return NotFound("Post not found.");
+            }
+            if (string.IsNullOrEmpty(post.Thumbnail))
+            {
+                return NotFound("Thumbnail not found.");
+            }
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_systemConfig.Value.BackendApiUrl);
+                var apiUrl = $"/api/admin/media?filePath={post.Thumbnail}";
+
+                var response = await client.GetAsync(apiUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return NotFound("Thumbnail not found.");
+                }
+                var image = await response.Content.ReadAsByteArrayAsync();
+                var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+                return File(image, contentType);
+            }
         }
     }
 }
