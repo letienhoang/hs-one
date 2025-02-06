@@ -16,10 +16,12 @@ namespace HSOne.Api.Controllers.AdminApi
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public SeriesController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public SeriesController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment hostingEnvironment)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpPost]
@@ -62,7 +64,19 @@ namespace HSOne.Api.Controllers.AdminApi
                 }
                 if (await _unitOfWork.PostInSeries.HasPostsInSeriesAsync(id))
                 {
-                    return BadRequest("Series has posts");
+                    await _unitOfWork.PostInSeries.RemoveLinkToSeriesAsync(id);
+                }
+                if (series.Thumbnail != null)
+                {
+                    var relativePath = series.Thumbnail.TrimStart('/').Replace("/", @"\");
+                    var fullPath = Path.Combine(_hostingEnvironment.WebRootPath, relativePath);
+
+                    if (!System.IO.File.Exists(fullPath))
+                    {
+                        return NotFound("File not found.");
+                    }
+
+                    System.IO.File.Delete(fullPath);
                 }
                 _unitOfWork.Series.Remove(series);
             }

@@ -21,12 +21,14 @@ namespace HSOne.Api.Controllers.AdminApi
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public PostController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager)
+        public PostController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager, IWebHostEnvironment hostingEnvironment)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -152,6 +154,20 @@ namespace HSOne.Api.Controllers.AdminApi
                 {
                     await _unitOfWork.Tags.RemoveTagsOfPostAsync(id);
                 }
+
+                if (post.Thumbnail != null)
+                {
+                    var relativePath = post.Thumbnail.TrimStart('/').Replace("/", @"\");
+                    var fullPath = Path.Combine(_hostingEnvironment.WebRootPath, relativePath);
+
+                    if (!System.IO.File.Exists(fullPath))
+                    {
+                        return NotFound("File not found.");
+                    }
+
+                    System.IO.File.Delete(fullPath);
+                }
+
                 _unitOfWork.Posts.Remove(post);
             }
 

@@ -67,5 +67,14 @@ namespace HSOne.Data.Repositories
                 _context.PostInSeries.RemoveRange(postInSeries);
             }
         }
+
+        public async Task RemoveLinkToSeriesAsync(Guid seriesId)
+        {
+            var postInSeries = await _context.PostInSeries.Where(x => x.SeriesId == seriesId).ToListAsync();
+            if (postInSeries.Any())
+            {
+                _context.PostInSeries.RemoveRange(postInSeries);
+            }
+        }
     }
 }
