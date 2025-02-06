@@ -36,7 +36,7 @@ namespace HSOne.Api.Extensions
             var claims = await roleManager.GetClaimsAsync(role);
             if (!claims.Any(x => x.Type == "Permissions" && x.Value == permission))
             {
-                await roleManager.AddClaimAsync(role, new Claim("Permissons", permission));
+                await roleManager.AddClaimAsync(role, new Claim("Permissions", permission));
             }
         }
     }
