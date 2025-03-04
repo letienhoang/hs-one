@@ -85,22 +85,26 @@ The backend is divided into four main projects:
 **Install Dependencies**:  
    ```bash
    npm install
+   ```
    
 
 ### Start Development Server 
     ```bash
     npm run start
+    ```
     
 
 ### Build for Production or Staging
     ```bash
 	npm run build-prod
 	npm run build-staging
+    ```
     
 
 ### Generate API Client
 	```bash
 	npm run nswag-admin
+    ```
     
 
 ## Architectural Highlights & Best Practices
