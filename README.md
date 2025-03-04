@@ -82,56 +82,57 @@ The backend is divided into four main projects:
    - Run **HSOne.WebApp** to launch the public web application.
 
 ### Frontend Setup
-**Install Dependencies**:  
+**Install Dependencies**
    ```bash
    npm install
    ```
    
 
-### Start Development Server 
-    ```bash
-    npm run start
-    ```
+### Start Development Server
+```bash
+npm run start
+```
     
 
 ### Build for Production or Staging
-    ```bash
-	npm run build-prod
-	npm run build-staging
-    ```
+
+```bash
+npm run build-prod
+npm run build-staging
+```
     
 
 ### Generate API Client
-	```bash
-	npm run nswag-admin
-    ```
+```bash
+npm run nswag-admin
+```
     
 
 ## Architectural Highlights & Best Practices
 
-    **Clean Architecture**: 
+- **Clean Architecture**: 
     Separation of concerns across layers (Presentation, Application, Domain, Infrastructure) enhances maintainability and scalability.
 
-    **Distributed Architecture**:
+- **Distributed Architecture**:
     Supports system scaling in a distributed environment.
 
-    **Domain Driven Design (DDD)**:
+- **Domain Driven Design (DDD)**:
     Focuses on the core domain and business logic, ensuring consistency and extendibility.
 
-    **Repository & Unit Of Work**:
+- **Repository & Unit Of Work**:
     Efficient and controlled data access management.
 
-    **Dependency Injection**:
+- **Dependency Injection**:
     Facilitates modular design and easier unit testing.
 
 
 
 ## Development Guidelines
 
-    **Follow Coding Conventions**: Adhere to clean code practices and the established best practices.
-    **Feature Development**: Begin with defining the domain model and apply appropriate design patterns.
-    **Testing**: Write unit tests for each module to ensure stability and quality.
+- **Follow Coding Conventions**: Adhere to clean code practices and the established best practices.
+- **Feature Development**: Begin with defining the domain model and apply appropriate design patterns.
+- **Testing**: Write unit tests for each module to ensure stability and quality.
 
 
 ## Contact
-    For any inquiries or feedback, please contact the development team at: ltienhoang2@gmail.com
+- For any inquiries or feedback, please contact the development team at: ltienhoang2@gmail.com
