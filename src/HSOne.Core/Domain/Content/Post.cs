@@ -26,8 +26,6 @@ namespace HSOne.Core.Domain.Content
         public string? Thumbnail { get; set; }
 
         public string? Content { get; set; }
-
-        [MaxLength(512)]
         public Guid AuthorUserId { get; set; }
 
         [MaxLength(512)]
