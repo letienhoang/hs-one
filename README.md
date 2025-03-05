@@ -76,36 +76,47 @@ The backend is divided into four main projects:
 
 3. **Database Migrations & Data Seeding**:  
    Run the migrations and seed the database if necessary.
+   - Set **HSOne.Data** as the startup project 
+   - Run the following commands in the Package Manager Console
+   - Set the default project to **HSOne.Data** in the Package Manager Console
+   - Seed the database with initial data
+	   ```bash
+	   Add-Migration Initial
+	   Update-Database
+	   ```
+   - Create Scripts changes from the last migration
+   - Run the following commands in the Package Manager Console
+        ```bash
+        Script-Migration -From <PreviousMigration> -To <LastMigration>
+        # Example for the first migration: Script-Migration -From 0 -To Initial
+		```
+   - Save the generated script to the `/database/schemas` folder in the physical path of the project.
 
 4. **Launch Applications**:  
    - Run **HSOne.Api** to start the Admin CMS API.
    - Run **HSOne.WebApp** to launch the public web application.
 
 ### Frontend Setup
-**Install Dependencies**
-   ```bash
-   npm install
-   ```
-   
+   **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-### Start Development Server
-```bash
-npm run start
-```
+   **Start Development Server
+    ```bash
+    npm run start
+    ```
     
+   **Build for Production or Staging**
+    ```bash
+    npm run build-prod
+    npm run build-staging
+    ```
 
-### Build for Production or Staging
-
-```bash
-npm run build-prod
-npm run build-staging
-```
-    
-
-### Generate API Client
-```bash
-npm run nswag-admin
-```
+   **Generate API Client**
+    ```bash
+    npm run nswag-admin
+    ```
     
 
 ## Architectural Highlights & Best Practices
