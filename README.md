@@ -102,7 +102,7 @@ The backend is divided into four main projects:
     npm install
     ```
 
-   **Start Development Server
+   **Start Development Server**
     ```bash
     npm run start
     ```
