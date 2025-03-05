@@ -98,25 +98,25 @@ The backend is divided into four main projects:
 
 ### Frontend Setup
    **Install Dependencies**
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
    **Start Development Server**
-    ```bash
-    npm run start
-    ```
+   ```bash
+   npm run start
+   ```
     
    **Build for Production or Staging**
-    ```bash
-    npm run build-prod
-    npm run build-staging
-    ```
+   ```bash
+   npm run build-prod
+   npm run build-staging
+   ```
 
    **Generate API Client**
-    ```bash
-    npm run nswag-admin
-    ```
+   ```bash
+   npm run nswag-admin
+   ```
     
 
 ## Architectural Highlights & Best Practices
