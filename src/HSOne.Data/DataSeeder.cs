@@ -27,12 +27,12 @@ namespace HSOne.Data
                 var rootAdmin = new AppUser()
                 {
                     Id = rootAdminId,
-                    FirstName = "Holwn",
+                    FirstName = "Admin",
                     LastName = "Admin",
-                    UserName = "HolwnAdmin",
-                    NormalizedUserName = "HOLWNADMIN",
-                    Email = "admin@hoctat.com",
-                    NormalizedEmail = "ADMIN@HOCTAT.COM",
+                    UserName = "Admin",
+                    NormalizedUserName = "ADMIN",
+                    Email = "admin@hsonedev.com",
+                    NormalizedEmail = "ADMIN@HSONEDEV.COM",
                     IsActive = true,
                     SecurityStamp = Guid.NewGuid().ToString(),
                     LockoutEnabled = false,
